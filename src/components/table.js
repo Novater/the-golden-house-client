@@ -23,7 +23,7 @@ export default class Table extends Component {
   // This method will get the data from the database
   componentDidMount() {
     axios
-      .get(`${process.env.SERVER_URL}/record/'`)
+      .get(`${process.env.SERVER_URL || 'https://calm-plains-52439.herokuapp.com/'}/record/`)
       .then((response) => {
         console.log(response);
         this.setState({ records: response.data });
