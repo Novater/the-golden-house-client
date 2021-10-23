@@ -23,7 +23,7 @@ export default class Table extends Component {
   // This method will get the data from the database
   componentDidMount() {
     axios
-      .get('http://localhost:8000/record/')
+      .get(`${process.env.SERVER_URL}/record/'`)
       .then((response) => {
         console.log(response);
         this.setState({ records: response.data });

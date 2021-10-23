@@ -1,10 +1,10 @@
 import React from 'react';
-
 import { Route, Switch } from 'react-router-dom';
-
 import Navbar from './components/navbar';
 import Page from './components/page';
 import './stylesheets/index.scss';
+
+require('dotenv').config();
 
 const App = () => {
   return (
