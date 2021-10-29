@@ -1,72 +1,74 @@
 import React, { Component } from 'react';
-
+import _generate from '../functions/index';
 import axios from 'axios';
-
-const TableEntry = (props) => (
-  <tr>
-    <td>{props.record.time}</td>
-    <td>{props.record.alias}</td>
-    <td>{Number(props.record.version)}</td>
-    <td>{props.record.region}</td>
-    <td>{props.record.link}</td>
-    <td>{props.record.characters.toString()}</td>
-    <td>{props.record.notes}</td>
-  </tr>
-);
 
 export default class Table extends Component {
   constructor (props) {
     super(props);
-    this.state = { records: [] }
+    this.state = { records: [], search: '', type: props.tableType }
   }
 
   // This method will get the data from the database
-  componentDidMount() {
+  componentDidMount = () => {
     axios
-      .get(`${process.env.SERVER_URL || 'https://calm-plains-52439.herokuapp.com'}/record/`)
+      .get(`${process.env.SERVER_URL || 'https://calm-plains-52439.herokuapp.com'}/record`)
       .then((response) => {
         console.log(response);
-        this.setState({ records: response.data });
+        this.setState({ 
+          records: response.data,
+          search: ''
+        });
       })
       .catch((error) => {
         console.log(error);
       });
   }
 
-  tableList() {
-    console.log('record', this.state.records);
+  componentWillUnmount = () => {
+  }
+
+  tableList = () => {
+    this.state.records.sort((a, b) => {
+      if (a.time > b.time) return 1;
+      return -1;
+    });
+
     return this.state.records.map((thisRec) => {
-      console.log('thisrec', thisRec);
       return (
-        <TableEntry
-          record={thisRec}
-          key={thisRec._id}
-        />
+        {
+          thisRec: thisRec,
+          trClass: 'abyss-info-row'
+        }
       );
     });
   }
 
-  // This will display the table with all records
+  updateSearch = (event) => {
+    this.setState({ search: event.target.value });
+  }
 
-  render() {
+  filterTableByFloor = (event) => {
+    console.log(event);
+    const floor = event.target;
+    alert('Filter by floor', floor);
+  }
+
+  // This will display the table with all records
+  render = () => {
     console.log('state', this.state);
+
+    let headers = ['Time', 'Alias', 'Version', 'Region', 'Link', 'Characters', 'Notes'];
+    let filters = ['12-1-1', '12-1-2', '12-2-1', '12-2-2', '12-3-1', '12-3-2', '12-1', '12-2', '12-3'];
+
+    filters = _generate.tableFunctions.initializeTableFilters(filters, 'table-filters', this.filterTableByFloor);
+    headers = _generate.tableFunctions.initializeTableHeaders(headers, 'leaderboard-row', () => { alert('hello')});
+
     return (
       <div className='abyss-table'>
-        <table className='table table-striped' style={{ marginTop: 20}} >
-          <thead>
-            <tr>
-              <th>Time</th>
-              <th>Alias</th>
-              <th>Version</th>
-              <th>Region</th>
-              <th>Link</th>
-              <th>Characters</th>
-              <th>Notes</th>
-            </tr>
-          </thead>
-          <tbody>{this.tableList()}</tbody>
-        </table>
+        <input type='text' id='table-search' onKeyUp={this.updateSearch} placeholder='Search Table...' />
+        {filters}
+        {_generate.tableFunctions.createTable('table table-hover', headers, this.tableList(), this.state.search)}
       </div>
-    )
+    );
   }
 }

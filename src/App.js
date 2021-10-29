@@ -1,14 +1,14 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import Navbar from './components/navbar';
-import Page from './components/page';
+import Page from './views/page';
 import './stylesheets/index.scss';
 
 require('dotenv').config();
 
 const App = () => {
   return (
-    <div>
+    <div class='app-container'>
       <Navbar />
       <Route exact path='/'>
         <Page tabName='home'></Page>
