@@ -10,7 +10,12 @@ export default class Table extends Component {
 
   // This method will get the data from the database
   componentDidMount = () => {
-    axios
+
+    // lets not cache for now 
+    //const storedData = window.localStorage.getItem(this.state.type);
+
+    if (true) {
+      axios
       .get(`${process.env.SERVER_URL || 'https://calm-plains-52439.herokuapp.com'}/record`)
       .then((response) => {
         console.log(response);
@@ -18,10 +23,17 @@ export default class Table extends Component {
           records: response.data,
           search: ''
         });
+        // window.localStorage.setItem(this.state.type, JSON.stringify(response.data));
       })
       .catch((error) => {
         console.log(error);
       });
+    } else {
+      // this.setState({
+      //   records: JSON.parse(storedData),
+      //   search: ''
+      // });
+    }
   }
 
   componentWillUnmount = () => {
@@ -48,16 +60,19 @@ export default class Table extends Component {
   }
 
   filterTableByFloor = (event) => {
-    console.log(event);
-    const floor = event.target;
-    alert('Filter by floor', floor);
+    console.log(event.target.name);
+    const floor = event.target.name;
+
+    this.setState({
+      search: floor
+    });
   }
 
   // This will display the table with all records
   render = () => {
     console.log('state', this.state);
 
-    let headers = ['Version', 'Time', 'Alias', 'Region', 'Link', 'Characters', 'Notes'];
+    let headers = ['Version', 'Floor', 'Time', 'Alias', 'Region', 'Link', 'Characters', 'Notes'];
     let filters = ['12-1-1', '12-1-2', '12-2-1', '12-2-2', '12-3-1', '12-3-2', '12-1', '12-2', '12-3'];
 
     filters = _generate.tableFunctions.initializeTableFilters('table-filters', filters, this.filterTableByFloor);

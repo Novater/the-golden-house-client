@@ -15,13 +15,11 @@ export default class Page extends Component {
 
   // This method will get the data from the database
   componentDidMount = () => {
-    // TODO: implement what needs to do when the page loads
     this.setState({ tabName: this.props.tabName });
 
     let SERVER_URL = _generate.serverFunctions.getServerURL();
-    console.log('SERVER_URL', SERVER_URL);
     axios
-    .get(`${SERVER_URL || 'https://calm-plains-52439.herokuapp.com'}/post`)
+    .get(`${SERVER_URL || 'https://calm-plains-52439.herokuapp.com'}/post/${this.props.tabName}`)
     .then((response) => {
       console.log(response);
       this.setState({ 
@@ -31,6 +29,21 @@ export default class Page extends Component {
     .catch((error) => {
       console.log(error);
     });
+  }
+
+  updatePosts = () => {
+    let SERVER_URL = _generate.serverFunctions.getServerURL();
+    axios
+    .get(`${SERVER_URL || 'https://calm-plains-52439.herokuapp.com'}/post/${this.state.tabName}`)
+    .then((response) => {
+      console.log(response);
+      this.setState({ 
+        posts: response.data
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+    });    
   }
 
   generatePage = (tabName, objFunc) => {
@@ -48,25 +61,32 @@ export default class Page extends Component {
   // This will display the table with all records
 
   render = () => {
-    console.log('state', this.state);
     const isTableTab = this.state.tabName === 'table';
     const isHomeTab = this.state.tabName === 'home';
-    const isAboutTab = this.state.tabName === 'about';
 
     return (
-      <div className='pageContainer droppable'>
-        {isHomeTab ?
-          <div className='blog-section'>
-            <div className='banner-img'>
-            </div>
-            <h3>Welcome to the Golden House!</h3>
-            <a href='#'>Click here to join our discord server!</a>
-          </div>
-          : ''}
-        { this.state.posts.map(post => { return (<BlogSection title={post.title} content={post.content}/>) })}
-        {
-          isTableTab ? <Table tableType='abyss'/> : ''
-        }
+      <div className='pageContainer'>
+        <div className='leftContainer'>
+        </div>
+        <div className='midContainer'>
+          {
+            isHomeTab ?
+              <div className='blog-section'>
+                <div className='banner-img'>
+                </div>
+                <h3>Welcome to the Golden House!</h3>
+                <a href='#'>Click here to join our discord server!</a>
+              </div>
+              : ''
+          }
+          { 
+            this.state.posts.map(post => { return (<BlogSection title={post.title} content={post.content} key={post._id} id={post._id} updatePosts={this.updatePosts} />) })}
+          {
+            isTableTab ? <Table tableType='abyss'/> : ''
+          }
+        </div>
+        <div className='rightContainer'>
+        </div>
       </div>
     )
   }

@@ -1,17 +1,29 @@
 export default class tableFunctions {
 
+  /**
+   * @param {*} filterClass 
+   * @param {*} filters 
+   * @param {*} onClick 
+   * @returns Filters JSX
+   */
   static initializeTableFilters = (filterClass, filters, onClick) => {
     return (
       <div className={filterClass}>
         {
           filters.map(el => {
-            return <button onClick={onClick}>{el}</button>
+            return <button name={el} onClick={onClick}>{el}</button>
           })
         }
       </div>
     );
   }
 
+  /**
+   * @param {*} headerClass 
+   * @param {*} headers 
+   * @param {*} onClick 
+   * @returns Headers object to pass into createTable
+   */
   static initializeTableHeaders = (headerClass, headers, onClick) => {
     return {
       className: headerClass,
@@ -20,6 +32,14 @@ export default class tableFunctions {
     };
   }
 
+  /**
+   * @param {*} tableClassName 
+   * @param {*} headers 
+   * @param {*} rows 
+   * @param {*} search 
+   * @description The columns of the table are defined by the headers
+   * @returns Table JSX
+   */
   static createTable = (tableClassName, headers, rows, search) => {
     let className = tableClassName.toString();
     let tableBuildRows = [];
@@ -39,7 +59,7 @@ export default class tableFunctions {
               }
 
               return (
-                <td>{record[header].toString()}</td>
+                <td dangerouslySetInnerHTML={{ __html: record[header].toString() }}></td>
               )
             })
           }
