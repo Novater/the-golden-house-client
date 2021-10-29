@@ -70,14 +70,17 @@ body, html {
   background-color: $color-sky;
 }
 
+.table-container {
+  display: grid;
+  place-items: center;
+  
+}
 .abyss-table {
-  width: 60%;
+  width: 80%;
   margin-top: 20px;
-  background-color: white;
+  display: grid;
+  place-items: center;
   overflow: scroll;
-  scrollbar-width: thin;
-  scrollbar-gutter: stable;
-  scrollbar-color: red !important;
 }
 
 @media (max-width: 900px) {

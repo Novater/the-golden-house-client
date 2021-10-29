@@ -1,6 +1,6 @@
 export default class tableFunctions {
 
-  static initializeTableFilters = (filters, filterClass, onClick) => {
+  static initializeTableFilters = (filterClass, filters, onClick) => {
     return (
       <div className={filterClass}>
         {
@@ -12,7 +12,7 @@ export default class tableFunctions {
     );
   }
 
-  static initializeTableHeaders = (headers, headerClass, onClick) => {
+  static initializeTableHeaders = (headerClass, headers, onClick) => {
     return {
       className: headerClass,
       headers: headers,
@@ -25,15 +25,24 @@ export default class tableFunctions {
     let tableBuildRows = [];
     
     function TableEntry(props) {
+      const record = props.record;
+      const lowerCaseHeaders = headers.headers.map(header => header.toLowerCase());
+
       return (
         <tr className={props.className || ''}>
-          <td>{props.record.time}</td>
-          <td>{props.record.alias}</td>
-          <td>{Number(props.record.version)}</td>
-          <td>{props.record.region}</td>
-          <td>{props.record.link}</td>
-          <td>{props.record.characters.toString()}</td>
-          <td>{props.record.notes}</td>
+          {
+            lowerCaseHeaders.map(header => {
+              if (!record[header]) {
+                return (
+                  <td></td>
+                );
+              }
+
+              return (
+                <td>{record[header].toString()}</td>
+              )
+            })
+          }
         </tr>        
       );
     };

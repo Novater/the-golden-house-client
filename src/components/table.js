@@ -57,17 +57,19 @@ export default class Table extends Component {
   render = () => {
     console.log('state', this.state);
 
-    let headers = ['Time', 'Alias', 'Version', 'Region', 'Link', 'Characters', 'Notes'];
+    let headers = ['Version', 'Time', 'Alias', 'Region', 'Link', 'Characters', 'Notes'];
     let filters = ['12-1-1', '12-1-2', '12-2-1', '12-2-2', '12-3-1', '12-3-2', '12-1', '12-2', '12-3'];
 
-    filters = _generate.tableFunctions.initializeTableFilters(filters, 'table-filters', this.filterTableByFloor);
-    headers = _generate.tableFunctions.initializeTableHeaders(headers, 'leaderboard-row', () => { alert('hello')});
+    filters = _generate.tableFunctions.initializeTableFilters('table-filters', filters, this.filterTableByFloor);
+    headers = _generate.tableFunctions.initializeTableHeaders('leaderboard-row', headers, () => { alert('hello')});
 
     return (
-      <div className='abyss-table'>
+      <div className='table-container'>
         <input type='text' id='table-search' onKeyUp={this.updateSearch} placeholder='Search Table...' />
         {filters}
-        {_generate.tableFunctions.createTable('table table-hover', headers, this.tableList(), this.state.search)}
+        <div className='abyss-table'>
+          {_generate.tableFunctions.createTable('table table-hover', headers, this.tableList(), this.state.search)}
+        </div>
       </div>
     );
   }

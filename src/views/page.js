@@ -1,7 +1,8 @@
+import axios from 'axios';
+import BlogSection from '../components/blogSection';
 import React, { Component } from 'react';
 import Table from '../components/table';
-import BlogSection from '../components/blogSection';
-import axios from 'axios';
+import _generate from '../functions/index';
 
 export default class Page extends Component {
   constructor (props) {
@@ -16,8 +17,11 @@ export default class Page extends Component {
   componentDidMount = () => {
     // TODO: implement what needs to do when the page loads
     this.setState({ tabName: this.props.tabName });
+
+    let SERVER_URL = _generate.serverFunctions.getServerURL();
+    console.log('SERVER_URL', SERVER_URL);
     axios
-    .get(`${process.env.SERVER_URL || 'https://calm-plains-52439.herokuapp.com'}/post`)
+    .get(`${SERVER_URL || 'https://calm-plains-52439.herokuapp.com'}/post`)
     .then((response) => {
       console.log(response);
       this.setState({ 
