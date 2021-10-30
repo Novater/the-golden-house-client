@@ -26,7 +26,6 @@ body, html {
 }
 
 .pageContainer {
-  width: 100%;
   height: fit-content;
   min-height: calc(100vh - $height-nav);
   display: grid;
@@ -59,15 +58,22 @@ body, html {
   grid-column: 3 / 4;
   grid-row: 1 / 4;
 }
+
 .main-nav {
-  background-color: $color-sky;
-  color: $color-carbon;
+  background-color: black;
+  color: white;
   width: 100% !important;
   position: fixed;
   grid-row: 1 / 2;
   z-index: 1;
 
+  a {
+    color: white !important;
+  }
+
   .dropdown-item {
+    color: black !important;
+
     &:focus {
       background-color: $color-sky;
     }
@@ -408,10 +414,8 @@ img {
   .midContainer {
     grid-column: 1 / 4;
   }
-}
-
-@media (max-width: 1400px) {
-  .pageContainer {
-    grid-column: 1 / 4;
+  
+  .leftContainer, .rightContainer {
+    display: none;
   }
 }

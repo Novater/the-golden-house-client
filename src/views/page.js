@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import Table from '../components/table';
 import _generate from '../functions/index';
 import BannerImg from '../assets/banner-image-tgh-2.png';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 
 export default class Page extends Component {
   constructor (props) {
@@ -78,7 +79,12 @@ export default class Page extends Component {
         </div>
         <div className='midContainer'>
           <div className='blog-section'>
-            <img className='banner-img' src={ BannerImg } alt='banner'></img>
+            <LazyLoadImage
+              src= { BannerImg }
+              className='banner-img'
+              effect='opacity'
+              alt='banner'
+            />
               {
                 isHomeTab ? 
                 <div className='welcome-banner'>
