@@ -81,7 +81,7 @@ export default class Navbar extends Component {
           </div>
         </div>
         <div className='edit-icon'>
-          <FontAwesomeIcon icon={faEye} onClick={this.props.setEditMode} />
+          <FontAwesomeIcon title='Toggle Edit' icon={faEye} onClick={this.props.setEditMode} />
         </div>
       </nav> 
     );
