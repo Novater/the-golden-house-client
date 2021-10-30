@@ -69,9 +69,8 @@ export default class Table extends Component {
 
   // This will display the table with all records
   render = () => {
-    console.log('state', this.state);
 
-    let headers = ['Version', 'Floor', 'Time', 'Alias', 'Region', 'Link', 'Characters', 'Notes'];
+    let headers = ['Rank', 'Version', 'Floor', 'Time', 'Alias', 'Region', 'Link', 'Characters', 'Notes'];
     let filters = ['12-1-1', '12-1-2', '12-2-1', '12-2-2', '12-3-1', '12-3-2', '12-1', '12-2', '12-3'];
 
     filters = _generate.tableFunctions.initializeTableFilters('table-filters', filters, this.filterTableByFloor);

@@ -77,15 +77,18 @@ export default class Page extends Component {
         <div className='leftContainer'>
         </div>
         <div className='midContainer'>
-          {
-            isHomeTab ?
-              <div className='blog-section'>
-                <img src={ BannerImg }></img>
-                <h3>Welcome to the Golden House!</h3>
-                <a href='#'>Click here to join our discord server!</a>
-              </div>
-              : ''
-          }
+          <div className='blog-section'>
+            <img className='banner-img' src={ BannerImg } alt='banner'></img>
+              {
+                isHomeTab ? 
+                <div className='welcome-banner'>
+                  <h1>Welcome to the Golden House</h1>
+                  <a href='#'>Click here to join our discord server!</a>
+                </div>
+                : ''
+              }
+
+          </div>
           { 
             this.state.posts.length > 0 ? 
               this.state.posts.map(post => { 

@@ -2,7 +2,7 @@ import { React, Component } from 'react';
 
 import 'bootstrap/dist/css/bootstrap.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faPenFancy } from '@fortawesome/free-solid-svg-icons';
 import { NavLink } from 'react-router-dom';
 
 export default class Navbar extends Component {
@@ -17,6 +17,12 @@ export default class Navbar extends Component {
 
   componentDidMount = () => {
 
+  }
+
+  componentWillReceiveProps = (props) => {
+    this.setState({
+      isEdit: props.isEdit
+    });
   }
 
   render = () => {
@@ -81,7 +87,9 @@ export default class Navbar extends Component {
           </div>
         </div>
         <div className='edit-icon'>
-          <FontAwesomeIcon title='Toggle Edit' icon={faEye} onClick={this.props.setEditMode} />
+          { this.state.isEdit ?
+            <FontAwesomeIcon title='Toggle Edit' icon={faEye} onClick={this.props.setEditMode} /> : <FontAwesomeIcon title='Toggle Edit' icon={faPenFancy} onClick={this.props.setEditMode} />
+          }
         </div>
       </nav> 
     );

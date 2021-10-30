@@ -1,7 +1,12 @@
 $color-sky: #CAEBF2;
 $color-carbon: #A9A9A9;
+$color-dark-grey: #A2A3A4;
 $color-watermelon: #FF3B3F;
 $color-neutral: #EFEFEF;
+$color-gold: #C9B037;
+$color-silver: #D7D7D7;
+$color-bronze: #AD8A56;
+$color-opaque-black: rgb(0 0 0 / 0.6);
 $height-nav: 60px;
 
 body, html {
@@ -26,15 +31,15 @@ body, html {
   min-height: calc(100vh - $height-nav);
   display: grid;
   grid-template-rows: 1fr;
-  grid-template-columns: 1fr 4fr 1fr;
-  background-color: $color-neutral;
+  grid-template-columns: 1fr 8fr 1fr;
+  background-color: $color-dark-grey;
   overflow: hidden;
   grid-row: 2 / 4;
   grid-column: 1 / 4;
 }
 
 .leftContainer {
-  background: rgb(0 0 0 / 0.1);
+  background: $color-dark-grey;
 }
 
 .midContainer {
@@ -46,7 +51,7 @@ body, html {
 }
 
 .rightContainer {
-  background: rgb(0 0 0 / 0.1);
+  background: $color-dark-grey;
 }
 .main-nav {
   background-color: $color-sky;
@@ -78,25 +83,28 @@ body, html {
 }
 
 .blog-section {
-  width: 80%;
+  width: 100%;
   height: auto;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  text-align: center;
 }
 
 img {
   width: 100%;
   height: auto;
 }
+
 .banner-img {
-  width: inherit;
-  height: 400px;
-  background-image: url('../assets/banner-image-tgh.png');
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
-  background-color: $color-sky;
+  width: 80%;
+  height: auto;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  opacity: 0.4;
 }
 
 .table-container {
@@ -110,16 +118,37 @@ img {
   width: 80%;
   display: grid;
   place-items: center;
-  overflow: scroll;
+  overflow: auto;
+  z-index: 1;
+
+  &::-webkit-scrollbar-track {
+    background-color: $color-neutral;
+    opacity: 0;
+    border-radius: 100px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-image: linear-gradient(180deg, $color-sky 50%, rgb(255 255 255 / 0));
+    box-shadow: inset 2px 2px 5px 0 rgba(#FFF, 0.5);
+    border-radius: 100px;
+  }
+
+  &::-webkit-scrollbar {
+    width: 15px;
+  }
 }
 
 .blog-post {
   width: 80%;
-  padding: 20px;
+  padding-top: 25px;
+  padding-bottom: 25px;
+  padding-left: 20px;
+  padding-right: 20px;
   margin-top: 20px;
   margin-bottom: 10px;
   height: auto;
-  background-color: white;
+  background-color: $color-opaque-black;
+  color: $color-neutral;
   border-radius: 5px;
   box-shadow: 0px 0px 2px 2px rgb(0 0 0 / 0.15);
   white-space: pre-line;
@@ -137,6 +166,8 @@ img {
 
   .edit {
     color: $color-carbon;
+    flex-shrink: 0;
+
     svg {
       margin-right: 10px;
     }
@@ -184,6 +215,8 @@ img {
     background: rgb(0 0 0 / 0.2);
     display: grid;
     place-items: center;
+    padding-top: 5px;
+    padding-bottom: 5px;
 
     &:hover {
       background: $color-sky;
@@ -194,11 +227,13 @@ img {
   .new-post-above {
     left: 0;
     top: 0;
+    margin-bottom: 5px;
   }
 
   .new-post-below {
     left: 0;
     bottom: 0;
+    margin-top: 5px;
   }
 }
 
@@ -209,10 +244,6 @@ img {
   font-family: Arial, Helvetica, sans-serif;
   position: relative;
   text-align: center;
-
-  td {
-    min-width: 100px;
-  }
 }
 
 .leaderboard-row::after {
@@ -227,11 +258,38 @@ img {
 
 .abyss-info-row {
   margin-bottom: 10px;
-  background-color: white;
+  background-color: rgb(0 0 0 / 0.6);
   text-align: center;
 
+  &:hover {
+    background-color: rgb(0 0 0 / 0.8);
+  }
+
   td {
-    min-width: 100px;
+    position: relative !important;
+    color: $color-neutral !important;
+
+    .rank-col {
+      font-weight: bold;
+      height: 40px;
+      line-height: 40px;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background-color: $color-watermelon;
+      color: black;
+    }
+
+    #rank-1 {
+      background-color: $color-gold;
+    }
+
+    #rank-2 {
+      background-color: $color-silver;
+    }
+
+    #rank-3 {
+      background-color: $color-bronze;
+    }
   }
 }
 
@@ -266,7 +324,7 @@ img {
   display: grid;
   place-items: center;
   height: fit-content;
-  transform: translate(0, -50%);
+  transform: translate(-50%, -50%);
 
   svg {
     font-size: 25px;
@@ -279,8 +337,25 @@ img {
   }
 }
 
+.welcome-banner {
+  margin-top: 20px;
+  color: $color-sky;
+}
+
 @media (max-width: 900px) {
   .abyss-table, .filter-container, .search-container {
+    width: 100%;
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .abyss-table, .filter-container, .search-container {
+    width: 90%;
+    font-size: 11px;
+  }
+
+  .banner-img {
     width: 100%;
   }
 }
