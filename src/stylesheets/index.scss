@@ -40,6 +40,8 @@ body, html {
 
 .leftContainer {
   background: $color-dark-grey;
+  grid-column: 1 / 2;
+  grid-row: 1 / 4;
 }
 
 .midContainer {
@@ -48,10 +50,13 @@ body, html {
   justify-content: flex-start;
   align-items: center;
   grid-column: 2 / 3;
+  grid-row: 1 / 4;
 }
 
 .rightContainer {
   background: $color-dark-grey;
+  grid-column: 3 / 4;
+  grid-row: 1 / 4;
 }
 .main-nav {
   background-color: $color-sky;
@@ -278,7 +283,7 @@ img {
     &:hover {
       color: $color-gold !important;
     }
-    
+
     .rank-col {
       font-weight: bold;
       height: 40px;
@@ -377,6 +382,10 @@ img {
 
   .banner-img {
     width: 100%;
+  }
+
+  .midContainer {
+    grid-column: 1 / 4;
   }
 }
 
