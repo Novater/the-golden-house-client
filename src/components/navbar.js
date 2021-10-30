@@ -77,11 +77,11 @@ export default class Navbar extends Component {
                   Partners
                 </NavLink>
               </li>
-              <li className="nav-item edit-icon">
-                <FontAwesomeIcon icon={faEye} onClick={this.props.setEditMode} />
-              </li>
             </ul>
           </div>
+        </div>
+        <div className='edit-icon'>
+          <FontAwesomeIcon icon={faEye} onClick={this.props.setEditMode} />
         </div>
       </nav> 
     );
