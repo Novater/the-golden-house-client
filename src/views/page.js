@@ -3,6 +3,7 @@ import BlogSection from '../components/blogSection';
 import React, { Component } from 'react';
 import Table from '../components/table';
 import _generate from '../functions/index';
+import BannerImg from '../assets/banner-image-tgh.png';
 
 export default class Page extends Component {
   constructor (props) {
@@ -67,7 +68,6 @@ export default class Page extends Component {
   }
 
   // This will display the table with all records
-
   render = () => {
     const isTableTab = this.state.tabName === 'table';
     const isHomeTab = this.state.tabName === 'home';
@@ -80,8 +80,7 @@ export default class Page extends Component {
           {
             isHomeTab ?
               <div className='blog-section'>
-                <div className='banner-img'>
-                </div>
+                <img src={ BannerImg }></img>
                 <h3>Welcome to the Golden House!</h3>
                 <a href='#'>Click here to join our discord server!</a>
               </div>
