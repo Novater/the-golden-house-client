@@ -10,7 +10,7 @@ export default class createFunctions {
         </Modal.Header>
         <Modal.Body>{content}</Modal.Body>
         <Modal.Footer>
-          <button className='btn btn-secondary'onClick={closeFunc}>
+          <button className='btn btn-secondary' onClick={closeFunc}>
             Cancel
           </button>
           <button className='btn btn-primary' onClick={saveFunc}>

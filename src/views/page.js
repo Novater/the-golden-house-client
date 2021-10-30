@@ -88,20 +88,32 @@ export default class Page extends Component {
               : ''
           }
           { 
-            this.state.posts.map(post => { 
-              return (
-                <BlogSection 
-                  title={post.title} 
-                  content={post.content} 
-                  index={post.index} 
-                  key={post._id} 
-                  id={post._id} 
-                  updatePosts={this.updatePosts} 
-                  isEdit={this.state.isEdit}
-                  tabName={this.state.tabName}
-                />
-              );
-            })
+            this.state.posts.length > 0 ? 
+              this.state.posts.map(post => { 
+                return (
+                  <BlogSection 
+                    title={post.title} 
+                    content={post.content} 
+                    index={post.index} 
+                    key={post._id} 
+                    id={post._id} 
+                    updatePosts={this.updatePosts} 
+                    isEdit={this.state.isEdit}
+                    tabName={this.state.tabName}
+                  />
+                );
+             }) : 
+            this.state.isEdit ? 
+              <BlogSection 
+                title="Looks like you don't have any posts on this page yet..."
+                content="" 
+                index=""
+                id="" 
+                updatePosts={this.updatePosts}
+                isEdit={this.state.isEdit}
+                tabName={this.state.tabName}
+              />
+              : ''
           }
           {
             isTableTab ? <Table tableType='abyss'/> : ''

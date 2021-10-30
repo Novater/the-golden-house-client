@@ -17,7 +17,8 @@ export default class BlogSection extends Component {
       loadedContent: props.content,
       isEdit: this.props.isEdit,
       isEditMode: false,
-      showModal: false
+      showCreateModal: false,
+      showDeleteModal: false
     };
   };
 
@@ -40,6 +41,10 @@ export default class BlogSection extends Component {
   }
 
   createNewPost = () => {
+    this.setState({ showCreateModal: true });
+  }
+
+  confirmCreate = () => {
     const SERVER_URL = _generate.serverFunctions.getServerURL();
 
     axios
@@ -51,6 +56,7 @@ export default class BlogSection extends Component {
       .then((response) => {
         console.log(response);
         this.props.updatePosts();
+        this.setState({ showCreateModal: false });
       })
       .catch((err) => {
         console.log(err);
@@ -58,7 +64,7 @@ export default class BlogSection extends Component {
   }
 
   deleteBlogPost = () => {
-    this.setState({ showModal: true });
+    this.setState({ showDeleteModal: true });
   }
 
   confirmDelete = () => {
@@ -78,8 +84,12 @@ export default class BlogSection extends Component {
       });
   }
 
-  handleClose = () => {
-    this.setState({ showModal: false });
+  handleCloseCreate = () => {
+    this.setState({ showCreateModal: false });
+  }
+
+  handleCloseDelete = () => {
+    this.setState({ showDeleteModal: false });
   }
   editBlogPost = () => {
     this.setState({ isEditMode: true });
@@ -138,7 +148,10 @@ export default class BlogSection extends Component {
             : ''
         }
         {
-          _generate.createFunctions.createModal('Confirmation', 'Are you sure you want to delete this post?', this.state.showModal, this.confirmDelete, this.handleClose)
+          _generate.createFunctions.createModal('Confirm', 'Create a new post?', this.state.showCreateModal, this.confirmCreate, this.handleCloseCreate)
+        }
+        {
+          _generate.createFunctions.createModal('Confirm', 'Are you sure you want to delete this post?', this.state.showDeleteModal, this.confirmDelete, this.handleCloseDelete)
         }
       </div>
     );
