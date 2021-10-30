@@ -60,7 +60,6 @@ export default class Table extends Component {
   }
 
   filterTableByFloor = (event) => {
-    console.log(event.target.name);
     const floor = event.target.name;
 
     this.setState({
@@ -80,8 +79,12 @@ export default class Table extends Component {
 
     return (
       <div className='table-container'>
-        <input type='text' id='table-search' onKeyUp={this.updateSearch} placeholder='Search Table...' />
-        {filters}
+        <div className='search-container'>
+          <input type='text' id='table-search' onKeyUp={this.updateSearch} placeholder='Search Table...' />
+        </div>
+        <div className='filter-container'>
+          {filters}
+        </div>
         <div className='abyss-table'>
           {_generate.tableFunctions.createTable('table table-hover', headers, this.tableList(), this.state.search)}
         </div>

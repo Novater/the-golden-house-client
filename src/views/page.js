@@ -9,7 +9,9 @@ export default class Page extends Component {
     super(props);
     this.state = {
       tabName: '',
-      posts: []
+      posts: [],
+      isEdit: this.props.isEdit,
+      isEditMode: this.props.isEditMode
     };
   }
 
@@ -31,8 +33,17 @@ export default class Page extends Component {
     });
   }
 
+  componentWillReceiveProps = (props) => {
+    console.log('receiving props', props);
+    this.setState({ 
+      isEdit: props.isEdit,
+      isEditMode: props.isEditMode
+    });
+  }
+
   updatePosts = () => {
     let SERVER_URL = _generate.serverFunctions.getServerURL();
+    console.log('updating posts');
     axios
     .get(`${SERVER_URL || 'https://calm-plains-52439.herokuapp.com'}/post/${this.state.tabName}`)
     .then((response) => {
@@ -55,9 +66,6 @@ export default class Page extends Component {
     );
   }
 
-  generateTablePage = () => {
-
-  }
   // This will display the table with all records
 
   render = () => {
@@ -80,7 +88,21 @@ export default class Page extends Component {
               : ''
           }
           { 
-            this.state.posts.map(post => { return (<BlogSection title={post.title} content={post.content} key={post._id} id={post._id} updatePosts={this.updatePosts} />) })}
+            this.state.posts.map(post => { 
+              return (
+                <BlogSection 
+                  title={post.title} 
+                  content={post.content} 
+                  index={post.index} 
+                  key={post._id} 
+                  id={post._id} 
+                  updatePosts={this.updatePosts} 
+                  isEdit={this.state.isEdit}
+                  tabName={this.state.tabName}
+                />
+              );
+            })
+          }
           {
             isTableTab ? <Table tableType='abyss'/> : ''
           }

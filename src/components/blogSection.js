@@ -1,39 +1,67 @@
 import React, { Component } from 'react';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash, faPen } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faPen, faPlus } from '@fortawesome/free-solid-svg-icons';
 import _generate from '../functions/index';
-import ReactDOM from 'react-dom';
 import axios from 'axios';
 
 export default class BlogSection extends Component {
   constructor (props) {
     super(props);
+    console.log(props);
     this.state = {
       id: props.id,
       title: props.title,
       content: props.content,
       loadedTitle: props.title,
       loadedContent: props.content,
-      isEdit: true,
-      editMode: false,
-      deleteMode: false
+      isEdit: this.props.isEdit,
+      isEditMode: false,
+      showModal: false
     };
   };
 
   componentDidMount = () => {
   };
 
+  componentWillReceiveProps = (props) => {
+    this.setState({
+      isEdit: props.isEdit,
+      isEditMode: props.isEditMode
+    });
+  }
+
   cancelSave = () => {
     this.setState({
       title: this.state.loadedTitle,
       content: this.state.loadedContent,
-      editMode: false
+      isEditMode: false
     });
   }
 
+  createNewPost = () => {
+    const SERVER_URL = _generate.serverFunctions.getServerURL();
+
+    axios
+      .post(`${SERVER_URL || 'https://calm-plains-52439.herokuapp.com'}/post/create`,
+      {
+        index: this.props.index,
+        tabname: this.props.tabName
+      })
+      .then((response) => {
+        console.log(response);
+        this.props.updatePosts();
+      })
+      .catch((err) => {
+        console.log(err);
+      });    
+  }
+
   deleteBlogPost = () => {
-    alert(`Trying to delete post ${this.state.id}`);
+    this.setState({ showModal: true });
+  }
+
+  confirmDelete = () => {
     const SERVER_URL = _generate.serverFunctions.getServerURL();
 
     axios
@@ -50,8 +78,11 @@ export default class BlogSection extends Component {
       });
   }
 
+  handleClose = () => {
+    this.setState({ showModal: false });
+  }
   editBlogPost = () => {
-    this.setState({ editMode: true });
+    this.setState({ isEditMode: true });
   }
 
   getBlogEditMode = () => {
@@ -82,6 +113,11 @@ export default class BlogSection extends Component {
   getBlogViewMode = () => {
     return (
       <div className='blog-post' id={this.state.id}>
+        {
+          this.state.isEdit ? 
+            <div className='new-post-above' onClick={this.createNewPost}><FontAwesomeIcon icon={faPlus} /></div>
+            : ''
+        }
         <div className='header'>
           <h4 dangerouslySetInnerHTML={{ __html: this.state.title }}></h4>
           {
@@ -96,6 +132,14 @@ export default class BlogSection extends Component {
         <div className='content-area'>
           <p dangerouslySetInnerHTML={{ __html: this.state.content }}></p>
         </div>
+        {
+          this.state.isEdit ? 
+            <div className='new-post-below' onClick={this.createNewPost}><FontAwesomeIcon icon={faPlus} /></div>
+            : ''
+        }
+        {
+          _generate.createFunctions.createModal('Confirmation', 'Are you sure you want to delete this post?', this.state.showModal, this.confirmDelete, this.handleClose)
+        }
       </div>
     );
   }
@@ -146,13 +190,13 @@ export default class BlogSection extends Component {
     this.setState({ 
       loadedTitle: this.state.title,
       loadedContent: this.state.content,
-      editMode: false
+      isEditMode: false
     });
   }
 
   render = () => {
     return (
-      this.state.editMode ? this.getBlogEditMode() : this.getBlogViewMode()
+      this.state.isEditMode ? this.getBlogEditMode() : this.getBlogViewMode()
     );
   }
 }
