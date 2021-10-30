@@ -135,6 +135,14 @@ img {
   &::-webkit-scrollbar {
     width: 15px;
   }
+
+  .abyss-info-row:nth-child(odd) {
+    background-color: $color-opaque-black;
+  }
+
+  .abyss-info-row:nth-child(even) {
+    background-color: rgb(0 0 0 / 0.4);
+  }
 }
 
 .blog-post {
@@ -257,17 +265,20 @@ img {
 
 .abyss-info-row {
   margin-bottom: 10px;
-  background-color: rgb(0 0 0 / 0.6);
   text-align: center;
 
   &:hover {
-    background-color: rgb(0 0 0 / 0.8);
+    background-color: rgb(0 0 0 / 0.9);
   }
 
   td {
     position: relative !important;
     color: $color-neutral !important;
 
+    &:hover {
+      color: $color-gold !important;
+    }
+    
     .rank-col {
       font-weight: bold;
       height: 40px;
@@ -297,6 +308,16 @@ img {
   justify-content: flex-start;
   align-content: center;
   flex-wrap: wrap;
+
+  button {
+    background-color: $color-opaque-black;
+    color: $color-neutral;
+    border-radius: 0 !important;
+
+    &:hover {
+      color: $color-gold;
+    }
+  }
 }
 
 .search-container {
@@ -330,7 +351,7 @@ img {
     color: $color-carbon;
 
     &:hover {
-      color: $color-watermelon;
+      color: $color-gold;
       cursor: pointer;
     }
   }

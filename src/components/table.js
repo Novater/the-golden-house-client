@@ -1,11 +1,17 @@
 import React, { Component } from 'react';
 import _generate from '../functions/index';
+import 'bootstrap/dist/css/bootstrap.css';
 import axios from 'axios';
 
 export default class Table extends Component {
   constructor (props) {
     super(props);
-    this.state = { records: [], search: '', type: props.tableType }
+    this.state = { 
+      records: [],
+      search: '',
+      type: props.tableType,
+      filter: ''
+    };
   }
 
   // This method will get the data from the database
@@ -73,7 +79,7 @@ export default class Table extends Component {
     let headers = ['Rank', 'Version', 'Floor', 'Time', 'Alias', 'Region', 'Link', 'Characters', 'Notes'];
     let filters = ['12-1-1', '12-1-2', '12-2-1', '12-2-2', '12-3-1', '12-3-2', '12-1', '12-2', '12-3'];
 
-    filters = _generate.tableFunctions.initializeTableFilters('table-filters', filters, this.filterTableByFloor);
+    filters = _generate.tableFunctions.initializeTableFilters('table-filters btn-group mr-2', filters, this.filterTableByFloor);
     headers = _generate.tableFunctions.initializeTableHeaders('leaderboard-row', headers, () => { alert('hello')});
 
     return (
@@ -87,6 +93,15 @@ export default class Table extends Component {
         <div className='abyss-table'>
           {_generate.tableFunctions.createTable('table table-hover', headers, this.tableList(), this.state.search)}
         </div>
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+          </ul>
+        </nav>
       </div>
     );
   }

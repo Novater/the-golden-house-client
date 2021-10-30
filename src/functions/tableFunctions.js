@@ -8,10 +8,10 @@ export default class tableFunctions {
    */
   static initializeTableFilters = (filterClass, filters, onClick) => {
     return (
-      <div className={filterClass}>
+      <div className={filterClass} role='group'>
         {
           filters.map(el => {
-            return <button name={el} onClick={onClick}>{el}</button>
+            return <button name={el} className='btn' type='button' onClick={onClick}>{el}</button>
           })
         }
       </div>
