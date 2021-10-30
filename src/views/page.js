@@ -1,10 +1,11 @@
 import axios from 'axios';
-import BlogSection from '../components/blogSection';
-import React, { Component } from 'react';
-import Table from '../components/table';
+import React, { Component, Suspense } from 'react';
 import _generate from '../functions/index';
 import BannerImg from '../assets/banner-image-tgh-2.png';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
+
+const Table = React.lazy(() => import('../components/table'));
+const BlogSection = React.lazy(() => import ('../components/blogSection'));
 
 export default class Page extends Component {
   constructor (props) {
@@ -89,7 +90,6 @@ export default class Page extends Component {
                 isHomeTab ? 
                 <div className='welcome-banner'>
                   <h1>Welcome to the Golden House</h1>
-                  <a href='#'>Click here to join our discord server!</a>
                 </div>
                 : ''
               }
@@ -99,32 +99,40 @@ export default class Page extends Component {
             this.state.posts.length > 0 ? 
               this.state.posts.map(post => { 
                 return (
-                  <BlogSection 
-                    title={post.title} 
-                    content={post.content} 
-                    index={post.index} 
-                    key={post._id} 
-                    id={post._id} 
-                    updatePosts={this.updatePosts} 
-                    isEdit={this.state.isEdit}
-                    tabName={this.state.tabName}
-                  />
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <BlogSection 
+                      title={post.title} 
+                      content={post.content} 
+                      index={post.index} 
+                      key={post._id} 
+                      id={post._id} 
+                      updatePosts={this.updatePosts} 
+                      isEdit={this.state.isEdit}
+                      tabName={this.state.tabName}
+                    />
+                  </Suspense>
                 );
              }) : 
-            this.state.isEdit ? 
-              <BlogSection 
-                title="Looks like you don't have any posts on this page yet..."
-                content="" 
-                index=""
-                id="" 
-                updatePosts={this.updatePosts}
-                isEdit={this.state.isEdit}
-                tabName={this.state.tabName}
-              />
+            this.state.isEdit ?
+              <Suspense fallback={<div>Loading...</div>}>
+                <BlogSection 
+                  title="Looks like you don't have any posts on this page yet..."
+                  content="" 
+                  index=""
+                  id="" 
+                  updatePosts={this.updatePosts}
+                  isEdit={this.state.isEdit}
+                  tabName={this.state.tabName}
+                />
+              </Suspense> 
               : ''
           }
           {
-            isTableTab ? <Table tableType='abyss'/> : ''
+            isTableTab ?
+              <Suspense fallback={<div>Loading...</div>}>
+                <Table tableType='abyss'/> 
+              </Suspense>
+              : ''
           }
         </div>
         <div className='rightContainer'>

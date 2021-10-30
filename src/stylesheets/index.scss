@@ -6,6 +6,7 @@ $color-neutral: #EFEFEF;
 $color-gold: #C9B037;
 $color-silver: #D7D7D7;
 $color-bronze: #AD8A56;
+$color-faded-white: rgb(255 255 255 / 0.3);
 $color-opaque-black: rgb(0 0 0 / 0.6);
 $height-nav: 60px;
 
@@ -71,15 +72,27 @@ body, html {
     color: white !important;
   }
 
+  a:hover {
+    color: $color-gold !important;
+    text-decoration: underline;
+  }
+
+  ul, li {
+    background-color: rgb(0 0 0 / 0.15);
+  }
+
   .dropdown-item {
-    color: black !important;
+    color: white !important;
+    &:hover {
+      background-color: $color-faded-white;
+    }
 
     &:focus {
-      background-color: $color-sky;
+      background-color: $color-faded-white;
     }
   }
   .dropdown-item.active {
-    background-color: $color-sky;
+    background-color: $color-faded-white;
     color: $color-carbon;
   }
 }
@@ -174,10 +187,15 @@ img {
   white-space: pre-line;
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
   .header {
     display: flex;
     justify-content: space-between;
+    width: 100%;
+    color: $color-gold;
   }
 
   textarea {
@@ -208,6 +226,7 @@ img {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    width: 100%;
   }
 
   .form-group {
@@ -239,7 +258,7 @@ img {
     padding-bottom: 5px;
 
     &:hover {
-      background: $color-sky;
+      background: #A9A9A9;
       cursor: pointer;
     }
   }
@@ -391,7 +410,7 @@ img {
 
 .welcome-banner {
   margin-top: 20px;
-  color: $color-sky;
+  color: $color-gold;
 }
 
 @media (max-width: 900px) {
@@ -414,7 +433,7 @@ img {
   .midContainer {
     grid-column: 1 / 4;
   }
-  
+
   .leftContainer, .rightContainer {
     display: none;
   }
