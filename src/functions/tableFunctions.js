@@ -74,14 +74,14 @@ export default class tableFunctions {
     };
 
     let rank = 1;
+
     for (let row of rows) {
       if (search) {
-        console.log(JSON.stringify(row));
-        console.log('search', search);
         if (JSON.stringify(row).toLowerCase().indexOf(search.toLowerCase()) < 0) continue;
       }
 
       row.thisRec.rank = rank++;
+
       tableBuildRows.push(
         <TableEntry 
           className={row.trClass}

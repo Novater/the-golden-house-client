@@ -91,6 +91,7 @@ export default class BlogSection extends Component {
   handleCloseDelete = () => {
     this.setState({ showDeleteModal: false });
   }
+  
   editBlogPost = () => {
     this.setState({ isEditMode: true });
   }
