@@ -3,7 +3,7 @@ import BlogSection from '../components/blogSection';
 import React, { Component } from 'react';
 import Table from '../components/table';
 import _generate from '../functions/index';
-import BannerImg from '../assets/banner-image-tgh.png';
+import BannerImg from '../assets/banner-image-tgh-2.png';
 
 export default class Page extends Component {
   constructor (props) {
