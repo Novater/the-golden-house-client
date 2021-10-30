@@ -27,7 +27,7 @@ export default class Navbar extends Component {
 
   render = () => {
     return (
-      <nav className="navbar navbar-expand-lg navbar-light main-nav">
+      <nav className="navbar navbar-expand-lg bg-dark main-nav">
         <div className="container-fluid">
           <NavLink className="navbar-brand" to="/">
             The Golden House

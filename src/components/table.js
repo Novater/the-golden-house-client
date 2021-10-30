@@ -76,32 +76,39 @@ export default class Table extends Component {
   // This will display the table with all records
   render = () => {
 
-    let headers = ['Rank', 'Version', 'Floor', 'Time', 'Alias', 'Region', 'Link', 'Characters', 'Notes'];
-    let filters = ['12-1-1', '12-1-2', '12-2-1', '12-2-2', '12-3-1', '12-3-2', '12-1', '12-2', '12-3'];
+    let headers = this.props.headers;
+    let filters = this.props.filters;
+    let rowSelectOptions = this.props.rowSelectOptions;
+    let searchable = this.props.searchable;
 
-    filters = _generate.tableFunctions.initializeTableFilters('table-filters btn-group mr-2', filters, this.filterTableByFloor);
-    headers = _generate.tableFunctions.initializeTableHeaders('leaderboard-row', headers, () => { alert('hello')});
+    if (filters) {
+      filters = _generate.tableFunctions.initializeTableFilters('table-filters btn-group mr-2', filters, this.filterTableByFloor);
+    }
+    if (headers) {
+      headers = _generate.tableFunctions.initializeTableHeaders('leaderboard-row', headers, () => { alert('hello')});
+    }
+    
+    let footer = _generate.tableFunctions.initializeTableFooters({
+      footerClass: 'table-footer',
+      rowClass: 'numrows-select',
+      rowOptions: rowSelectOptions
+    });
 
     return (
       <div className='table-container'>
-        <div className='search-container'>
-          <input type='text' id='table-search' onKeyUp={this.updateSearch} placeholder='Search Table...' />
-        </div>
+        {
+          searchable ? 
+          <div className='search-container'>
+            <input type='text' id='table-search' onKeyUp={this.updateSearch} placeholder='Search Table...' />
+          </div> : ''
+        }
         <div className='filter-container'>
           {filters}
         </div>
         <div className='abyss-table'>
           {_generate.tableFunctions.createTable('table table-hover', headers, this.tableList(), this.state.search)}
+          {footer}
         </div>
-        <nav aria-label="Page navigation example">
-          <ul class="pagination">
-            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item"><a class="page-link" href="#">Next</a></li>
-          </ul>
-        </nav>
       </div>
     );
   }

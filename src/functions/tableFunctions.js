@@ -32,6 +32,42 @@ export default class tableFunctions {
     };
   }
 
+  static initializeTableFooters = ({ footerClass, rowOptions, rowClass, paginationClass, paginationValues, paginationFunc }) => {
+
+    let rowOptionEls = [];
+
+    for (let rowOption of rowOptions.rows) {
+      if (rowOption == rowOptions.selected) {
+        rowOptionEls.push(
+          <option selected>{rowOption}</option>
+        );
+      } else {
+        rowOptionEls.push(
+          <option>{rowOption}</option>
+        );
+      }
+    }
+
+    return (
+      <div className={footerClass}>
+        <div className={rowClass}>
+          <p>Rows: </p>
+          <select className='form-select'>
+            {rowOptionEls}
+          </select>
+        </div>
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+          </ul>
+        </nav>
+      </div>
+    );
+  }
   /**
    * @param {*} tableClassName 
    * @param {*} headers 
@@ -74,7 +110,6 @@ export default class tableFunctions {
     };
 
     let rank = 1;
-
     for (let row of rows) {
       if (search) {
         if (JSON.stringify(row).toLowerCase().indexOf(search.toLowerCase()) < 0) continue;
