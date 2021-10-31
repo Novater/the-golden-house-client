@@ -57,10 +57,7 @@ export default class Navbar extends Component {
                   Speedrunning
                 </a>
                 <ul className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                  <li><NavLink className="dropdown-item" to="/leaderboard/abyss">Abyss Leaderboards</NavLink></li>
-                  <li><NavLink className="dropdown-item" to="/leaderboard/boss">Boss Leaderboards</NavLink></li>
-                  <li><NavLink className="dropdown-item" to="/leaderboard/domain">Domain Leaderboards</NavLink></li>
-                  <li><NavLink className="dropdown-item" to="/leaderboard/event">Event Leaderboards</NavLink></li>
+                  <li><NavLink className="dropdown-item" to="/leaderboard">Leaderboards</NavLink></li>
                 </ul>
               </li>
               <li className="nav-item dropdown">

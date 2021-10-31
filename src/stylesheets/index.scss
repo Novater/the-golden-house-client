@@ -26,6 +26,15 @@ body, html {
   grid-template-columns: 1fr 4fr 1fr;
 }
 
+.spinner-container {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 200px;
+  margin: 50px;
+  background-color: $color-opaque-black;
+}
+
 .pageContainer {
   margin-top: -5px;
   height: fit-content;
@@ -157,6 +166,19 @@ img {
   display: grid;
   place-items: center;
   overflow: auto;
+
+  th {
+    cursor: pointer;
+  }
+
+  svg {
+    font-size: 12px;
+  }
+
+  th::after {
+    content: '';
+
+  }
 
   &::-webkit-scrollbar-track {
     background-color: $color-neutral;

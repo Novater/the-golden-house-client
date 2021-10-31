@@ -9,8 +9,10 @@ export default class Table extends Component {
     this.state = { 
       records: [],
       search: '',
+      sortKey: this.props.defaultSortKey,
+      sortDir: this.props.defaultSortDir || 1,
       type: props.tableType,
-      filter: props.rowSelectOptions ? props.rowSelectOptions.selected : '',
+      filter: this.props.rowSelectOptions ? this.props.rowSelectOptions.selected : '',
       rowSelectOptions: props.rowSelectOptions,
       currRowIndex: 0
     };
@@ -18,28 +20,32 @@ export default class Table extends Component {
 
   // This method will get the data from the database
   componentDidMount = () => {
-
     const storedData = window.sessionStorage.getItem(this.state.type);
 
     if (!storedData) {
       axios
       .get(`${process.env.SERVER_URL || 'https://calm-plains-52439.herokuapp.com'}/record`)
       .then((response) => {
-        console.log(response);
-        this.setState({ 
-          records: response.data,
-          search: ''
-        });
-        window.sessionStorage.setItem(this.state.type, JSON.stringify(response.data));
+        if (this.state.sortKey) {
+          this.sortTable(this.state.sortKey, this.state.sortDir || 1, response.data);
+        } else {
+          this.setState({
+            records: response.data
+          });
+        }
+        window.sessionStorage.setItem(this.state.type, JSON.stringify(this.state.records));
       })
       .catch((error) => {
         console.log(error);
       });
     } else {
-      this.setState({
-        records: JSON.parse(storedData),
-        search: ''
-      });
+      if (this.state.sortKey) {
+        this.sortTable(this.state.sortKey, this.state.sortDir || 1, JSON.parse(storedData));
+      } else {
+        this.setState({
+          records: JSON.parse(storedData)
+        });
+      }
     }
   }
 
@@ -47,14 +53,7 @@ export default class Table extends Component {
   }
 
   tableList = () => {
-    const copiedRecords = [...this.state.records];
-    copiedRecords.sort((a, b) => {
-      if (a.time > b.time) return 1;
-      if (a.time === b.time) return 0;
-      return -1;
-    });
-
-    return copiedRecords.map((thisRec) => {
+    return this.state.records.map((thisRec) => {
       return (
         {
           thisRec: thisRec,
@@ -86,9 +85,71 @@ export default class Table extends Component {
     });
   }
   
+  sortByKey = (event) => {
+    const headerName = event.target.getAttribute('name');
+    
+    if (this.state.sortKey === headerName) {
+      this.sortTable(headerName, this.state.sortDir * -1, [...this.state.records]);
+    } else {
+      this.sortTable(headerName, 1, [...this.state.records]);
+    }
+  }
+
+  sortTable = (sortKey, sortDirection, records) => {
+    let headerObj;
+    const headers = this.props.headers;
+    console.log(sortDirection);
+
+    for (let i = 0; i < headers.length; i += 1) {
+      if (headers[i].title === sortKey) headerObj = headers[i];
+    }
+
+    if (!headerObj) return;
+
+    const format = headerObj.format;
+    const keys = headerObj.keys;
+
+    for (let i = 0; i < records.length; i += 1) {
+      let stringRep = format;
+      for (const key of keys) {
+        stringRep = stringRep.replace(`{${key}}`, records[i][key]);
+      }
+      records[i].sortString = stringRep;
+    }
+
+    records.sort((a, b) => {
+      if (a.sortString > b.sortString) return 1 * sortDirection;
+      if (a.sortString === b.sortString) {
+        return 0;
+      }
+      return -1 * sortDirection;
+    });
+
+    console.log(records);
+
+    this.setState({
+      records: records,
+      sortDir: sortDirection,
+      sortKey: sortKey
+    });
+  }
+
+  updateRanks = () => {
+    const copiedRecs = [...this.state.records];
+
+    for (let i = 0; i < copiedRecs.length; i += 1) {
+      copiedRecs[i].rank = i + 1;
+    }
+    console.log(copiedRecs);
+    this.setState({
+      records: copiedRecs
+    });
+  }
+
   // This will display the table with all records
   render = () => {
-
+    console.log(this.state);
+    console.log(this.props);
     let headers = this.props.headers;
     let filters = this.props.filters;
     let searchable = this.props.searchable;
@@ -97,7 +158,7 @@ export default class Table extends Component {
       filters = _generate.tableFunctions.initializeTableFilters('table-filters btn-group mr-2', filters, this.filterTableByFloor);
     }
     if (headers) {
-      headers = _generate.tableFunctions.initializeTableHeaders('leaderboard-row', headers, () => { alert('hello')});
+      headers = _generate.tableFunctions.initializeTableHeaders('leaderboard-row', headers, this.sortByKey);
     }
     
     let footerObj = {

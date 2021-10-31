@@ -6,12 +6,6 @@ export default class ContentEditor extends Component {
     super(props);
   }
 
-  componentDidMount = () => {
-  }
-
-  componentDidUpdate = () => {
-  }
-
   render = () => {
     return (
       <Editor

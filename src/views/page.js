@@ -3,15 +3,17 @@ import React, { Component, Suspense } from 'react';
 import _generate from '../functions/index';
 import BannerImg from '../assets/banner-image-tgh-2.png';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
+import LoadingSpinner from '../components/loadingspinner';
 
 const Table = React.lazy(() => import('../components/table'));
-const BlogSection = React.lazy(() => import ('../components/blogsection'));
+const BlogSection = React.lazy(() => import('../components/blogsection'));
+
+const config = require('../config/index');
 
 export default class Page extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      tabName: '',
       posts: [],
       isEdit: this.props.isEdit,
       isEditMode: this.props.isEditMode
@@ -47,9 +49,8 @@ export default class Page extends Component {
 
   updatePosts = () => {
     let SERVER_URL = _generate.serverFunctions.getServerURL();
-    console.log('updating posts');
     axios
-    .get(`${SERVER_URL || 'https://calm-plains-52439.herokuapp.com'}/post/${this.state.tabName}`)
+    .get(`${SERVER_URL || 'https://calm-plains-52439.herokuapp.com'}/post/${this.props.tabName}`)
     .then((response) => {
       console.log(response);
       this.setState({ 
@@ -70,60 +71,59 @@ export default class Page extends Component {
     );
   }
 
-  createAbyssTableHeaders = () => {
-    let headers = [];
-    let header;
-    header = _generate.tableFunctions.createHeaderDataMapping({
-      title: 'Rank',
-      format: '{rank}'
-    }, 'rank');
-    headers.push(header);
-    header = _generate.tableFunctions.createHeaderDataMapping({
-      title: 'Version',
-      format: '{version}'
-    }, 'version');
-    headers.push(header);
-    header = _generate.tableFunctions.createHeaderDataMapping({
-      title: 'Floor',
-      format: '{floor}'
-    }, 'floor');
-    headers.push(header);
-    header = _generate.tableFunctions.createHeaderDataMapping({
-      title: 'Time',
-      format: '{time}'
-    }, 'time');
-    headers.push(header);
-    header = _generate.tableFunctions.createHeaderDataMapping({
-      title: 'Alias',
-      format: '{alias}'
-    }, 'alias');
-    headers.push(header);
-    header = _generate.tableFunctions.createHeaderDataMapping({
-      title: 'Region',
-      format: '{region}'
-    }, 'region');
-    headers.push(header);
-    header = _generate.tableFunctions.createHeaderDataMapping({
-      title: 'Characters',
-      format: '{characters}'
-    }, 'characters');
-    headers.push(header);
-    header = _generate.tableFunctions.createHeaderDataMapping({
-      title: 'Notes',
-      format: '{notes}'
-    }, 'notes');
-    headers.push(header);
-
-    return headers;
+  renderBackdrop = (image) => {
+    return (
+      <LazyLoadImage
+        src= { image }
+        className='banner-img'
+        effect='opacity'
+        alt='banner'
+      />
+    )
+  }
+  
+  renderPosts = () => {
+    return (
+      this.state.posts.length > 0 ? 
+        this.state.posts.map(post => { 
+          return (
+            <Suspense key={post._id} fallback={<LoadingSpinner />}>
+              <BlogSection 
+                title={post.title} 
+                content={post.content} 
+                index={post.index} 
+                key={post._id} 
+                id={post._id} 
+                updatePosts={this.updatePosts} 
+                isEdit={this.state.isEdit}
+                tabName={this.props.tabName}
+              />
+            </Suspense>
+          );
+        }) : 
+      this.state.isEdit ?
+        <Suspense key="" fallback={<LoadingSpinner />}>
+          <BlogSection 
+            title="Looks like you don't have any posts on this page yet..."
+            content="" 
+            index=""
+            id=""
+            key=""
+            updatePosts={this.updatePosts}
+            isEdit={this.state.isEdit}
+            tabName={this.props.tabName}
+          />
+        </Suspense> 
+        : ''
+    );
   }
 
   // This will display the table with all records
   render = () => {
-    const isTableTab = this.state.tabName === 'table';
-    const isHomeTab = this.state.tabName === 'home';
+    const isTableTab = this.props.tabName === 'table';
 
     let rowSelectOptions = { rows: [25, 50, 100], selected: 100 };
-    let abyssHeaders = this.createAbyssTableHeaders();
+    let abyssHeaders = config.abyssTableHeaderKeys;
     let abyssFilters = ['12-1-1', '12-1-2', '12-2-1', '12-2-2', '12-3-1', '12-3-2', '12-1', '12-2', '12-3'];
 
     return (
@@ -132,58 +132,21 @@ export default class Page extends Component {
         </div>
         <div className='midContainer'>
           <div className='blog-section'>
-            <LazyLoadImage
-              src= { BannerImg }
-              className='banner-img'
-              effect='opacity'
-              alt='banner'
-            />
-              {
-                isHomeTab ? 
-                <div className='welcome-banner'>
-                  <h1>Welcome to the Golden House</h1>
-                </div>
-                : ''
-              }
-
+            { this.renderBackdrop(this.props.backgroundImage) }
+            <div className='welcome-banner'>
+              <h1>{this.props.title}</h1>
+            </div>
           </div>
           { 
-            this.state.posts.length > 0 ? 
-              this.state.posts.map(post => { 
-                return (
-                  <Suspense fallback={<div>Loading...</div>}>
-                    <BlogSection 
-                      title={post.title} 
-                      content={post.content} 
-                      index={post.index} 
-                      key={post._id} 
-                      id={post._id} 
-                      updatePosts={this.updatePosts} 
-                      isEdit={this.state.isEdit}
-                      tabName={this.state.tabName}
-                    />
-                  </Suspense>
-                );
-             }) : 
-            this.state.isEdit ?
-              <Suspense fallback={<div>Loading...</div>}>
-                <BlogSection 
-                  title="Looks like you don't have any posts on this page yet..."
-                  content="" 
-                  index=""
-                  id="" 
-                  updatePosts={this.updatePosts}
-                  isEdit={this.state.isEdit}
-                  tabName={this.state.tabName}
-                />
-              </Suspense> 
-              : ''
+            this.renderPosts()
           }
           {
             isTableTab ?
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<LoadingSpinner />}>
                 <Table 
                   tableType='abyss'
+                  defaultSortKey='Time'
+                  defaultSortDir={1}
                   headers={abyssHeaders}
                   filters={abyssFilters}
                   searchable={true}

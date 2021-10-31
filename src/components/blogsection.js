@@ -6,6 +6,8 @@ import ContentEditor from './contenteditor';
 import _generate from '../functions/index';
 import axios from 'axios';
 
+const config = require('../config/index');
+
 export default class BlogSection extends Component {
   constructor (props) {
     super(props);
@@ -137,7 +139,7 @@ export default class BlogSection extends Component {
             : ''
         }
         <div className='header'>
-          <h4 dangerouslySetInnerHTML={{ __html: this.state.title }}></h4>
+          <h4 dangerouslySetInnerHTML={{ __html: _generate.cleanHTML.clean(this.state.title, config.allowedTags, config.allowedAttr) }}></h4>
           {
             this.state.isEdit ? 
               <div className='edit'>
@@ -148,7 +150,7 @@ export default class BlogSection extends Component {
           }
         </div>
         <div className='content-area'>
-          <p dangerouslySetInnerHTML={{ __html: this.state.content }}></p>
+          <p dangerouslySetInnerHTML={{ __html: _generate.cleanHTML.clean(this.state.content, config.allowedTags, config.allowedAttr) }}></p>
         </div>
         {
           this.state.isEdit ? 
@@ -179,6 +181,7 @@ export default class BlogSection extends Component {
   handleEditorChange = (content) => {
     this.setState({ content: content });
   }
+
   handleChange = (event) => {
     const thisName = event.target.id;
     console.log('handlechange');

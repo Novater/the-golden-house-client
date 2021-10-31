@@ -1,3 +1,6 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
+
 export default class tableFunctions {
 
   /**
@@ -6,17 +9,12 @@ export default class tableFunctions {
    * @param  {...any} keys 
    * @returns 
    */
-  static createHeaderDataMapping = ({ title, format }, ...keys) => {
-    let keySet = [];
-
-    for (let key of keys) {
-      keySet.push(key);
-    }
+  static createHeaderDataMapping = ({ title, format, keys }) => {
 
     return {
       title,
       format,
-      keys: keySet
+      keys
     };
   }
 
@@ -66,30 +64,24 @@ export default class tableFunctions {
       let paginationEls = [];
 
       for (let rowOption of rowOptions.rows) {
-        if (rowOption == rowOptions.selected) {
-          rowOptionEls.push(
-            <option selected>{rowOption}</option>
-          );
-        } else {
-          rowOptionEls.push(
-            <option>{rowOption}</option>
-          );
-        }
+        rowOptionEls.push(
+          <option>{rowOption}</option>
+        );
       }
       
       let numPages = rowOptions.selected ? Math.ceil(numRows / rowOptions.selected) : 1;
 
       if (numPages > 1) {
         paginationEls.push(
-          <li class='page-item'><a class='page-link' onClick={paginationFunc}>Previous</a></li>
+          <li class='page-item'><a class='page-link' href='#' onClick={paginationFunc}>Previous</a></li>
         );
         for (let i = 0; i < numPages; i += 1) {
           paginationEls.push(
-            <li class='page-item'><a class='page-link' onClick={paginationFunc}>{i + 1}</a></li>
+            <li class='page-item'><a class='page-link' href='#' onClick={paginationFunc}>{i + 1}</a></li>
           )
         }
         paginationEls.push(
-          <li class='page-item'><a class='page-link' onClick={paginationFunc}>Next</a></li>
+          <li class='page-item'><a class='page-link' href='#' onClick={paginationFunc}>Next</a></li>
         );
       }
 
@@ -97,7 +89,7 @@ export default class tableFunctions {
         <div className={footerClass}>
           <div className={rowClass}>
             <p>Rows Displayed: </p>
-            <select className='form-select' onChange={onRowUpdate}>
+            <select className='form-select' onChange={onRowUpdate} defaultValue={rowOptions.selected}>
               {rowOptionEls}
             </select>
           </div>
@@ -142,7 +134,6 @@ export default class tableFunctions {
       );
     };
 
-    let rank = 1;
     let maxRows = rows.length;
     rows = rows.slice(currRowIndex);
     let currRow = currRowIndex;
@@ -155,7 +146,6 @@ export default class tableFunctions {
         if (JSON.stringify(row).toLowerCase().indexOf(search.toLowerCase()) < 0) continue;
       }
 
-      row.thisRec.rank = rank++;
       numRows += 1;
 
       tableBuildRows.push(
@@ -184,7 +174,9 @@ export default class tableFunctions {
           <tr className={headers.className} onClick={headers.onClick}>
             {headers.headers.map(header => {
               return (
-                <th>{header.title}</th>
+                <th name={header.title}>
+                  {header.title}
+                </th>
               );
             })}
           </tr>
