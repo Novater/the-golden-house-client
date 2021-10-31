@@ -6,7 +6,6 @@ import axios from 'axios';
 export default class Table extends Component {
   constructor (props) {
     super(props);
-
     this.state = { 
       records: [],
       search: '',
@@ -49,12 +48,14 @@ export default class Table extends Component {
   }
 
   tableList = () => {
-    this.state.records.sort((a, b) => {
+    const copiedRecords = [...this.state.records];
+    copiedRecords.sort((a, b) => {
       if (a.time > b.time) return 1;
+      if (a.time === b.time) return 0;
       return -1;
     });
 
-    return this.state.records.map((thisRec) => {
+    return copiedRecords.map((thisRec) => {
       return (
         {
           thisRec: thisRec,
@@ -77,7 +78,6 @@ export default class Table extends Component {
   }
 
   updateFilter = (event) => {
-    console.log('update filter to', event.target.value);
     this.setState({
       filter: event.target.value,
       rowSelectOptions: {
@@ -86,13 +86,13 @@ export default class Table extends Component {
       }
     });
   }
+  
   // This will display the table with all records
   render = () => {
 
     let headers = this.props.headers;
     let filters = this.props.filters;
     let searchable = this.props.searchable;
-    console.log('headers', this.props.headers);
 
     if (filters) {
       filters = _generate.tableFunctions.initializeTableFilters('table-filters btn-group mr-2', filters, this.filterTableByFloor);
@@ -100,7 +100,6 @@ export default class Table extends Component {
     if (headers) {
       headers = _generate.tableFunctions.initializeTableHeaders('leaderboard-row', headers, () => { alert('hello')});
     }
-    console.log('headers2', headers);
     
     let footerObj = {
       footerClass: 'table-footer',

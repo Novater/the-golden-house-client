@@ -1,5 +1,11 @@
 export default class tableFunctions {
 
+  /**
+   * 
+   * @param {*} param0 
+   * @param  {...any} keys 
+   * @returns 
+   */
   static createHeaderDataMapping = ({ title, format }, ...keys) => {
     let keySet = [];
 
