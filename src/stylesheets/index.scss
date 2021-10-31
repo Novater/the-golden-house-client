@@ -27,6 +27,7 @@ body, html {
 }
 
 .pageContainer {
+  margin-top: -5px;
   height: fit-content;
   min-height: calc(100vh - $height-nav);
   display: grid;
@@ -63,6 +64,7 @@ body, html {
   bottom: 0;
   color: $color-gold;
   margin: 10px;
+  opacity: 0.5;
 }
 
 .rightContainer {
@@ -305,6 +307,8 @@ img {
   .form-select {
     width: fit-content;
     height: fit-content;
+    color: white;
+    background-color: black;
   }
 
   .numrows-select {
@@ -449,6 +453,7 @@ img {
 
   .midContainer::after {
     font-size: 10px;
+    z-index: -1;
   }
 }
 

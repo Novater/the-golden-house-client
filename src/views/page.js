@@ -74,7 +74,7 @@ export default class Page extends Component {
     const isTableTab = this.state.tabName === 'table';
     const isHomeTab = this.state.tabName === 'home';
 
-    let rowSelectOptions = { rows: [5, 10, 25, 50], selected: 10 };
+    let rowSelectOptions = { rows: [25, 50, 100], selected: 100 };
     let headers = ['Rank', 'Version', 'Floor', 'Time', 'Alias', 'Region', 'Link', 'Characters', 'Notes'];
     let filters = ['12-1-1', '12-1-2', '12-2-1', '12-2-2', '12-3-1', '12-3-2', '12-1', '12-2', '12-3'];
 

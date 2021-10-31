@@ -44,7 +44,7 @@ export default class Navbar extends Component {
           <span className="navbar-toggler-icon"></span>
           </button>
   
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav ml-auto">
               <li className="nav-item">
                 <NavLink className="nav-link" to="/about">
@@ -55,7 +55,7 @@ export default class Navbar extends Component {
                 <a className="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   Speedrunning
                 </a>
-                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <ul className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                   <li><NavLink className="dropdown-item" to="/leaderboard/abyss">Abyss Leaderboards</NavLink></li>
                   <li><NavLink className="dropdown-item" to="/leaderboard/boss">Boss Leaderboards</NavLink></li>
                   <li><NavLink className="dropdown-item" to="/leaderboard/domain">Domain Leaderboards</NavLink></li>
@@ -66,7 +66,7 @@ export default class Navbar extends Component {
                 <a className="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   DPS
                 </a>
-                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <ul className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                   <li><NavLink className="dropdown-item" to="/dps/abyss">Abyss</NavLink></li>
                   <li><NavLink className="dropdown-item" to="/dps/events">Events</NavLink></li>
                   <li><NavLink className="dropdown-item" to="/dps/openworld">Open World</NavLink></li>

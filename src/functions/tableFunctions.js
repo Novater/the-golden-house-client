@@ -32,42 +32,6 @@ export default class tableFunctions {
     };
   }
 
-  static initializeTableFooters = ({ footerClass, rowOptions, rowClass, paginationClass, paginationValues, paginationFunc }) => {
-
-    let rowOptionEls = [];
-
-    for (let rowOption of rowOptions.rows) {
-      if (rowOption == rowOptions.selected) {
-        rowOptionEls.push(
-          <option selected>{rowOption}</option>
-        );
-      } else {
-        rowOptionEls.push(
-          <option>{rowOption}</option>
-        );
-      }
-    }
-
-    return (
-      <div className={footerClass}>
-        <div className={rowClass}>
-          <p>Rows: </p>
-          <select className='form-select'>
-            {rowOptionEls}
-          </select>
-        </div>
-        <nav aria-label="Page navigation example">
-          <ul class="pagination">
-            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item"><a class="page-link" href="#">Next</a></li>
-          </ul>
-        </nav>
-      </div>
-    );
-  }
   /**
    * @param {*} tableClassName 
    * @param {*} headers 
@@ -76,7 +40,59 @@ export default class tableFunctions {
    * @description The columns of the table are defined by the headers
    * @returns Table JSX
    */
-  static createTable = (tableClassName, headers, rows, search) => {
+  static createTable = (tableClassName, headers, rows, search, currRowIndex, rowFilter, footerObj) => {
+
+    function initializeTableFooters({ footerClass, rowOptions, rowClass, onRowUpdate, paginationClass, paginationValues, paginationFunc, numRows }) {
+      console.log('numRows', numRows);
+      console.log('rowOptions.selected', rowOptions.selected);
+      let rowOptionEls = [];
+      let paginationEls = [];
+
+      for (let rowOption of rowOptions.rows) {
+        if (rowOption == rowOptions.selected) {
+          rowOptionEls.push(
+            <option selected>{rowOption}</option>
+          );
+        } else {
+          rowOptionEls.push(
+            <option>{rowOption}</option>
+          );
+        }
+      }
+      
+      let numPages = rowOptions.selected ? Math.ceil(numRows / rowOptions.selected) : 1;
+
+      if (numPages > 1) {
+        paginationEls.push(
+          <li class='page-item'><a class='page-link' onClick={paginationFunc}>Previous</a></li>
+        );
+        for (let i = 0; i < numPages; i += 1) {
+          paginationEls.push(
+            <li class='page-item'><a class='page-link' onClick={paginationFunc}>{i + 1}</a></li>
+          )
+        }
+        paginationEls.push(
+          <li class='page-item'><a class='page-link' onClick={paginationFunc}>Next</a></li>
+        );
+      }
+
+      return (
+        <div className={footerClass}>
+          <div className={rowClass}>
+            <p>Rows Displayed: </p>
+            <select className='form-select' onChange={onRowUpdate}>
+              {rowOptionEls}
+            </select>
+          </div>
+          <nav aria-label="Page navigation example">
+            <ul class="pagination">
+              {paginationEls}
+            </ul>
+          </nav>
+        </div>
+      );
+    }
+
     let className = tableClassName.toString();
     let tableBuildRows = [];
     
@@ -110,12 +126,20 @@ export default class tableFunctions {
     };
 
     let rank = 1;
-    for (let row of rows) {
+    let maxRows = rows.length;
+    rows = rows.slice(currRowIndex);
+    let currRow = currRowIndex;
+    let numRows = 0;
+
+    while (numRows < rowFilter && currRow < maxRows) {
+      const row = rows[currRow++];
+
       if (search) {
         if (JSON.stringify(row).toLowerCase().indexOf(search.toLowerCase()) < 0) continue;
       }
 
       row.thisRec.rank = rank++;
+      numRows += 1;
 
       tableBuildRows.push(
         <TableEntry 
@@ -126,19 +150,33 @@ export default class tableFunctions {
       );
     }
 
+    let footer = initializeTableFooters({
+      footerClass: footerObj.footerClass,
+      rowOptions: footerObj.rowOptions,
+      rowClass: footerObj.rowClass,
+      onRowUpdate: footerObj.onRowUpdate,
+      paginationClass: footerObj.paginationClass,
+      paginationValues: footerObj.paginationValues,
+      paginationFunc: footerObj.paginationFunc,
+      numRows: maxRows
+    });
+
     return (
-      <table class={className}>
-        <tr className={headers.className} onClick={headers.onClick}>
-          {headers.headers.map(header => {
-            return (
-              <th>{header}</th>
-            );
-          })}
-        </tr>
-        <tbody>
-          {tableBuildRows}
-        </tbody>
-      </table>
+      <div className={tableClassName}>
+        <table className={tableClassName}>
+          <tr className={headers.className} onClick={headers.onClick}>
+            {headers.headers.map(header => {
+              return (
+                <th>{header}</th>
+              );
+            })}
+          </tr>
+          <tbody>
+            {tableBuildRows}
+          </tbody>
+        </table>
+        {footer}
+      </div>
     );
   };
 };

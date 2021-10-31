@@ -35,7 +35,7 @@ export default class App extends Component {
 
   render = () => {
     return (
-      <div class='app-container'>
+      <div className='app-container'>
         <Navbar setEditMode={this.updateEditMode} isEdit={this.state.isEdit} />
         <Route exact path='/'>
           <Page tabName='home' isEdit={this.state.isEdit} isEditMode={this.state.isEditMode}></Page>

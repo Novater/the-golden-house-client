@@ -10,7 +10,9 @@ export default class Table extends Component {
       records: [],
       search: '',
       type: props.tableType,
-      filter: ''
+      filter: props.rowSelectOptions ? props.rowSelectOptions.selected : '',
+      rowSelectOptions: props.rowSelectOptions,
+      currRowIndex: 0
     };
   }
 
@@ -73,12 +75,21 @@ export default class Table extends Component {
     });
   }
 
+  updateFilter = (event) => {
+    console.log('update filter to', event.target.value);
+    this.setState({
+      filter: event.target.value,
+      rowSelectOptions: {
+        ...this.state.rowSelectOptions,
+        selected: event.target.value
+      }
+    });
+  }
   // This will display the table with all records
   render = () => {
 
     let headers = this.props.headers;
     let filters = this.props.filters;
-    let rowSelectOptions = this.props.rowSelectOptions;
     let searchable = this.props.searchable;
 
     if (filters) {
@@ -88,11 +99,12 @@ export default class Table extends Component {
       headers = _generate.tableFunctions.initializeTableHeaders('leaderboard-row', headers, () => { alert('hello')});
     }
     
-    let footer = _generate.tableFunctions.initializeTableFooters({
+    let footerObj = {
       footerClass: 'table-footer',
       rowClass: 'numrows-select',
-      rowOptions: rowSelectOptions
-    });
+      rowOptions: this.state.rowSelectOptions,
+      onRowUpdate: this.updateFilter
+    };
 
     return (
       <div className='table-container'>
@@ -106,8 +118,7 @@ export default class Table extends Component {
           {filters}
         </div>
         <div className='abyss-table'>
-          {_generate.tableFunctions.createTable('table table-hover', headers, this.tableList(), this.state.search)}
-          {footer}
+          {_generate.tableFunctions.createTable('table table-hover', headers, this.tableList(), this.state.search, this.state.currRowIndex, this.state.filter, footerObj )}
         </div>
       </div>
     );
