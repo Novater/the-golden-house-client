@@ -1,10 +1,17 @@
 export default class tableFunctions {
 
-  static createHeaderDataMapping = (title, ...keys) => {
+  static createHeaderDataMapping = ({ title, format }, ...keys) => {
+    let keySet = [];
+
+    for (let key of keys) {
+      keySet.push(key);
+    }
+
     return {
       title,
-
-    }
+      format,
+      keys: keySet
+    };
   }
 
   /**
@@ -48,10 +55,7 @@ export default class tableFunctions {
    * @returns Table JSX
    */
   static createTable = (tableClassName, headers, rows, search, currRowIndex, rowFilter, footerObj) => {
-
     function initializeTableFooters({ footerClass, rowOptions, rowClass, onRowUpdate, paginationClass, paginationValues, paginationFunc, numRows }) {
-      console.log('numRows', numRows);
-      console.log('rowOptions.selected', rowOptions.selected);
       let rowOptionEls = [];
       let paginationEls = [];
 
@@ -104,26 +108,27 @@ export default class tableFunctions {
     
     function TableEntry(props) {
       const record = props.record;
-      const lowerCaseHeaders = headers.headers.map(header => header.toLowerCase());
+      let headerKeyFormats = headers.headers;
 
       return (
         <tr className={props.className || ''}>
           {
-            lowerCaseHeaders.map(header => {
-              if (!record[header]) {
+            headerKeyFormats.map(header => {
+              if (header.title === 'Rank') {
                 return (
-                  <td></td>
+                  <td><div className='rank-col' id={`rank-${record['rank']}`}>{record['rank']}</div></td>
                 );
               }
 
-              if (header === 'rank') {
-                return (
-                  <td><div className='rank-col' id={`rank-${record[header]}`}>{record[header]}</div></td>
-                );
+              let format = header.format;
+              const keys = header.keys;
+
+              for (let key of keys) {
+                format = format.replace(`{${key}}`, record[key] || '');
               }
 
               return (
-                <td dangerouslySetInnerHTML={{ __html: record[header].toString() }}></td>
+                <td dangerouslySetInnerHTML={{ __html: format.toString() }}></td>
               )
             })
           }
@@ -173,7 +178,7 @@ export default class tableFunctions {
           <tr className={headers.className} onClick={headers.onClick}>
             {headers.headers.map(header => {
               return (
-                <th>{header}</th>
+                <th>{header.title}</th>
               );
             })}
           </tr>

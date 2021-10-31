@@ -69,13 +69,60 @@ export default class Page extends Component {
     );
   }
 
+  createAbyssTableHeaders = () => {
+    let headers = [];
+    let header;
+    header = _generate.tableFunctions.createHeaderDataMapping({
+      title: 'Rank',
+      format: '{rank}'
+    }, 'rank');
+    headers.push(header);
+    header = _generate.tableFunctions.createHeaderDataMapping({
+      title: 'Version',
+      format: '{version}'
+    }, 'version');
+    headers.push(header);
+    header = _generate.tableFunctions.createHeaderDataMapping({
+      title: 'Floor',
+      format: '{floor}'
+    }, 'floor');
+    headers.push(header);
+    header = _generate.tableFunctions.createHeaderDataMapping({
+      title: 'Time',
+      format: '{time}'
+    }, 'time');
+    headers.push(header);
+    header = _generate.tableFunctions.createHeaderDataMapping({
+      title: 'Alias',
+      format: '{alias}'
+    }, 'alias');
+    headers.push(header);
+    header = _generate.tableFunctions.createHeaderDataMapping({
+      title: 'Region',
+      format: '{region}'
+    }, 'region');
+    headers.push(header);
+    header = _generate.tableFunctions.createHeaderDataMapping({
+      title: 'Characters',
+      format: '{characters}'
+    }, 'characters');
+    headers.push(header);
+    header = _generate.tableFunctions.createHeaderDataMapping({
+      title: 'Notes',
+      format: '{notes}'
+    }, 'notes');
+    headers.push(header);
+
+    return headers;
+  }
+
   // This will display the table with all records
   render = () => {
     const isTableTab = this.state.tabName === 'table';
     const isHomeTab = this.state.tabName === 'home';
 
     let rowSelectOptions = { rows: [25, 50, 100], selected: 100 };
-    let abyssHeaders = ['Rank', 'Version', 'Floor', 'Time', 'Alias', 'Region', 'Characters', 'Notes'];
+    let abyssHeaders = this.createAbyssTableHeaders();
     let abyssFilters = ['12-1-1', '12-1-2', '12-2-1', '12-2-2', '12-3-1', '12-3-2', '12-1', '12-2', '12-3'];
 
     return (
