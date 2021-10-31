@@ -75,8 +75,8 @@ export default class Page extends Component {
     const isHomeTab = this.state.tabName === 'home';
 
     let rowSelectOptions = { rows: [25, 50, 100], selected: 100 };
-    let headers = ['Rank', 'Version', 'Floor', 'Time', 'Alias', 'Region', 'Link', 'Characters', 'Notes'];
-    let filters = ['12-1-1', '12-1-2', '12-2-1', '12-2-2', '12-3-1', '12-3-2', '12-1', '12-2', '12-3'];
+    let abyssHeaders = ['Rank', 'Version', 'Floor', 'Time', 'Alias', 'Region', 'Characters', 'Notes'];
+    let abyssFilters = ['12-1-1', '12-1-2', '12-2-1', '12-2-2', '12-3-1', '12-3-2', '12-1', '12-2', '12-3'];
 
     return (
       <div className='pageContainer'>
@@ -136,8 +136,8 @@ export default class Page extends Component {
               <Suspense fallback={<div>Loading...</div>}>
                 <Table 
                   tableType='abyss'
-                  headers={headers}
-                  filters={filters}
+                  headers={abyssHeaders}
+                  filters={abyssFilters}
                   searchable={true}
                   rowSelectOptions={rowSelectOptions}
                   pagination={true}

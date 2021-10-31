@@ -1,5 +1,12 @@
 export default class tableFunctions {
 
+  static createHeaderDataMapping = (title, ...keys) => {
+    return {
+      title,
+
+    }
+  }
+
   /**
    * @param {*} filterClass 
    * @param {*} filters 
@@ -93,7 +100,6 @@ export default class tableFunctions {
       );
     }
 
-    let className = tableClassName.toString();
     let tableBuildRows = [];
     
     function TableEntry(props) {
