@@ -5,7 +5,7 @@ import BannerImg from '../assets/banner-image-tgh-2.png';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 
 const Table = React.lazy(() => import('../components/table'));
-const BlogSection = React.lazy(() => import ('../components/blogSection'));
+const BlogSection = React.lazy(() => import ('../components/blogsection'));
 
 export default class Page extends Component {
   constructor (props) {
@@ -36,12 +36,13 @@ export default class Page extends Component {
     });
   }
 
-  componentWillReceiveProps = (props) => {
-    console.log('receiving props', props);
-    this.setState({ 
-      isEdit: props.isEdit,
-      isEditMode: props.isEditMode
-    });
+  componentDidUpdate = (prevProps) => {
+    if (prevProps.isEdit !== this.props.isEdit || prevProps.isEditMode !== this.props.isEditMode) {
+      this.setState({
+        isEdit: this.props.isEdit,
+        isEditMode: this.props.isEditMode
+      });
+    }
   }
 
   updatePosts = () => {

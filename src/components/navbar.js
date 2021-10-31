@@ -16,13 +16,14 @@ export default class Navbar extends Component {
   }
 
   componentDidMount = () => {
-
   }
 
-  componentWillReceiveProps = (props) => {
-    this.setState({
-      isEdit: props.isEdit
-    });
+  componentDidUpdate = (prevProps) => {
+    if (prevProps.isEdit !== this.props.isEdit) {
+      this.setState({
+        isEdit: this.props.isEdit
+      });
+    }
   }
 
   render = () => {

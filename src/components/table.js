@@ -19,10 +19,9 @@ export default class Table extends Component {
   // This method will get the data from the database
   componentDidMount = () => {
 
-    // lets not cache for now 
-    //const storedData = window.localStorage.getItem(this.state.type);
+    const storedData = window.sessionStorage.getItem(this.state.type);
 
-    if (true) {
+    if (!storedData) {
       axios
       .get(`${process.env.SERVER_URL || 'https://calm-plains-52439.herokuapp.com'}/record`)
       .then((response) => {
@@ -31,16 +30,16 @@ export default class Table extends Component {
           records: response.data,
           search: ''
         });
-        // window.localStorage.setItem(this.state.type, JSON.stringify(response.data));
+        window.sessionStorage.setItem(this.state.type, JSON.stringify(response.data));
       })
       .catch((error) => {
         console.log(error);
       });
     } else {
-      // this.setState({
-      //   records: JSON.parse(storedData),
-      //   search: ''
-      // });
+      this.setState({
+        records: JSON.parse(storedData),
+        search: ''
+      });
     }
   }
 

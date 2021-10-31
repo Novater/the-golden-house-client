@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faPen, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { Editor } from '@tinymce/tinymce-react';
 import _generate from '../functions/index';
 import axios from 'axios';
 
 export default class BlogSection extends Component {
   constructor (props) {
     super(props);
-    console.log(props);
+
     this.state = {
       id: props.id,
       title: props.title,
@@ -25,11 +26,13 @@ export default class BlogSection extends Component {
   componentDidMount = () => {
   };
 
-  componentWillReceiveProps = (props) => {
-    this.setState({
-      isEdit: props.isEdit,
-      isEditMode: props.isEditMode
-    });
+  componentDidUpdate = (prevProps) => {
+    if (prevProps.isEdit !== this.props.isEdit || prevProps.isEditMode !== this.props.isEditMode) {
+      this.setState({
+        isEdit: this.props.isEdit,
+        isEditMode: this.props.isEditMode
+      });
+    }
   }
 
   cancelSave = () => {
@@ -103,13 +106,32 @@ export default class BlogSection extends Component {
           <div className='form-group row'>
             <label className='col-sm-2 col-form-label'>Title: </label>
             <div className='col-sm-10'>
-              <input type='text' name='title' className='form-control' aria-describedby='titleHelp' placeholder='Enter Title' value={this.state.title} onChange={this.handleChange}></input>
+              <input type='text' id={`title-${this.state.id}`} className='form-control' aria-describedby='titleHelp' placeholder='Enter Title' value={this.state.title} onChange={this.handleChange}></input>
             </div>
           </div>
           <div className='form-group row'>
             <label className='col-sm-2 col-form-label'>Content: </label>
             <div className='col-sm-10'>
-              <textarea name='content' className='form-control' aria-describedby='contentHelp' placeholder='Enter Content' value={this.state.content} onChange={this.handleChange}></textarea>
+              <Editor
+                value={this.state.content}
+                init={{
+                  height: 500,
+                  menubar: false,
+                  plugins: [
+                    'advlist autolink lists link image charmap print preview anchor',
+                    'searchreplace visualblocks code fullscreen',
+                    'insertdatetime media table paste code help wordcount code'
+                  ],
+                  toolbar: 'undo redo | formatselect | ' +
+                  'bold italic backcolor | alignleft aligncenter ' +
+                  'alignright alignjustify | bullist numlist outdent indent | ' +
+                  'removeformat | help | code',
+                  content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+                }}
+                id={`content-${this.state.id}`}
+                onEditorChange={this.handleEditorChange}
+                apiKey='gtfc54ziqkg4zxfs7ygx30ddnkzks6abnkds81zs3h6p2ftm'
+              />
             </div>
           </div>
           <div className='form-group row button-group'>
@@ -169,15 +191,18 @@ export default class BlogSection extends Component {
     }
   }
 
+  handleEditorChange = (content) => {
+    this.setState({ content: content });
+  }
   handleChange = (event) => {
-    const thisName = event.target.name.toLowerCase();
-
+    const thisName = event.target.id;
+    console.log('handlechange');
     switch (thisName) {
-      case 'title': 
+      case thisName.match('title-.*').input: 
         this.setState({ title: event.target.value });
         break;
-      case 'content':
-        this.setState({ content: event.target.value });
+      case thisName.match('content-.*').input:
+        this.setState({ content: event.target.getContent() });
         break;
       default: 
         break;
