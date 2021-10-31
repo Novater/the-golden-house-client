@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faPen, faPlus } from '@fortawesome/free-solid-svg-icons';
-import { Editor } from '@tinymce/tinymce-react';
+import ContentEditor from './contenteditor';
 import _generate from '../functions/index';
 import axios from 'axios';
 
@@ -112,25 +112,10 @@ export default class BlogSection extends Component {
           <div className='form-group row'>
             <label className='col-sm-2 col-form-label'>Content: </label>
             <div className='col-sm-10'>
-              <Editor
-                value={this.state.content}
-                init={{
-                  height: 500,
-                  menubar: false,
-                  plugins: [
-                    'advlist autolink lists link image charmap print preview anchor',
-                    'searchreplace visualblocks code fullscreen',
-                    'insertdatetime media table paste code help wordcount code textcolor'
-                  ],
-                  toolbar: 'undo redo | formatselect | ' +
-                  'bold italic forecolor backcolor | alignleft aligncenter ' +
-                  'alignright alignjustify | bullist numlist outdent indent | ' +
-                  'removeformat | code | help',
-                  content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
-                }}
-                id={`content-${this.state.id}`}
-                onEditorChange={this.handleEditorChange}
-                apiKey='gtfc54ziqkg4zxfs7ygx30ddnkzks6abnkds81zs3h6p2ftm'
+              <ContentEditor
+                onChange={this.handleEditorChange}
+                content={this.state.content}
+                id={this.state.id}
               />
             </div>
           </div>
