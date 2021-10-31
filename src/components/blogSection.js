@@ -120,12 +120,12 @@ export default class BlogSection extends Component {
                   plugins: [
                     'advlist autolink lists link image charmap print preview anchor',
                     'searchreplace visualblocks code fullscreen',
-                    'insertdatetime media table paste code help wordcount code'
+                    'insertdatetime media table paste code help wordcount code textcolor'
                   ],
                   toolbar: 'undo redo | formatselect | ' +
-                  'bold italic backcolor | alignleft aligncenter ' +
+                  'bold italic forecolor backcolor | alignleft aligncenter ' +
                   'alignright alignjustify | bullist numlist outdent indent | ' +
-                  'removeformat | help | code',
+                  'removeformat | code | help',
                   content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
                 }}
                 id={`content-${this.state.id}`}
