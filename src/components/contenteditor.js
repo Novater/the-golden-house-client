@@ -16,12 +16,12 @@ export default class ContentEditor extends Component {
           plugins: [
             'advlist autolink lists link image charmap print preview anchor',
             'searchreplace visualblocks code fullscreen',
-            'insertdatetime media table paste code help wordcount code textcolor'
+            'insertdatetime media table paste code help wordcount code textcolor image'
           ],
           toolbar: 'undo redo | formatselect | ' +
           'bold italic forecolor backcolor | alignleft aligncenter ' +
           'alignright alignjustify | bullist numlist outdent indent | ' +
-          'removeformat | code | help',
+          'removeformat | code | image | help',
           content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
         }}
         id={`content-${this.props.id}`}
