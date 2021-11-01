@@ -14,7 +14,8 @@ export default class App extends Component {
     this.state = {
       isEdit: false,
       isEditMode: false,
-      showEditModal: false
+      showEditModal: false,
+      isLoggedIn: false
     };
   }
 
@@ -49,6 +50,12 @@ export default class App extends Component {
     )
   }
 
+  loginUser = () => {
+    this.setState({
+      isLoggedIn: true
+    });
+  }
+
   render = () => {
     return (
       <div className='app-container'>
@@ -56,7 +63,11 @@ export default class App extends Component {
           setEditMode={this.updateEditMode}
           isEdit={this.state.isEdit}
           title='The Golden House'
+          isLoggedIn={this.state.isLoggedIn}
         />
+        <Route exact path='/secret-login/12345'>
+          <button style={{ position: 'absolute', left: '50%', top: '50%' }} onClick={this.loginUser}>Log In</button>
+        </Route>
         {
           this.createPage('/', {
             title: 'Welcome to the Golden House',

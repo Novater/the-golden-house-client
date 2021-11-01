@@ -75,11 +75,13 @@ export default class Navbar extends Component {
             </ul>
           </div>
         </div>
-        <div className='edit-icon'>
-          { this.state.isEdit ?
-            <FontAwesomeIcon title='Toggle Edit' icon={faEye} onClick={this.props.setEditMode} /> : <FontAwesomeIcon title='Toggle Edit' icon={faPenFancy} onClick={this.props.setEditMode} />
-          }
-        </div>
+        { this.props.isLoggedIn ?
+          <div className='edit-icon'>
+            { this.state.isEdit ?
+              <FontAwesomeIcon title='Toggle Edit' icon={faEye} onClick={this.props.setEditMode} /> : <FontAwesomeIcon title='Toggle Edit' icon={faPenFancy} onClick={this.props.setEditMode} />
+            }
+          </div> : ''
+        }
       </nav> 
     );
   }
