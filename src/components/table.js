@@ -265,15 +265,15 @@ export default class Table extends Component {
 
     return (
       <div className='table-container'>
+        <div className='filter-container'>
+          {filters}
+        </div>
         {
           searchable ? 
           <div className='search-container'>
             <input type='text' id='table-search' onKeyUp={this.updateSearch} placeholder='Search Table...' />
           </div> : ''
         }
-        <div className='filter-container'>
-          {filters}
-        </div>
         <div className='web-table'>
           {_generate.tableFunctions.createTable('table-wrapper', 'table table-hover', headers, this.tableList(), this.state.search, this.state.currPage, this.state.pageRows, footerObj, this.props.pagination )}
         </div>
