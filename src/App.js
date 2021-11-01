@@ -34,36 +34,64 @@ export default class App extends Component {
     this.setState({ showEditModal: false });
   }
 
+  createPage = (path, { title, tabName, backgroundImage, tableName }) => {
+    return (
+      <Route exact path={path}>
+        <Page
+          title={title}
+          tabName={tabName}
+          isEdit={this.state.isEdit}
+          isEditMode={this.state.isEditMode}
+          backgroundImage={backgroundImage}
+          tableName={tableName}
+        />
+      </Route>
+    )
+  }
+
   render = () => {
     return (
       <div className='app-container'>
-        <Navbar setEditMode={this.updateEditMode} isEdit={this.state.isEdit} />
-        <Route exact path='/'>
-          <Page 
-            title='Welcome to the Golden House'
-            tabName='home'
-            isEdit={this.state.isEdit}
-            isEditMode={this.state.isEditMode}
-            backgroundImage={BannerImg}
-          />
-        </Route>
-        <Route exact path='/about'>
-          <Page
-            title='About Us'
-            tabName='about'
-            isEdit={this.state.isEdit}
-            isEditMode={this.state.isEditMode}
-            backgroundImage={BannerImg}
-          />
-        </Route>
-        <Route exact path='/leaderboard'>
-          <Page
-            tabName='table'
-            isEdit={this.state.isEdit}
-            isEditMode={this.state.isEditMode}
-            backgroundImage={BannerImg}
-          />
-        </Route>
+        <Navbar
+          setEditMode={this.updateEditMode}
+          isEdit={this.state.isEdit}
+          title='The Golden House'
+        />
+        {
+          this.createPage('/', {
+            title: 'Welcome to the Golden House',
+            tabName: 'home',
+            backgroundImage: BannerImg
+          })
+        }
+        {
+          this.createPage('/about', {
+            title: 'About Us',
+            tabName: 'about',
+            backgroundImage: BannerImg
+          })
+        }
+        {
+          this.createPage('/speedrun/leaderboard', {
+            tabName: 'speedrun-leaderboard',
+            tableName: 'abyss',
+            backgroundImage: BannerImg
+          })
+        }
+        {
+          this.createPage('/contests', {
+            title: 'Contests',
+            tabName: 'contests',
+            backgroundImage: BannerImg
+          })          
+        }
+        {
+          this.createPage('/partners', {
+            title: 'Partners',
+            tabName: 'partners',
+            backgroundImage: BannerImg
+          })          
+        }
         {
           _generate.createFunctions.createModal(this.state.isEdit ? 'Leave Edit Mode?' : 'Enter Edit Mode?', this.state.isEdit ? 'Are you sure you want to leave edit mode?' : 'Are you sure you want to enter edit mode?', this.state.showEditModal, this.changeEditMode, this.closeModal)
         }

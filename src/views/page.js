@@ -1,7 +1,6 @@
 import axios from 'axios';
 import React, { Component, Suspense } from 'react';
 import _generate from '../functions/index';
-import BannerImg from '../assets/banner-image-tgh-2.png';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import LoadingSpinner from '../components/loadingspinner';
 
@@ -118,13 +117,30 @@ export default class Page extends Component {
     );
   }
 
+  getTableConfigs = (tableName) => {
+    switch (tableName) {
+      case 'abyss':
+        return ({
+          rowSelectOptions: config.abyssTablePagination,
+          headers: config.abyssTableHeaderKeys,
+          filters: config.abyssTableFilters,
+          dataSource: config.abyssTableDataSource
+        });
+      default:
+        return {
+          rowSelectOptions: '',
+          headers: '',
+          filters: '',
+          dataSource: ''
+        };
+    }
+  }
+
   // This will display the table with all records
   render = () => {
-    const isTableTab = this.props.tabName === 'table';
+    const isTableTab = this.props.tableName ? true : false;
 
-    let rowSelectOptions = { rows: [25, 50, 100], selected: 100 };
-    let abyssHeaders = config.abyssTableHeaderKeys;
-    let abyssFilters = ['12-1-1', '12-1-2', '12-2-1', '12-2-2', '12-3-1', '12-3-2', '12-1', '12-2', '12-3'];
+    const { rowSelectOptions, headers, filters, dataSource } = this.getTableConfigs(this.props.tableName);
 
     return (
       <div className='pageContainer'>
@@ -144,14 +160,15 @@ export default class Page extends Component {
             isTableTab ?
               <Suspense fallback={<LoadingSpinner />}>
                 <Table 
-                  tableType='abyss'
                   defaultSortKey='Time'
                   defaultSortDir={1}
-                  headers={abyssHeaders}
-                  filters={abyssFilters}
+                  defaultFilter='12-3-1'
+                  headers={headers}
+                  filters={filters}
                   searchable={true}
                   rowSelectOptions={rowSelectOptions}
                   pagination={true}
+                  dataSource={dataSource}
                 />
               </Suspense>
               : ''

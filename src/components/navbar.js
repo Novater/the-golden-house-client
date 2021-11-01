@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faPenFancy } from '@fortawesome/free-solid-svg-icons';
 import { NavLink } from 'react-router-dom';
+import _generate from '../functions/index';
 
 export default class Navbar extends Component {
 
@@ -31,7 +32,7 @@ export default class Navbar extends Component {
       <nav className="navbar navbar-expand-lg bg-dark main-nav">
         <div className="container-fluid">
           <NavLink className="navbar-brand" to="/">
-            The Golden House
+            {this.props.title}
           </NavLink>
           <button
             className="navbar-toggler"
@@ -47,40 +48,30 @@ export default class Navbar extends Component {
   
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav ml-auto">
-              <li className="nav-item">
-                <NavLink className="nav-link" to="/about">
-                  About
-                </NavLink>
-              </li>
-              <li className="nav-item dropdown">
-                <a className="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Speedrunning
-                </a>
-                <ul className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                  <li><NavLink className="dropdown-item" to="/leaderboard">Leaderboards</NavLink></li>
-                </ul>
-              </li>
-              <li className="nav-item dropdown">
-                <a className="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  DPS
-                </a>
-                <ul className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                  <li><NavLink className="dropdown-item" to="/dps/abyss">Abyss</NavLink></li>
-                  <li><NavLink className="dropdown-item" to="/dps/events">Events</NavLink></li>
-                  <li><NavLink className="dropdown-item" to="/dps/openworld">Open World</NavLink></li>
-                  <li><NavLink className="dropdown-item" to="/dps/primo-geovishap">Primo Geovishap</NavLink></li>
-                </ul>
-              </li>
-              <li className="nav-item">
-                <NavLink className="nav-link" to="/contests">
-                  Contests
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink className="nav-link" to="/partners">
-                  Partners
-                </NavLink>
-              </li>
+              {
+                _generate.navbarFunctions.createNavSimpleElement('About', '/about')
+              }
+              {
+                _generate.navbarFunctions.createNavDropdownElement('Speedrunning', {
+                  names: ['Leaderboards'],
+                  paths: ['/speedrun/leaderboard']
+                })
+              }
+              {
+                _generate.navbarFunctions.createNavDropdownElement('DPS', {
+                  names: ['Abyss', 'Events', 'Open World', 'Primo Geovishap'],
+                  paths: ['/dps/abyss', '/dps/events', '/dps/openworld', '/dps/primo-geovishap']
+                })
+              }
+              {
+                _generate.navbarFunctions.createNavSimpleElement('Contests', '/contests')
+              }
+              {
+                _generate.navbarFunctions.createNavSimpleElement('Partners', '/partners')
+              }
+              {
+                _generate.navbarFunctions.createNavSimpleElement('Contact Us', '/contact-us')
+              }
             </ul>
           </div>
         </div>

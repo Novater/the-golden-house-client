@@ -1,6 +1,8 @@
 module.exports = {
   allowedTags: ['iframe'],
   allowedAttr: ['style', 'allow', 'allowfullscreen', 'frameborder', 'scrolling'],
+
+  // Abyss Table Configs
   abyssTableHeaderKeys: [
     {
       title: 'Rank',
@@ -42,5 +44,15 @@ module.exports = {
       format: '{notes}',
       keys: ['notes']
     }
-  ]
+  ],
+  abyssTablePagination: { 
+    rows: [10, 20, 50, 100],
+    selected: 20
+  },
+  abyssTableFilters: {
+    headers: ['12-1-1', '12-1-2', '12-2-1', '12-2-2', '12-3-1', '12-3-2', '12-1', '12-2', '12-3'],
+    values: ['12-1-1', '12-1-2', '12-2-1', '12-2-2', '12-3-1', '12-3-2', '12-1', '12-2', '12-3'],
+    key: 'Floor'
+  },
+  abyssTableDataSource: 'entries'
 };

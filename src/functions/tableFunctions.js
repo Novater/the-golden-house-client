@@ -24,14 +24,18 @@ export default class tableFunctions {
    * @param {*} onClick 
    * @returns Filters JSX
    */
-  static initializeTableFilters = (filterClass, filters, onClick) => {
+  static initializeTableFilters = ({ title, filterClass, filters, onChange, defaultValue }) => {
+
     return (
-      <div className={filterClass} role='group'>
-        {
-          filters.map(el => {
-            return <button name={el} className='btn' type='button' onClick={onClick}>{el}</button>
-          })
-        }
+      <div className={filterClass}>
+        <p>{`${title}: `}</p>
+        <select className='form-select' onChange={onChange} defaultValue={defaultValue}>
+          {
+            filters.headers.map(el => {
+              return <option>{el}</option>;
+            })
+          }
+        </select>
       </div>
     );
   }
@@ -58,7 +62,7 @@ export default class tableFunctions {
    * @description The columns of the table are defined by the headers
    * @returns Table JSX
    */
-  static createTable = (tableClassName, headers, rows, search, currRowIndex, rowFilter, footerObj) => {
+  static createTable = (wrapperClassName, tableClassName, headers, rows, search, currPage, rowFilter, footerObj, pagination) => {
     function initializeTableFooters({ footerClass, rowOptions, rowClass, onRowUpdate, paginationClass, paginationValues, paginationFunc, numRows }) {
       let rowOptionEls = [];
       let paginationEls = [];
@@ -69,20 +73,28 @@ export default class tableFunctions {
         );
       }
       
-      let numPages = rowOptions.selected ? Math.ceil(numRows / rowOptions.selected) : 1;
+      if (pagination) {
+        let numPages = rowOptions.selected ? Math.ceil(numRows / rowOptions.selected) : 1;
 
-      if (numPages > 1) {
-        paginationEls.push(
-          <li class='page-item'><a class='page-link' href='#' onClick={paginationFunc}>Previous</a></li>
-        );
-        for (let i = 0; i < numPages; i += 1) {
+        if (numPages > 1) {
           paginationEls.push(
-            <li class='page-item'><a class='page-link' href='#' onClick={paginationFunc}>{i + 1}</a></li>
-          )
+            <li className='page-item'><a class='page-link' href='#' onClick={paginationFunc}>Previous</a></li>
+          );
+          for (let i = 0; i < numPages; i += 1) {
+            if (i + 1 == currPage) {
+              paginationEls.push(
+                <li className='page-item focused'><a class='page-link' href='#' onClick={paginationFunc}>{i + 1}</a></li>
+              );
+            } else {
+              paginationEls.push(
+                <li className='page-item'><a class='page-link' href='#' onClick={paginationFunc}>{i + 1}</a></li>
+              );
+            }
+          }
+          paginationEls.push(
+            <li className='page-item'><a class='page-link' href='#' onClick={paginationFunc}>Next</a></li>
+          );
         }
-        paginationEls.push(
-          <li class='page-item'><a class='page-link' href='#' onClick={paginationFunc}>Next</a></li>
-        );
       }
 
       return (
@@ -135,18 +147,18 @@ export default class tableFunctions {
     };
 
     let maxRows = rows.length;
-    rows = rows.slice(currRowIndex);
-    let currRow = currRowIndex;
+    rows = rows.slice((currPage - 1) * rowFilter);
+    let currRow = (currPage - 1) * rowFilter;
+    console.log('currow',currRow);
     let numRows = 0;
 
+    console.log('maxRows', maxRows);
     while (numRows < rowFilter && currRow < maxRows) {
-      const row = rows[currRow++];
-
-      if (search) {
-        if (JSON.stringify(row).toLowerCase().indexOf(search.toLowerCase()) < 0) continue;
-      }
-
-      numRows += 1;
+      const row = rows[numRows++];
+      currRow += 1;
+      // if (search) {
+      //   if (JSON.stringify(row).toLowerCase().indexOf(search.toLowerCase()) < 0) continue;
+      // }
 
       tableBuildRows.push(
         <TableEntry 
@@ -169,21 +181,23 @@ export default class tableFunctions {
     });
 
     return (
-      <div className={tableClassName}>
-        <table className={tableClassName}>
-          <tr className={headers.className} onClick={headers.onClick}>
-            {headers.headers.map(header => {
-              return (
-                <th name={header.title}>
-                  {header.title}
-                </th>
-              );
-            })}
-          </tr>
-          <tbody>
-            {tableBuildRows}
-          </tbody>
-        </table>
+      <div className={wrapperClassName}>
+        <div className={tableClassName}>
+          <table className={tableClassName}>
+            <tr className={headers.className} onClick={headers.onClick}>
+              {headers.headers.map(header => {
+                return (
+                  <th name={header.title}>
+                    {header.title}
+                  </th>
+                );
+              })}
+            </tr>
+            <tbody>
+              {tableBuildRows}
+            </tbody>
+          </table>          
+        </div>
         {footer}
       </div>
     );

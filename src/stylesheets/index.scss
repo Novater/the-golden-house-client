@@ -161,7 +161,13 @@ img {
   z-index: 1;
 }
 
-.abyss-table {
+.table {
+  max-height: 700px;
+  overflow: auto;
+  position: relative;
+}
+
+.web-table {
   width: 80%;
   display: grid;
   place-items: center;
@@ -177,7 +183,6 @@ img {
 
   th::after {
     content: '';
-
   }
 
   &::-webkit-scrollbar-track {
@@ -187,7 +192,7 @@ img {
   }
 
   &::-webkit-scrollbar-thumb {
-    background-image: linear-gradient(180deg, $color-sky 50%, rgb(255 255 255 / 0));
+    background-image: linear-gradient(180deg, $color-gold 50%, rgb(0 0 0 / 0.5));
     box-shadow: inset 2px 2px 5px 0 rgba(#FFF, 0.5);
     border-radius: 100px;
   }
@@ -196,13 +201,40 @@ img {
     width: 15px;
   }
 
-  .abyss-info-row:nth-child(odd) {
+  .info-row:nth-child(odd) {
     background-color: $color-opaque-black;
   }
 
-  .abyss-info-row:nth-child(even) {
+  .info-row:nth-child(even) {
     background-color: rgb(0 0 0 / 0.4);
   }
+}
+
+.page-item.focused > a {
+  color: $color-gold;
+  background-color: $color-neutral;  
+}
+
+.page-item {
+
+  a {
+    background-color: $color-opaque-black;
+    color: $color-neutral;
+
+    &:hover {
+      color: $color-gold;
+      background-color: $color-neutral;
+    }
+  }
+}
+
+.search-container > input {
+  background-color: $color-opaque-black;
+  color: $color-gold;
+}
+
+.table-wrapper {
+  width: 100%;
 }
 
 .blog-post {
@@ -313,11 +345,15 @@ img {
 
 .leaderboard-row {
   height: 50px;
+  width: 100%;
   background: rgb(0 0 0 / 0.8);
   color: white;
   font-family: Arial, Helvetica, sans-serif;
-  position: relative;
   text-align: center;
+  position: sticky;
+  left: 0;
+  top: 0;
+  z-index: 1;
 }
 
 .table-footer {
@@ -338,6 +374,8 @@ img {
     display: flex;
     flex-direction: row;
     color: white;
+    flex-shrink: 0;
+    margin-right: 20px;
 
     p {
       margin-right: 10px;
@@ -358,7 +396,7 @@ img {
 .navbar-toggler-icon {
   color: white !important;
 }
-.abyss-info-row {
+.info-row {
   margin-bottom: 10px;
   text-align: center;
 
@@ -414,15 +452,13 @@ img {
   justify-content: flex-start;
   align-content: center;
   flex-wrap: wrap;
+  color: $color-neutral;
 
-  button {
-    background-color: $color-opaque-black;
+  select {
+    background-color: black;
     color: $color-neutral;
-    border-radius: 0 !important;
-
-    &:hover {
-      color: $color-gold;
-    }
+    border-radius: 5px !important;
+    margin-bottom: 5px;
   }
 }
 
@@ -469,9 +505,13 @@ img {
 }
 
 @media (max-width: 900px) {
-  .abyss-table, .filter-container, .search-container {
+  .abyss-table, .filter-container {
     width: 100%;
     font-size: 10px;
+  }
+
+  .search-container {
+    width: 100%;
   }
 
   .midContainer::after {
@@ -481,9 +521,13 @@ img {
 }
 
 @media (max-width: 1200px) {
-  .abyss-table, .filter-container, .search-container {
+  .filter-container, .web-table {
     width: 90%;
     font-size: 11px;
+  }
+
+  .search-container {
+    width: 90%;
   }
 
   .midContainer::after {
