@@ -66,11 +66,14 @@ body, html {
 
 .midContainer::after {
   position: fixed;
-  content: 'Copyright © 2021 The Golden House';
+  content: 'Website by Novater \A Copyright © 2021 The Golden House';
+  text-align: center;
+  white-space: pre-wrap;
   width: fit-content;
   height: fit-content;
-  right: 0;
+  left: 50%;
   bottom: 0;
+  transform: translateX(-50%);
   color: $color-gold;
   margin: 10px;
   opacity: 0.5;
