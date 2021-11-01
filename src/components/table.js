@@ -143,7 +143,6 @@ export default class Table extends Component {
 
   filterTable = (event) => {
     const filter = event.target.value;
-    console.log(this.props.filters);
     const filterIndex = this.props.filters.headers.indexOf(filter);
     const filterKey = this.props.filters.values[filterIndex];
 
@@ -220,7 +219,7 @@ export default class Table extends Component {
   }
 
   updatePage = (event) => {
-    let pageNum = event.target.getInnerHTML();
+    let pageNum = event.target.name;
 
     if (pageNum.toLowerCase() === 'previous') {
       if (this.state.currPage > 1) this.setState({ currPage: --this.state.currPage });
@@ -228,7 +227,7 @@ export default class Table extends Component {
       this.setState({ currPage: ++this.state.currPage });
     } else {
       this.setState({
-        currPage: event.target.getInnerHTML()
+        currPage: event.target.name
       });
     }
   }
@@ -239,7 +238,6 @@ export default class Table extends Component {
     let filters = this.props.filters;
     let searchable = this.props.searchable;
 
-    console.log('this.tableList', this.tableList());
     if (filters) {
       filters = _generate.tableFunctions.initializeTableFilters({
         title: filters.key,
@@ -260,8 +258,6 @@ export default class Table extends Component {
       onRowUpdate: this.updateFilter,
       paginationFunc: this.updatePage
     };
-
-    console.log(this.state);
 
     return (
       <div className='table-container'>

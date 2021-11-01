@@ -213,6 +213,10 @@ body, html {
   background-color: $color-neutral;  
 }
 
+.page-link {
+  cursor: pointer;
+}
+
 .page-item {
 
   a {
@@ -352,10 +356,6 @@ body, html {
   left: 0;
   top: 0;
   z-index: 1;
-
-  td {
-    min-width: 120px;
-  }
 }
 
 .table-footer {

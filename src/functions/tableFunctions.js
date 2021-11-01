@@ -78,21 +78,21 @@ export default class tableFunctions {
 
         if (numPages > 1) {
           paginationEls.push(
-            <li className='page-item'><a class='page-link' href='#' onClick={paginationFunc}>Previous</a></li>
+            <li className='page-item'><a class='page-link' name='Previous' onClick={paginationFunc}>Previous</a></li>
           );
           for (let i = 0; i < numPages; i += 1) {
             if (i + 1 == currPage) {
               paginationEls.push(
-                <li className='page-item focused'><a class='page-link' href='#' onClick={paginationFunc}>{i + 1}</a></li>
+                <li className='page-item focused'><a class='page-link' name={i + 1} onClick={paginationFunc}>{i + 1}</a></li>
               );
             } else {
               paginationEls.push(
-                <li className='page-item'><a class='page-link' href='#' onClick={paginationFunc}>{i + 1}</a></li>
+                <li className='page-item'><a class='page-link' name={i + 1} onClick={paginationFunc}>{i + 1}</a></li>
               );
             }
           }
           paginationEls.push(
-            <li className='page-item'><a class='page-link' href='#' onClick={paginationFunc}>Next</a></li>
+            <li className='page-item'><a class='page-link' name='Next' onClick={paginationFunc}>Next</a></li>
           );
         }
       }
@@ -149,16 +149,11 @@ export default class tableFunctions {
     let maxRows = rows.length;
     rows = rows.slice((currPage - 1) * rowFilter);
     let currRow = (currPage - 1) * rowFilter;
-    console.log('currow',currRow);
     let numRows = 0;
 
-    console.log('maxRows', maxRows);
     while (numRows < rowFilter && currRow < maxRows) {
       const row = rows[numRows++];
       currRow += 1;
-      // if (search) {
-      //   if (JSON.stringify(row).toLowerCase().indexOf(search.toLowerCase()) < 0) continue;
-      // }
 
       tableBuildRows.push(
         <TableEntry 

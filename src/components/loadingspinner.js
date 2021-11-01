@@ -9,7 +9,7 @@ export default class LoadingSpinner extends Component {
     return (
       <div className='spinner-container'>
         <div className="spinner-border text-light" role="status">
-          <span className="sr-only">Loading...</span>
+          <span className="sr-only"></span>
         </div>
       </div>
     );
