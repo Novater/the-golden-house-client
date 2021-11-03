@@ -222,6 +222,11 @@ body, html {
   a {
     background-color: $color-opaque-black;
     color: $color-neutral;
+    user-select: none; /* supported by Chrome and Opera */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
 
     &:hover {
       color: $color-gold;
@@ -356,6 +361,14 @@ body, html {
   left: 0;
   top: 0;
   z-index: 1;
+
+  th {
+    user-select: none; /* supported by Chrome and Opera */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+  }
 }
 
 .table-footer {
@@ -455,8 +468,8 @@ body, html {
   align-content: center;
   flex-wrap: wrap;
   color: $color-neutral;
-  max-width: 300px;
-  margin-right: 10px;
+  max-width: 200px;
+  margin-right: 20px;
 
   .filter-checkbox, .filter-label {
     margin-right: 10px;
@@ -488,7 +501,7 @@ body, html {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 10px;
 }
 
