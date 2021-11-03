@@ -14,8 +14,8 @@ module.exports = {
       format: '{version}',
       keys: ['version'],
       filterValues: [
-        { title: 'All', lookFor: '.*', selected: true },
-        { title: '2.1', lookFor: '2.1' },
+        { title: 'All', lookFor: '.*' },
+        { title: '2.1', lookFor: '2.1', selected: true },
         { title: '2.0', lookFor: '2.0' }
       ]
     },
@@ -46,8 +46,8 @@ module.exports = {
       format: '{region}',
       keys: ['region'],
       filterValues: [
-        { title: 'America', lookFor: 'America'},
-        { title: 'Asia', lookFor: 'Asia' },
+        { title: 'America', lookFor: 'America', selected: true},
+        { title: 'Asia', lookFor: 'Asia', selected: true},
         { title: 'Europe', lookFor: 'Europe' },
         { title: 'China', lookFor: 'China' }
       ],

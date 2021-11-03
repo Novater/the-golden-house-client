@@ -85,16 +85,21 @@ export default class Table extends Component {
         const thisFilter = filters[header.title].rows;
         const selectedEl = thisFilter.filter(value => value.selected);
 
+        if (selectedEl.length === 0) continue;
+        
+        let thisFilterLookupAMatch = false;
         selectedEl.map(el => {
           const  { lookFor } = el;
 
-          if (!stringRep.match(lookFor)) {
-            add = false;
-            return;
+          if (stringRep.match(lookFor)) {
+            thisFilterLookupAMatch = true;
           }
         });
 
-
+        if (!thisFilterLookupAMatch) {
+          add = false;
+          break;
+        }
       }
     }
 

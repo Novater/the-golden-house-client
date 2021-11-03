@@ -31,11 +31,10 @@ export default class tableFunctions {
         <div className={filterClass}>
           <p style={{ width: '100%' }}>{`${title}: `}</p>
           {
-            filters.map(el => {
+            filters.map((el, idx) => {
               return (
-                
                 <div className='checkbox-filter'>
-                  <input className='form-check-input filter-checkbox' type="checkbox" name={title} value={el.title} id='filterCheckbox' onChange={onChange} />
+                  <input className='form-check-input filter-checkbox' type="checkbox" name={title} value={el.title} id='filterCheckbox' onChange={onChange} checked={!!el.selected} />
                   <label className='form-check-label filter-label' for='filterCheckbox'>
                     {el.title}
                   </label>
@@ -53,7 +52,7 @@ export default class tableFunctions {
     return (
       <div className={filterClass}>
         <p style={{ width: '100%' }}>{`${title}: `}</p>
-        <select className='form-select' name={title} onChange={onChange} defaultValue={defaultValues[0]}>
+        <select className='form-select' name={title} onChange={onChange} defaultValue={defaultValues[0].title}>
           {
             filters.map(el => {
               return <option>{el.title}</option>;
