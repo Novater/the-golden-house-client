@@ -38,7 +38,7 @@ body, html {
 .pageContainer {
   margin-top: -5px;
   height: fit-content;
-  min-height: calc(100vh - $height-nav);
+  min-height: calc(100vh - $height-nav + 5px);
   display: grid;
   grid-template-rows: 1fr;
   grid-template-columns: 1fr 8fr 1fr;
@@ -465,7 +465,7 @@ body, html {
   .filter-checkbox {
     background-color: black;
   }
-  
+
   select {
     background-color: black;
     color: $color-neutral;

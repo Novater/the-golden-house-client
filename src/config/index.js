@@ -77,5 +77,23 @@ module.exports = {
     rows: [10, 20, 50, 100],
     selected: 20
   },
-  abyssTableDataSource: '/record/entries'
+  abyssTableDataSource: '/record/entries',
+  getTableConfigs(tableName) {
+    switch (tableName) {
+      case 'abyss':
+        return ({
+          rowSelectOptions: this.abyssTablePagination,
+          headers: this.abyssTableHeaderKeys,
+          filters: this.abyssTableFilters,
+          dataSource: this.abyssTableDataSource
+        });
+      default:
+        return {
+          rowSelectOptions: '',
+          headers: '',
+          filters: '',
+          dataSource: ''
+        };
+    }
+  }
 };

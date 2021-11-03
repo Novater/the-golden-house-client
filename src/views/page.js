@@ -71,6 +71,8 @@ export default class Page extends Component {
   }
 
   renderBackdrop = (image) => {
+    if (!image) return '';
+    
     return (
       <LazyLoadImage
         src= { image }
@@ -117,30 +119,11 @@ export default class Page extends Component {
     );
   }
 
-  getTableConfigs = (tableName) => {
-    switch (tableName) {
-      case 'abyss':
-        return ({
-          rowSelectOptions: config.abyssTablePagination,
-          headers: config.abyssTableHeaderKeys,
-          filters: config.abyssTableFilters,
-          dataSource: config.abyssTableDataSource
-        });
-      default:
-        return {
-          rowSelectOptions: '',
-          headers: '',
-          filters: '',
-          dataSource: ''
-        };
-    }
-  }
-
   // This will display the table with all records
   render = () => {
     const isTableTab = this.props.tableName ? true : false;
 
-    const { rowSelectOptions, headers, filters, dataSource } = this.getTableConfigs(this.props.tableName);
+    const { rowSelectOptions, headers, filters, dataSource } = config.getTableConfigs(this.props.tableName);
 
     return (
       <div className='pageContainer'>

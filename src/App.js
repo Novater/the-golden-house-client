@@ -1,10 +1,13 @@
-import { React, Component } from 'react';
+import { React, Component, Suspense } from 'react';
 import { Route } from 'react-router-dom';
 import Navbar from './components/navbar';
 import Page from './views/page';
+import LoadingSpinner from './components/loadingspinner';
 import './stylesheets/index.scss';
 import _generate from './functions/index';
 import BannerImg from './assets/banner-image-tgh-2.png';
+
+const config = require('./config/index');
 
 require('dotenv').config();
 
@@ -35,7 +38,7 @@ export default class App extends Component {
     this.setState({ showEditModal: false });
   }
 
-  createPage = (path, { title, tabName, backgroundImage, tableName }) => {
+  createPage = (path, { title, tabName, backgroundImage, tableName, navBar }) => {
     return (
       <Route exact path={path}>
         <Page
@@ -45,6 +48,7 @@ export default class App extends Component {
           isEditMode={this.state.isEditMode}
           backgroundImage={backgroundImage}
           tableName={tableName}
+          navBar={navBar}
         />
       </Route>
     )
@@ -57,13 +61,28 @@ export default class App extends Component {
   }
 
   render = () => {
+    const { rowSelectOptions, headers, filters, dataSource } =  config.getTableConfigs('abyss');
+
     return (
       <div className='app-container'>
-        <Navbar
-          setEditMode={this.updateEditMode}
-          isEdit={this.state.isEdit}
-          title='The Golden House'
-          isLoggedIn={this.state.isLoggedIn}
+
+        <Route render=
+          {
+            ({ location }) => ['/speedrun/leaderboard/fullpage'].includes(location.pathname) ?
+              <Navbar
+                setEditMode={this.updateEditMode}
+                isEdit={this.state.isEdit}
+                title='Leaderboard'
+                isLoggedIn={this.state.isLoggedIn}
+                standAlone={true}
+              /> : 
+              <Navbar
+                setEditMode={this.updateEditMode}
+                isEdit={this.state.isEdit}
+                title='The Golden House'
+                isLoggedIn={this.state.isLoggedIn}
+              />
+          } 
         />
         <Route exact path='/secret-login/12345'>
           <button style={{ position: 'absolute', left: '50%', top: '50%' }} onClick={this.loginUser}>Log In</button>
@@ -88,6 +107,13 @@ export default class App extends Component {
             tableName: 'abyss',
             backgroundImage: BannerImg
           })
+        },
+        {
+          this.createPage('/speedrun/leaderboard/fullpage', {
+            tableName: 'abyss',
+            navBar: 'none',
+            backgroundImage: ''
+          })          
         }
         {
           this.createPage('/contests', {
