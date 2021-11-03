@@ -33,7 +33,7 @@ export default class Navbar extends Component {
       {
         this.props.standAlone ?         
         <div className="container-fluid">
-          <NavLink className="navbar-brand" to="#">
+          <NavLink className="navbar-brand" to="/" target='_blank'>
             {this.props.title}
           </NavLink>
         </div> :
