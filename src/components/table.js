@@ -10,13 +10,21 @@ export default class Table extends Component {
     let filterObj = {};
     this.props.headers.map(header => {
 
-      const { filterValues, title, filter } = header;
+      const { filterValues, filterStyle } = header;
 
       if (filterValues) {
-        if (!filterValues.reduce((currVal, filter) => currVal || filter.selected, false)) filterValues[0].selected = true;
-        filterObj[header.title] = filterValues;
+        if (!filterValues.reduce((currVal, filter) => currVal || filter.selected, false)) {
+          if (filterStyle !== 'checkbox') filterValues[0].selected = true;
+        }
+
+        filterObj[header.title] = {
+          rows: filterValues,
+          filterStyle
+        };
       } else {
-        filterObj[header.title] = [];
+        filterObj[header.title] = {
+          rows: []
+        };
       }
     });
 
@@ -64,7 +72,7 @@ export default class Table extends Component {
     
     for (let header of headers) {
 
-      if (filters[header.title] && filters[header.title].length > 0) {
+      if (filters[header.title].rows && filters[header.title].rows.length > 0) {
         const format = header.format;
         const keys = header.keys;
 
@@ -74,14 +82,19 @@ export default class Table extends Component {
           stringRep = stringRep.replace(`{${key}}`, rec[key]);
         }
 
-        const thisFilter = filters[header.title];
-        const selectedEl = thisFilter.filter(value => value.selected)[0];
-        const  { lookFor } = selectedEl;
+        const thisFilter = filters[header.title].rows;
+        const selectedEl = thisFilter.filter(value => value.selected);
 
-        if (!stringRep.match(lookFor)) {
-          add = false;
-          break;
-        }
+        selectedEl.map(el => {
+          const  { lookFor } = el;
+
+          if (!stringRep.match(lookFor)) {
+            add = false;
+            return;
+          }
+        });
+
+
       }
     }
 
@@ -130,21 +143,21 @@ export default class Table extends Component {
   filterTable = (event) => {
     const filterFrom = event.target.name;
     const filterBy = event.target.value;
-    const filterArr = this.state.filters[filterFrom].map(filterEl => {
+    
+    const filterArr = this.state.filters[filterFrom].rows.map(filterEl => {
+      const filterStyle = this.state.filters[filterFrom].filterStyle;
+
       if (filterEl.title === filterBy) {
-        return ({
-          ...filterEl,
-          selected: true
-        });
+        const thisEl = filterStyle === 'checkbox' ? { ...filterEl, selected: event.target.checked } : { ...filterEl, selected: true };
+        return thisEl;
       } else {
-        return ({
-          ...filterEl,
-          selected: false
-        });
+        const thisEl = filterStyle === 'checkbox' ? filterEl : { ...filterEl, selected: false };
+        return thisEl;
       }
     });
+    
     let copiedFilters = { ...this.state.filters };
-    copiedFilters[filterFrom] = filterArr;
+    copiedFilters[filterFrom].rows = filterArr;
     // const filterIndex = this.props.filters.headers.indexOf(filter);
     // const filterKey = this.props.filters.values[filterIndex];
 
@@ -178,7 +191,6 @@ export default class Table extends Component {
   }
 
   sortTable = (sortKey, sortDirection, records, ranking = false, filters = null) => {
-    console.log('resorting table');
     let headerObj;
     const headers = this.props.headers;
 
@@ -248,17 +260,18 @@ export default class Table extends Component {
 
     Object.keys(this.state.filters).map((key) => {
       let filterObj = this.state.filters[key];
-      let filterForDefault = filterObj.filter(filter => filter.selected);
-      let defaultFilter = filterForDefault.length > 0 ? filterForDefault[0].title : filterObj[0];
+      console.log(filterObj.rows);
+      let filterForDefault = filterObj.rows.filter(filter => filter.selected);
 
-      if (filterObj.length > 0) {
+      if (filterObj.rows && filterObj.rows.length > 0) {
         generatedFilters.push(
           _generate.tableFunctions.initializeTableFilters({
             title: key,
             filterClass: 'table-filters',
-            filters: filterObj,
+            filters: filterObj.rows,
             onChange: this.filterTable,
-            defaultValue: defaultFilter
+            defaultValues: filterForDefault,
+            filterStyle: filterObj.filterStyle
           })
         );
       }

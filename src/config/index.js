@@ -49,7 +49,16 @@ module.exports = {
     {
       title: 'Characters',
       format: '{characters}',
-      keys: ['characters']
+      keys: ['characters'],
+      filterValues: [
+        { title: 'Hu Tao', lookFor: '.*Hutao.*' },
+        { title: 'Ganyu', lookFor: '.*Ganyu.*' },
+        { title: 'Raiden', lookFor: '.*Raiden.*' },
+        { title: 'Venti', lookFor: '.*Venti.*' },
+        { title: 'Bennett', lookFor: '.*Bennett.*' },
+        { title: 'Cryo Kazuha', lookFor: '.*Qiqi.*' }
+      ],
+      filterStyle: 'checkbox'
     },
     {
       title: 'Notes',

@@ -24,12 +24,36 @@ export default class tableFunctions {
    * @param {*} onClick 
    * @returns Filters JSX
    */
-  static initializeTableFilters = ({ title, filterClass, filters, onChange, defaultValue }) => {
+  static initializeTableFilters = ({ title, filterClass, filters, onChange, defaultValues, filterStyle }) => {
+
+    if (filterStyle === 'checkbox') {
+      return (
+        <div className={filterClass}>
+          <p style={{ width: '100%' }}>{`${title}: `}</p>
+          {
+            filters.map(el => {
+              return (
+                
+                <div className='checkbox-filter'>
+                  <input className='form-check-input filter-checkbox' type="checkbox" name={title} value={el.title} id='filterCheckbox' onChange={onChange} />
+                  <label className='form-check-label filter-label' for='filterCheckbox'>
+                    {el.title}
+                  </label>
+                </div>
+              );
+            })
+          }
+        </div>
+      );
+
+    }
+
+    console.log('filters', filters);
 
     return (
       <div className={filterClass}>
-        <p>{`${title}: `}</p>
-        <select className='form-select' name={title} onChange={onChange} defaultValue={defaultValue}>
+        <p style={{ width: '100%' }}>{`${title}: `}</p>
+        <select className='form-select' name={title} onChange={onChange} defaultValue={defaultValues[0]}>
           {
             filters.map(el => {
               return <option>{el.title}</option>;
@@ -88,9 +112,6 @@ export default class tableFunctions {
           }
 
           for (let i = 0; i < numPages; i += 1) {
-            console.log('i', i);
-            console.log('currpage', currPage);
-            console.log('Math.abs', Math.abs(i - currPage));
             if (i + 1 == currPage) {
               paginationEls.push(
                 <li className='page-item focused'><a class='page-link' name={i + 1} onClick={paginationFunc}>{i + 1}</a></li>

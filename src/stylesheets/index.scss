@@ -455,7 +455,16 @@ body, html {
   align-content: center;
   flex-wrap: wrap;
   color: $color-neutral;
+  max-width: 300px;
   margin-right: 10px;
+
+  .filter-checkbox, .filter-label {
+    margin-right: 10px;
+  }
+
+  .filter-checkbox {
+    background-color: black;
+  }
   
   select {
     background-color: black;
