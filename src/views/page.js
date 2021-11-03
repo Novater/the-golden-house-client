@@ -162,7 +162,6 @@ export default class Page extends Component {
                 <Table 
                   defaultSortKey='Time'
                   defaultSortDir={1}
-                  defaultFilter='12-3-1'
                   headers={headers}
                   filters={filters}
                   searchable={true}

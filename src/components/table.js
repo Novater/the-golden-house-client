@@ -6,14 +6,28 @@ import axios from 'axios';
 export default class Table extends Component {
   constructor (props) {
     super(props);
+
+    let filterObj = {};
+    this.props.headers.map(header => {
+
+      const { filterValues, title, filter } = header;
+
+      if (filterValues) {
+        if (!filterValues.reduce((currVal, filter) => currVal || filter.selected, false)) filterValues[0].selected = true;
+        filterObj[header.title] = filterValues;
+      } else {
+        filterObj[header.title] = [];
+      }
+    });
+
     this.state = { 
       records: [],
       search: '',
-      sortKey: this.props.defaultSortKey,
+      sortKey: this.props.defaultSortKey || '',
       sortDir: this.props.defaultSortDir || 1,
       pageRows: this.props.rowSelectOptions ? this.props.rowSelectOptions.selected : '',
-      filter: this.props.defaultFilter,
-      rowSelectOptions: props.rowSelectOptions,
+      filters: filterObj,
+      rowSelectOptions: this.props.rowSelectOptions,
       currPage: 1
     };
   }
@@ -25,7 +39,7 @@ export default class Table extends Component {
 
     if (true) {
       axios
-      .get(`${SERVER_URL || 'https://calm-plains-52439.herokuapp.com'}/record/${this.props.dataSource}`)
+      .get(`${SERVER_URL || 'https://calm-plains-52439.herokuapp.com'}${this.props.dataSource}`)
       .then((response) => {
         if (this.state.sortKey) {
           this.sortTable(this.state.sortKey, this.state.sortDir || 1, response.data, true);
@@ -39,54 +53,52 @@ export default class Table extends Component {
       .catch((error) => {
         console.log(error);
       });
-    } else {
-      if (this.state.sortKey) {
-        this.sortTable(this.state.sortKey, this.state.sortDir || 1, JSON.parse(storedData), true);
-      } else {
-        this.setState({
-          records: JSON.parse(storedData)
-        });
-      }
     }
   }
 
   componentWillUnmount = () => {
   }
 
+  checkFilterColumn = (headers, filters, rec) => {
+    let add = true;
+    
+    for (let header of headers) {
+
+      if (filters[header.title] && filters[header.title].length > 0) {
+        const format = header.format;
+        const keys = header.keys;
+
+        let stringRep = format;
+
+        for (const key of keys) {
+          stringRep = stringRep.replace(`{${key}}`, rec[key]);
+        }
+
+        const thisFilter = filters[header.title];
+        const selectedEl = thisFilter.filter(value => value.selected)[0];
+        const  { lookFor } = selectedEl;
+
+        if (!stringRep.match(lookFor)) {
+          add = false;
+          break;
+        }
+      }
+    }
+
+    return add;
+  }
+
   tableList = () => {
     let searchedRecords = [];
+    const { headers } = this.props;
+
     this.state.records.map((thisRec) => {
       if (this.state.search) {
         if (JSON.stringify(thisRec).toLowerCase().indexOf(this.state.search.toLowerCase()) >= 0) {
           
-          if (this.state.filter) {
-            let headerObj;
-            const headers = this.props.headers;
-      
-            for (let i = 0; i < headers.length; i += 1) {
-              if (headers[i].title === this.props.filters.key) headerObj = headers[i];
-            }
-        
-            if (!headerObj) return;
-        
-            const format = headerObj.format;
-            const keys = headerObj.keys;
-  
-            let stringRep = format;
+          const appendRec = this.checkFilterColumn(headers, this.state.filters, thisRec);
 
-            for (const key of keys) {
-              stringRep = stringRep.replace(`{${key}}`, thisRec[key]);
-            }
-
-            if (this.state.filter === stringRep) {
-              searchedRecords.push(
-                {
-                  thisRec: thisRec,
-                  trClass: 'info-row'
-                }
-              );
-            }
-          } else {
+          if (appendRec) {
             searchedRecords.push(
               {
                 thisRec: thisRec,
@@ -96,34 +108,8 @@ export default class Table extends Component {
           }
         }
       } else {
-        if (this.state.filter) {
-          let headerObj;
-          const headers = this.props.headers;
-    
-          for (let i = 0; i < headers.length; i += 1) {
-            if (headers[i].title === this.props.filters.key) headerObj = headers[i];
-          }
-      
-          if (!headerObj) return;
-      
-          const format = headerObj.format;
-          const keys = headerObj.keys;
-
-          let stringRep = format;
-          
-          for (const key of keys) {
-            stringRep = stringRep.replace(`{${key}}`, thisRec[key]);
-          }
-
-          if (this.state.filter === stringRep) {
-            searchedRecords.push(
-              {
-                thisRec: thisRec,
-                trClass: 'info-row'
-              }
-            );
-          }
-        } else {
+        const appendRec = this.checkFilterColumn(headers, this.state.filters, thisRec);
+        if (appendRec) {
           searchedRecords.push(
             {
               thisRec: thisRec,
@@ -142,16 +128,32 @@ export default class Table extends Component {
   }
 
   filterTable = (event) => {
-    const filter = event.target.value;
-    const filterIndex = this.props.filters.headers.indexOf(filter);
-    const filterKey = this.props.filters.values[filterIndex];
+    const filterFrom = event.target.name;
+    const filterBy = event.target.value;
+    const filterArr = this.state.filters[filterFrom].map(filterEl => {
+      if (filterEl.title === filterBy) {
+        return ({
+          ...filterEl,
+          selected: true
+        });
+      } else {
+        return ({
+          ...filterEl,
+          selected: false
+        });
+      }
+    });
+    let copiedFilters = { ...this.state.filters };
+    copiedFilters[filterFrom] = filterArr;
+    // const filterIndex = this.props.filters.headers.indexOf(filter);
+    // const filterKey = this.props.filters.values[filterIndex];
 
     this.setState({
-      filter: filterKey,
+      filters: copiedFilters,
       currPage: 1
     });
 
-    this.sortTable(this.props.defaultSortKey, this.props.defaultSortDir, [...this.state.records], true);
+    this.sortTable(this.props.defaultSortKey, this.props.defaultSortDir, [...this.state.records], true, copiedFilters);
   }
 
   updateFilter = (event) => {
@@ -175,7 +177,8 @@ export default class Table extends Component {
     }
   }
 
-  sortTable = (sortKey, sortDirection, records, ranking = false) => {
+  sortTable = (sortKey, sortDirection, records, ranking = false, filters = null) => {
+    console.log('resorting table');
     let headerObj;
     const headers = this.props.headers;
 
@@ -199,18 +202,22 @@ export default class Table extends Component {
     records.sort((a, b) => {
       if (a.sortString > b.sortString) return 1 * sortDirection;
       if (a.sortString === b.sortString) {
+        if (a.rank > b.rank) return 1;
         return 0;
       }
       return -1 * sortDirection;
     });
 
     if (ranking) {
-      records.map((record, idx) => {
-        record.rank = idx + 1;
-        return record;
+      let rank = 1;
+      records.map((record) => {
+
+        const appendRec = this.checkFilterColumn(this.props.headers, filters || this.state.filters, record);
+        if (appendRec) {
+          record.rank = rank++;
+        }
       });
     }
-
     this.setState({
       records: records,
       sortDir: sortDirection,
@@ -235,18 +242,28 @@ export default class Table extends Component {
   // This will display the table with all records
   render = () => {
     let headers = this.props.headers;
-    let filters = this.props.filters;
     let searchable = this.props.searchable;
 
-    if (filters) {
-      filters = _generate.tableFunctions.initializeTableFilters({
-        title: filters.key,
-        filterClass: 'table-filters',
-        filters: filters,
-        onChange: this.filterTable,
-        defaultValue: this.props.defaultFilter
-      });
-    }
+    let generatedFilters = [];
+
+    Object.keys(this.state.filters).map((key) => {
+      let filterObj = this.state.filters[key];
+      let filterForDefault = filterObj.filter(filter => filter.selected);
+      let defaultFilter = filterForDefault.length > 0 ? filterForDefault[0].title : filterObj[0];
+
+      if (filterObj.length > 0) {
+        generatedFilters.push(
+          _generate.tableFunctions.initializeTableFilters({
+            title: key,
+            filterClass: 'table-filters',
+            filters: filterObj,
+            onChange: this.filterTable,
+            defaultValue: defaultFilter
+          })
+        );
+      }
+    });
+    
     if (headers) {
       headers = _generate.tableFunctions.initializeTableHeaders('leaderboard-row', headers, this.sortByKey);
     }
@@ -262,7 +279,7 @@ export default class Table extends Component {
     return (
       <div className='table-container'>
         <div className='filter-container'>
-          {filters}
+          {generatedFilters}
         </div>
         {
           searchable ? 

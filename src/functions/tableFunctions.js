@@ -29,10 +29,10 @@ export default class tableFunctions {
     return (
       <div className={filterClass}>
         <p>{`${title}: `}</p>
-        <select className='form-select' onChange={onChange} defaultValue={defaultValue}>
+        <select className='form-select' name={title} onChange={onChange} defaultValue={defaultValue}>
           {
-            filters.headers.map(el => {
-              return <option>{el}</option>;
+            filters.map(el => {
+              return <option>{el.title}</option>;
             })
           }
         </select>
@@ -75,12 +75,22 @@ export default class tableFunctions {
       
       if (pagination) {
         let numPages = rowOptions.selected ? Math.ceil(numRows / rowOptions.selected) : 1;
-
         if (numPages > 1) {
-          paginationEls.push(
-            <li className='page-item'><a class='page-link' name='Previous' onClick={paginationFunc}>Previous</a></li>
-          );
+
+          if (currPage > 1) {
+
+            paginationEls.push(
+              <li className='page-item'><a class='page-link' name={1} onClick={paginationFunc}>&lt;&lt;</a></li>
+            );
+            paginationEls.push(
+              <li className='page-item'><a class='page-link' name={'Previous'} onClick={paginationFunc}>&lt;</a></li>
+            );
+          }
+
           for (let i = 0; i < numPages; i += 1) {
+            console.log('i', i);
+            console.log('currpage', currPage);
+            console.log('Math.abs', Math.abs(i - currPage));
             if (i + 1 == currPage) {
               paginationEls.push(
                 <li className='page-item focused'><a class='page-link' name={i + 1} onClick={paginationFunc}>{i + 1}</a></li>
@@ -88,12 +98,17 @@ export default class tableFunctions {
             } else {
               paginationEls.push(
                 <li className='page-item'><a class='page-link' name={i + 1} onClick={paginationFunc}>{i + 1}</a></li>
-              );
+              );              
             }
           }
-          paginationEls.push(
-            <li className='page-item'><a class='page-link' name='Next' onClick={paginationFunc}>Next</a></li>
-          );
+          if (currPage < numPages) {
+            paginationEls.push(
+              <li className='page-item'><a class='page-link' name={'Next'} onClick={paginationFunc}>&gt;</a></li>
+            );
+            paginationEls.push(
+              <li className='page-item'><a class='page-link' name={numPages} onClick={paginationFunc}>&gt;&gt;</a></li>
+            );
+          }
         }
       }
 
