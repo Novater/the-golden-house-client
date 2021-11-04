@@ -1,13 +1,19 @@
 module.exports = {
   allowedTags: ['iframe'],
-  allowedAttr: ['style', 'allow', 'allowfullscreen', 'frameborder', 'scrolling'],
+  allowedAttr: [
+    'style',
+    'allow',
+    'allowfullscreen',
+    'frameborder',
+    'scrolling',
+  ],
 
   // Abyss Table Configs
   abyssTableHeaderKeys: [
     {
       title: 'Rank',
       format: '{rank}',
-      keys: ['rank']
+      keys: ['rank'],
     },
     {
       title: 'Version',
@@ -16,8 +22,8 @@ module.exports = {
       filterValues: [
         { title: 'All', lookFor: '.*' },
         { title: '2.1', lookFor: '2.1', selected: true },
-        { title: '2.0', lookFor: '2.0' }
-      ]
+        { title: '2.0', lookFor: '2.0' },
+      ],
     },
     {
       title: 'Floor',
@@ -28,30 +34,30 @@ module.exports = {
         { title: '12-1-1', lookFor: '12-1-1' },
         { title: '12-1-2', lookFor: '12-1-2' },
         { title: '12-1-3', lookFor: '12-1-3' },
-        { title: '12-3-1', lookFor: '12-3-1'}
-      ]
+        { title: '12-3-1', lookFor: '12-3-1' },
+      ],
     },
     {
       title: 'Time',
       format: '{time}',
-      keys: ['time']
+      keys: ['time'],
     },
     {
       title: 'Alias',
       format: '{alias}',
-      keys: ['alias']
+      keys: ['alias'],
     },
     {
       title: 'Region',
       format: '{region}',
       keys: ['region'],
       filterValues: [
-        { title: 'America', lookFor: 'America', selected: true},
-        { title: 'Asia', lookFor: 'Asia', selected: true},
+        { title: 'America', lookFor: 'America', selected: true },
+        { title: 'Asia', lookFor: 'Asia', selected: true },
         { title: 'Europe', lookFor: 'Europe' },
-        { title: 'China', lookFor: 'China' }
+        { title: 'China', lookFor: 'China' },
       ],
-      filterStyle: 'checkbox'
+      filterStyle: 'checkbox',
     },
     {
       title: 'Characters',
@@ -63,37 +69,35 @@ module.exports = {
         { title: 'Raiden', lookFor: '.*Raiden.*' },
         { title: 'Venti', lookFor: '.*Venti.*' },
         { title: 'Bennett', lookFor: '.*Bennett.*' },
-        { title: 'Cryo Kazuha', lookFor: '.*Qiqi.*' }
+        { title: 'Cryo Kazuha', lookFor: '.*Qiqi.*' },
       ],
-      filterStyle: 'checkbox'
+      filterStyle: 'checkbox',
     },
     {
       title: 'Notes',
       format: '{notes}',
-      keys: ['notes']
-    }
+      keys: ['notes'],
+    },
   ],
-  abyssTablePagination: { 
+  abyssTablePagination: {
     rows: [10, 20, 50, 100],
-    selected: 20
+    selected: 20,
   },
-  abyssTableDataSource: '/record/entries',
   getTableConfigs(tableName) {
     switch (tableName) {
       case 'abyss':
-        return ({
+        return {
           rowSelectOptions: this.abyssTablePagination,
           headers: this.abyssTableHeaderKeys,
           filters: this.abyssTableFilters,
-          dataSource: this.abyssTableDataSource
-        });
+        }
       default:
         return {
           rowSelectOptions: '',
           headers: '',
           filters: '',
-          dataSource: ''
-        };
+          dataSource: '',
+        }
     }
-  }
-};
+  },
+}

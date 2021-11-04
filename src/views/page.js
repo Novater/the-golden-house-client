@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import axios from 'axios';
 import React, { Component, Suspense } from 'react';
 import _generate from '../functions/index';
@@ -6,7 +8,6 @@ import LoadingSpinner from '../components/loadingspinner';
 
 const Table = React.lazy(() => import('../components/table'));
 const BlogSection = React.lazy(() => import('../components/blogsection'));
-
 const config = require('../config/index');
 
 export default class Page extends Component {
@@ -20,6 +21,8 @@ export default class Page extends Component {
     };
   }
 
+/* eslint-enable */
+
   // This method will get the data from the database
   async componentDidMount() {
     this.setState({ tabName: this.props.tabName });
@@ -29,6 +32,7 @@ export default class Page extends Component {
     const postData  = posts.data;
 
     let data = [];
+
     if (this.props.dataSource) {
       const dataSource = await axios.get(`${SERVER_URL || 'https://calm-plains-52439.herokuapp.com'}${this.props.dataSource}`);
       data = dataSource.data;
@@ -40,7 +44,7 @@ export default class Page extends Component {
     });
   }
 
-  componentDidUpdate = (prevProps) => {
+  componentDidUpdate(prevProps) {
     if (prevProps.isEdit !== this.props.isEdit || prevProps.isEditMode !== this.props.isEditMode) {
       this.setState({
         isEdit: this.props.isEdit,
@@ -64,7 +68,7 @@ export default class Page extends Component {
     });    
   }
 
-  generatePage = (tabName, objFunc) => {
+  generatePage(tabName, objFunc) {
     let content = objFunc.generatePage(tabName);
     return (
       <div className='pageContainer'>
@@ -73,7 +77,7 @@ export default class Page extends Component {
     );
   }
 
-  renderBackdrop = (image) => {
+  renderBackdrop(image) {
     if (!image) return '';
 
     return (
@@ -86,7 +90,7 @@ export default class Page extends Component {
     )
   }
   
-  renderPosts = () => {
+  renderPosts() {
     return (
       this.state.posts.length > 0 ? 
         this.state.posts.map(post => { 
@@ -123,7 +127,7 @@ export default class Page extends Component {
   }
 
   // This will display the table with all records
-  render = () => {
+  render() {
     const isTableTab = this.props.tableName ? true : false;
 
     const { rowSelectOptions, headers, filters } = config.getTableConfigs(this.props.tableName);
