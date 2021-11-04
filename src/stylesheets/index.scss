@@ -350,6 +350,14 @@ body, html {
   }
 }
 
+thead {
+  position: sticky;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  background: rgb(0 0 0 / 0.8);
+}
+
 .leaderboard-row {
   height: 50px;
   width: 100%;

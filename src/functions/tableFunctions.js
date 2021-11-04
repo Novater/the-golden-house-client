@@ -1,6 +1,9 @@
 /* eslint-disable */
 
 import React from 'react'
+import _generate from '../functions/index'
+
+const config = require('../config/index')
 
 export default class tableFunctions {
   /**
@@ -232,7 +235,7 @@ export default class tableFunctions {
             if (header.title === 'Rank') {
               return (
                 <td>
-                  <div className="rank-col" id={`rank-${record.rank}`}>
+                  <div key={`${header.title}-${record._id}`} className="rank-col" id={`rank-${record.rank}`}>
                     {record.rank}
                   </div>
                 </td>
@@ -247,7 +250,14 @@ export default class tableFunctions {
             }
 
             return (
-              <td dangerouslySetInnerHTML={{ __html: format.toString() }}></td>
+              <td key={`${header.title}-${record._id}`} dangerouslySetInnerHTML={{ 
+                __html: _generate.cleanHTML.clean(
+                  format.toString(),
+                  config.allowedTags,
+                  config.allowedAttr,
+                ), 
+              }}>
+              </td>
             )
           })}
         </tr>
@@ -287,14 +297,19 @@ export default class tableFunctions {
     return (
       <div className={wrapperClassName}>
         <div className={tableClassName}>
-          <table className={tableClassName}>
-            <tr className={headers.className} onClick={headers.onClick}>
-              {headers.headers.map((header) => (
-                <th name={header.title}>{header.title}</th>
-              ))}
-            </tr>
-            <tbody>{tableBuildRows}</tbody>
-          </table>
+          {
+            headers ?
+            <table className={tableClassName}>
+              <thead>
+              <tr className={headers.className} onClick={headers.onClick}>
+                {headers.headers.map((header) => (
+                  <th name={header.title}>{header.title}</th>
+                ))}
+              </tr>
+              </thead>
+              <tbody>{tableBuildRows}</tbody>
+            </table> : null
+          }
         </div>
         {footer}
       </div>
