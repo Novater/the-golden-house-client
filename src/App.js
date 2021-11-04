@@ -38,7 +38,8 @@ export default class App extends Component {
     this.setState({ showEditModal: false });
   }
 
-  createPage = (path, { title, tabName, backgroundImage, tableName, navBar }) => {
+  createExactPage = (path, { title, tabName, backgroundImage, tableName, navBar, dataSource }) => {
+    console.log('dataSource', dataSource);
     return (
       <Route exact path={path}>
         <Page
@@ -49,6 +50,7 @@ export default class App extends Component {
           backgroundImage={backgroundImage}
           tableName={tableName}
           navBar={navBar}
+          dataSource={dataSource}
         />
       </Route>
     )
@@ -61,7 +63,6 @@ export default class App extends Component {
   }
 
   render = () => {
-    const { rowSelectOptions, headers, filters, dataSource } =  config.getTableConfigs('abyss');
 
     return (
       <div className='app-container'>
@@ -72,7 +73,7 @@ export default class App extends Component {
               <Navbar
                 setEditMode={this.updateEditMode}
                 isEdit={this.state.isEdit}
-                title='Leaderboard'
+                title='Abyss Leaderboard'
                 isLoggedIn={this.state.isLoggedIn}
                 standAlone={true}
               /> : 
@@ -88,42 +89,44 @@ export default class App extends Component {
           <button style={{ position: 'absolute', left: '50%', top: '50%' }} onClick={this.loginUser}>Log In</button>
         </Route>
         {
-          this.createPage('/', {
+          this.createExactPage('/', {
             title: 'Welcome to the Golden House',
             tabName: 'home',
             backgroundImage: BannerImg
           })
         }
         {
-          this.createPage('/about', {
+          this.createExactPage('/about', {
             title: 'About Us',
             tabName: 'about',
             backgroundImage: BannerImg
           })
         }
         {
-          this.createPage('/speedrun/leaderboard', {
+          this.createExactPage('/speedrun/leaderboard', {
             tabName: 'speedrun-leaderboard',
             tableName: 'abyss',
-            backgroundImage: BannerImg
+            backgroundImage: BannerImg,
+            dataSource: '/record/entries'
           })
         },
         {
-          this.createPage('/speedrun/leaderboard/fullpage', {
+          this.createExactPage('/speedrun/leaderboard/fullpage', {
             tableName: 'abyss',
             navBar: 'none',
-            backgroundImage: ''
+            backgroundImage: '',
+            dataSource: '/record/entries'
           })          
         }
         {
-          this.createPage('/contests', {
+          this.createExactPage('/contests', {
             title: 'Contests',
             tabName: 'contests',
             backgroundImage: BannerImg
           })          
         }
         {
-          this.createPage('/partners', {
+          this.createExactPage('/partners', {
             title: 'Partners',
             tabName: 'partners',
             backgroundImage: BannerImg

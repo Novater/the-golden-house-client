@@ -47,8 +47,6 @@ export default class tableFunctions {
 
     }
 
-    console.log('filters', filters);
-
     return (
       <div className={filterClass}>
         <p style={{ width: '100%' }}>{`${title}: `}</p>
@@ -156,7 +154,7 @@ export default class tableFunctions {
       let headerKeyFormats = headers.headers;
 
       return (
-        <tr className={props.className || ''}>
+        <tr key={record._id} className={props.className || ''}>
           {
             headerKeyFormats.map(header => {
               if (header.title === 'Rank') {

@@ -29,7 +29,7 @@ export default class Table extends Component {
     });
 
     this.state = { 
-      records: [],
+      records: this.props.dataSource,
       search: '',
       sortKey: this.props.defaultSortKey || '',
       sortDir: this.props.defaultSortDir || 1,
@@ -41,26 +41,15 @@ export default class Table extends Component {
   }
 
   // This method will get the data from the database
-  componentDidMount = () => {
-    const storedData = window.sessionStorage.getItem(this.state.type);
-    const SERVER_URL = _generate.serverFunctions.getServerURL();
-
-    if (true) {
-      axios
-      .get(`${SERVER_URL || 'https://calm-plains-52439.herokuapp.com'}${this.props.dataSource}`)
-      .then((response) => {
-        if (this.state.sortKey) {
-          this.sortTable(this.state.sortKey, this.state.sortDir || 1, response.data, true);
-        } else {
-          this.setState({
-            records: response.data
-          });
-        }
-        window.sessionStorage.setItem(this.state.type, JSON.stringify(this.state.records));
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  componentDidUpdate = (prevProps) => {
+    if (this.props.dataSource !== prevProps.dataSource) {
+      if (this.state.sortKey) {
+        this.sortTable(this.state.sortKey, this.state.sortDir || 1, this.props.dataSource, true);
+      } else {
+        this.setState({
+          records: this.props.dataSource
+        });
+      }
     }
   }
 
@@ -86,7 +75,7 @@ export default class Table extends Component {
         const selectedEl = thisFilter.filter(value => value.selected);
 
         if (selectedEl.length === 0) continue;
-        
+
         let thisFilterLookupAMatch = false;
         selectedEl.map(el => {
           const  { lookFor } = el;
@@ -109,6 +98,8 @@ export default class Table extends Component {
   tableList = () => {
     let searchedRecords = [];
     const { headers } = this.props;
+
+    if (!this.state.records) return [];
 
     this.state.records.map((thisRec) => {
       if (this.state.search) {
@@ -195,7 +186,7 @@ export default class Table extends Component {
     }
   }
 
-  sortTable = (sortKey, sortDirection, records, ranking = false, filters = null) => {
+  sortTable = (sortKey, sortDirection, records = [], ranking = false, filters = null) => {
     let headerObj;
     const headers = this.props.headers;
 
@@ -265,7 +256,6 @@ export default class Table extends Component {
 
     Object.keys(this.state.filters).map((key) => {
       let filterObj = this.state.filters[key];
-      console.log(filterObj.rows);
       let filterForDefault = filterObj.rows.filter(filter => filter.selected);
 
       if (filterObj.rows && filterObj.rows.length > 0) {

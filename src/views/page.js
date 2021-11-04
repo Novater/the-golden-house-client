@@ -15,25 +15,28 @@ export default class Page extends Component {
     this.state = {
       posts: [],
       isEdit: this.props.isEdit,
-      isEditMode: this.props.isEditMode
+      isEditMode: this.props.isEditMode,
+      records: []
     };
   }
 
   // This method will get the data from the database
-  componentDidMount = () => {
+  async componentDidMount() {
     this.setState({ tabName: this.props.tabName });
 
     let SERVER_URL = _generate.serverFunctions.getServerURL();
-    axios
-    .get(`${SERVER_URL || 'https://calm-plains-52439.herokuapp.com'}/post/${this.props.tabName}`)
-    .then((response) => {
-      console.log(response);
-      this.setState({ 
-        posts: response.data
-      });
-    })
-    .catch((error) => {
-      console.log(error);
+    const posts = await axios.get(`${SERVER_URL || 'https://calm-plains-52439.herokuapp.com'}/post/${this.props.tabName}`);
+    const postData  = posts.data;
+
+    let data = [];
+    if (this.props.dataSource) {
+      const dataSource = await axios.get(`${SERVER_URL || 'https://calm-plains-52439.herokuapp.com'}${this.props.dataSource}`);
+      data = dataSource.data;
+    }
+
+    this.setState({
+      posts: postData,
+      records: data
     });
   }
 
@@ -72,7 +75,7 @@ export default class Page extends Component {
 
   renderBackdrop = (image) => {
     if (!image) return '';
-    
+
     return (
       <LazyLoadImage
         src= { image }
@@ -123,7 +126,7 @@ export default class Page extends Component {
   render = () => {
     const isTableTab = this.props.tableName ? true : false;
 
-    const { rowSelectOptions, headers, filters, dataSource } = config.getTableConfigs(this.props.tableName);
+    const { rowSelectOptions, headers, filters } = config.getTableConfigs(this.props.tableName);
 
     return (
       <div className='pageContainer'>
@@ -150,7 +153,8 @@ export default class Page extends Component {
                   searchable={true}
                   rowSelectOptions={rowSelectOptions}
                   pagination={true}
-                  dataSource={dataSource}
+                  dataSource={this.state.records}
+                  key={this.props.title}
                 />
               </Suspense>
               : ''
