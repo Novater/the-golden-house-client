@@ -68,7 +68,7 @@ export default class Table extends Component {
 
   componentWillUnmount() {}
 
-  checkFilterColumn(headers, filters, rec) {
+  checkFilterColumn = (headers, filters, rec) => {
     let add = true
 
     for (const header of headers) {
@@ -106,7 +106,7 @@ export default class Table extends Component {
     return add
   }
 
-  tableList() {
+  tableList = () => {
     const searchedRecords = []
     const { headers } = this.props
 
@@ -150,14 +150,14 @@ export default class Table extends Component {
     return searchedRecords
   }
 
-  updateSearch(event) {
+  updateSearch = (event) => {
     this.setState({ search: event.target.value, currPage: 1 })
   }
 
-  filterTable(event) {
+  filterTable = (event) => {
     const filterFrom = event.target.name
     const filterBy = event.target.value
-
+    console.log('this', this)
     const filterArr = this.state.filters[filterFrom].rows.map((filterEl) => {
       const { filterStyle } = this.state.filters[filterFrom]
 
@@ -192,7 +192,7 @@ export default class Table extends Component {
     )
   }
 
-  updateFilter(event) {
+  updateFilter = (event) => {
     this.setState({
       pageRows: event.target.value,
       currPage: 1,
@@ -203,7 +203,7 @@ export default class Table extends Component {
     })
   }
 
-  sortByKey(event) {
+  sortByKey = (event) => {
     const headerName = event.target.getAttribute('name')
 
     if (this.state.sortKey === headerName) {
@@ -215,13 +215,13 @@ export default class Table extends Component {
     }
   }
 
-  sortTable(
+  sortTable = (
     sortKey,
     sortDirection,
     records = [],
     ranking = false,
     filters = null,
-  ) {
+  ) => {
     let headerObj
     const { headers } = this.props
 
@@ -271,7 +271,7 @@ export default class Table extends Component {
     })
   }
 
-  updatePage(event) {
+  updatePage = (event) => {
     const pageNum = event.target.name
 
     if (pageNum.toLowerCase() === 'previous') {
@@ -288,6 +288,7 @@ export default class Table extends Component {
 
   // This will display the table with all records
   render() {
+    console.log(this.state)
     let { headers } = this.props
     const { searchable } = this.props
 
@@ -363,9 +364,9 @@ export default class Table extends Component {
 }
 
 Table.propTypes = {
-  dataSource: PropTypes.object,
-  headers: PropTypes.object.isRequired,
+  dataSource: PropTypes.array,
+  headers: PropTypes.array.isRequired,
   defaultSortKey: PropTypes.string,
-  defaultSortDir: PropTypes.string,
+  defaultSortDir: PropTypes.number,
   rowSelectOptions: PropTypes.object.isRequired,
 }

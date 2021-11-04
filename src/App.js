@@ -21,11 +21,11 @@ export default class App extends Component {
     }
   }
 
-  updateEditMode() {
+  updateEditMode = () => {
     this.setState({ showEditModal: true })
   }
 
-  changeEditMode() {
+  changeEditMode = () => {
     this.setState((prevState) => ({
       showEditModal: false,
       isEdit: !prevState.isEdit,
@@ -33,14 +33,14 @@ export default class App extends Component {
     }))
   }
 
-  closeModal() {
+  closeModal = () => {
     this.setState({ showEditModal: false })
   }
 
-  createExactPage(
+  createExactPage = (
     path,
     { title, tabName, backgroundImage, tableName, navBar, dataSource },
-  ) {
+  ) => {
     return (
       <Route exact path={path}>
         <Page
@@ -57,7 +57,7 @@ export default class App extends Component {
     )
   }
 
-  loginUser() {
+  loginUser = () => {
     this.setState({
       isLoggedIn: true,
     })

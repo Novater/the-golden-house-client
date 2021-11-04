@@ -42,7 +42,7 @@ export default class BlogSection extends Component {
     }
   }
 
-  cancelSave() {
+  cancelSave = () => {
     this.setState((prevState) => ({
       title: prevState.loadedTitle,
       content: prevState.loadedContent,
@@ -50,11 +50,11 @@ export default class BlogSection extends Component {
     }))
   }
 
-  createNewPost() {
+  createNewPost = () => {
     this.setState({ showCreateModal: true })
   }
 
-  confirmCreate() {
+  confirmCreate = () => {
     const SERVER_URL = _generate.serverFunctions.getServerURL()
 
     axios
@@ -74,11 +74,11 @@ export default class BlogSection extends Component {
       .catch((err) => {})
   }
 
-  deleteBlogPost() {
+  deleteBlogPost = () => {
     this.setState({ showDeleteModal: true })
   }
 
-  confirmDelete() {
+  confirmDelete = () => {
     const SERVER_URL = _generate.serverFunctions.getServerURL()
 
     axios
@@ -99,19 +99,19 @@ export default class BlogSection extends Component {
       })
   }
 
-  handleCloseCreate() {
+  handleCloseCreate = () => {
     this.setState({ showCreateModal: false })
   }
 
-  handleCloseDelete() {
+  handleCloseDelete = () => {
     this.setState({ showDeleteModal: false })
   }
 
-  editBlogPost() {
+  editBlogPost = () => {
     this.setState({ isEditMode: true })
   }
 
-  getBlogEditMode() {
+  getBlogEditMode = () => {
     return (
       <div className="blog-post" id={this.state.id}>
         <form className="blog-form" onSubmit={this.handleSubmit}>
@@ -161,7 +161,7 @@ export default class BlogSection extends Component {
     )
   }
 
-  getBlogViewMode() {
+  getBlogViewMode = () => {
     return (
       <div className="blog-post" id={this.state.id}>
         {this.state.isEdit ? (
@@ -226,7 +226,7 @@ export default class BlogSection extends Component {
     )
   }
 
-  handleSubmit(event) {
+  handleSubmit = (event) => {
     const type = event.target.name
 
     if (type === 'save') {
@@ -237,13 +237,13 @@ export default class BlogSection extends Component {
     }
   }
 
-  handleEditorChange(content) {
+  handleEditorChange = (content) => {
     this.setState({ content })
   }
 
-  handleChange(event) {
+  handleChange = (event) => {
     const thisName = event.target.id
-    console.log('handlechange')
+
     switch (thisName) {
       case thisName.match('title-.*').input:
         this.setState({ title: event.target.value })
@@ -256,7 +256,7 @@ export default class BlogSection extends Component {
     }
   }
 
-  saveBlogPost() {
+  saveBlogPost = () => {
     const SERVER_URL = _generate.serverFunctions.getServerURL()
 
     axios

@@ -121,6 +121,6 @@ Navbar.propTypes = {
   isEdit: PropTypes.bool.isRequired,
   standAlone: PropTypes.bool,
   title: PropTypes.string,
-  setEditMode: PropTypes.bool,
+  setEditMode: PropTypes.func,
   isLoggedIn: PropTypes.bool,
 }
