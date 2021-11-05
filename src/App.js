@@ -124,39 +124,6 @@ export default class App extends Component {
             })
           },
         )}
-        {/* {this.createExactPage('/', {
-          title: 'Welcome to the Golden House',
-          tabName: 'home',
-          backgroundImage: BannerImg,
-        })}
-        {this.createExactPage('/about', {
-          title: 'About Us',
-          tabName: 'about',
-          backgroundImage: BannerImg,
-        })}
-        {this.createExactPage('/speedrun/leaderboard', {
-          tabName: 'speedrun-leaderboard',
-          tableName: 'abyss',
-          backgroundImage: BannerImg,
-          dataSource: '/record/entries',
-        })}
-        ,
-        {this.createExactPage('/speedrun/leaderboard/fullpage', {
-          tableName: 'abyss',
-          navBar: 'none',
-          backgroundImage: '',
-          dataSource: '/record/entries',
-        })}
-        {this.createExactPage('/contests', {
-          title: 'Contests',
-          tabName: 'contests',
-          backgroundImage: BannerImg,
-        })}
-        {this.createExactPage('/partners', {
-          title: 'Partners',
-          tabName: 'partners',
-          backgroundImage: BannerImg,
-        })} */}
         {_generate.createFunctions.createModal(
           this.state.isEdit ? 'Leave Edit Mode?' : 'Enter Edit Mode?',
           this.state.isEdit
