@@ -2,11 +2,30 @@
 
 import React from 'react'
 import _generate from '../functions/index'
+import axios from 'axios'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons'
 const config = require('../config/index')
 
 export default class tableFunctions {
+  static async getTableConfigs(tableName) {
+    if (!tableName) {
+      return {
+        rowSelectOptions: '',
+        headers: '',
+        dataSource: '',
+      }
+    }
+
+    const SERVER_URL = _generate.serverFunctions.getServerURL()
+    const tableConfig = await axios.get(`${SERVER_URL}/table/${tableName}`)
+    const { _id, rowSelectOptions, headers } = tableConfig.data
+    
+    return {
+      rowSelectOptions: JSON.parse(rowSelectOptions),
+      headers: JSON.parse(headers),
+    }
+  }
   /**
    *
    * @param {*} param0
@@ -236,7 +255,11 @@ export default class tableFunctions {
             if (header.title === 'Rank') {
               return (
                 <td>
-                  <div key={`${header.title}-${record._id}`} className="rank-col" id={`rank-${record.rank}`}>
+                  <div
+                    key={`${header.title}-${record._id}`}
+                    className="rank-col"
+                    id={`rank-${record.rank}`}
+                  >
                     {record.rank}
                   </div>
                 </td>
@@ -251,14 +274,16 @@ export default class tableFunctions {
             }
 
             return (
-              <td key={`${header.title}-${record._id}`} dangerouslySetInnerHTML={{ 
-                __html: _generate.cleanHTML.clean(
-                  format.toString(),
-                  config.allowedTags,
-                  config.allowedAttr,
-                ), 
-              }}>
-              </td>
+              <td
+                key={`${header.title}-${record._id}`}
+                dangerouslySetInnerHTML={{
+                  __html: _generate.cleanHTML.clean(
+                    format.toString(),
+                    config.allowedTags,
+                    config.allowedAttr,
+                  ),
+                }}
+              ></td>
             )
           })}
         </tr>
@@ -270,7 +295,7 @@ export default class tableFunctions {
     let currRow = (currPage - 1) * rowFilter
     let numRows = 0
 
-    while (numRows < rowFilter && currRow < maxRows) {
+    while ((numRows < rowFilter || !pagination) && currRow < maxRows) {
       const row = rows[numRows]
       numRows += 1
       currRow += 1
@@ -298,8 +323,7 @@ export default class tableFunctions {
     return (
       <div className={wrapperClassName}>
         <div className={tableClassName}>
-          {
-            headers ?
+          {headers ? (
             <table className={tableClassName}>
               <thead>
                 <tr className={headers.className} onClick={headers.onClick}>
@@ -321,8 +345,8 @@ export default class tableFunctions {
                 </tr>
               </thead>
               <tbody>{tableBuildRows}</tbody>
-            </table> : null
-          }
+            </table>
+          ) : null}
         </div>
         {footer}
       </div>

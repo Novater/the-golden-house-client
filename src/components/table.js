@@ -48,6 +48,17 @@ export default class Table extends Component {
     }
   }
 
+  componentDidMount() {
+    if (this.state.records.length > 0) {
+      this.sortTable(
+        this.state.sortKey,
+        this.state.sortDir || 1,
+        this.state.records,
+        true,
+      )
+    }
+  }
+
   // This method will get the data from the database
   componentDidUpdate(prevProps) {
     if (this.props.dataSource !== prevProps.dataSource) {
@@ -157,7 +168,6 @@ export default class Table extends Component {
   filterTable = (event) => {
     const filterFrom = event.target.name
     const filterBy = event.target.value
-    console.log('this', this)
     const filterArr = this.state.filters[filterFrom].rows.map((filterEl) => {
       const { filterStyle } = this.state.filters[filterFrom]
 
@@ -288,7 +298,6 @@ export default class Table extends Component {
 
   // This will display the table with all records
   render() {
-    console.log(this.state)
     let { headers } = this.props
     const { searchable } = this.props
 
