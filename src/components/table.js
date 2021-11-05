@@ -235,6 +235,8 @@ export default class Table extends Component {
     let headerObj
     const { headers } = this.props
 
+    console.log(sortKey)
+    console.log(headers)
     for (let i = 0; i < headers.length; i += 1) {
       if (headers[i].title === sortKey) headerObj = headers[i]
     }
@@ -249,12 +251,27 @@ export default class Table extends Component {
       for (const key of keys) {
         stringRep = stringRep.replace(`{${key}}`, records[i][key])
       }
-      records[i].sortString = stringRep
+      records[i].sortVal = isNaN(stringRep) ? stringRep : Number(stringRep)
     }
 
+    console.log(records)
+
     records.sort((a, b) => {
-      if (a.sortString > b.sortString) return 1 * sortDirection
-      if (a.sortString === b.sortString) {
+
+      if (!isNaN(b.sortVal) || !isNaN(a.sortVal)) {
+
+        if (isNaN(a.sortVal)) return -1 * sortDirection
+        if (isNaN(b.sortVal)) return 1 * sortDirection
+
+        if (a.sortVal === b.sortVal) {
+          if (a.rank > b.rank) return 1 * sortDirection
+          return 0
+        }
+        return (b.sortVal - a.sortVal) * sortDirection
+      }
+
+      if (a.sortVal > b.sortVal) return 1 * sortDirection
+      if (a.sortVal === b.sortVal) {
         if (a.rank > b.rank) return 1
         return 0
       }
@@ -274,6 +291,7 @@ export default class Table extends Component {
         }
       })
     }
+
     this.setState({
       records,
       sortDir: sortDirection,
