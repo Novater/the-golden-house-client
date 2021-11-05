@@ -167,7 +167,7 @@ export default class Page extends Component {
                   defaultSortDir={1}
                   headers={this.state.tableHeaders}
                   searchable={true}
-                  rowSelectOptions={rowSelectOptions}
+                  rowSelectOptions={this.state.rowSelectOptions}
                   dataSource={this.state.records}
                 />
               ) : null}
