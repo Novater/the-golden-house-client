@@ -20,7 +20,7 @@ export default class tableFunctions {
     const SERVER_URL = _generate.serverFunctions.getServerURL()
     const tableConfig = await axios.get(`${SERVER_URL}/table/${tableName}`)
     const { _id, rowSelectOptions, headers } = tableConfig.data
-    
+
     return {
       rowSelectOptions: JSON.parse(rowSelectOptions),
       headers: JSON.parse(headers),
@@ -129,7 +129,9 @@ export default class tableFunctions {
     currPage,
     rowFilter,
     footerObj,
-    pagination,
+    lazyLoad,
+    loadNum,
+    handleScroll,
   ) {
     function initializeTableFooters({
       footerClass,
@@ -144,11 +146,10 @@ export default class tableFunctions {
       const rowOptionEls = []
       const paginationEls = []
 
-      for (const rowOption of rowOptions.rows) {
-        rowOptionEls.push(<option>{rowOption}</option>)
-      }
-
-      if (pagination) {
+      if (rowOptions) {
+        for (const rowOption of rowOptions.rows) {
+          rowOptionEls.push(<option>{rowOption}</option>)
+        }
         const numPages = rowOptions.selected
           ? Math.ceil(numRows / rowOptions.selected)
           : 1
@@ -226,16 +227,19 @@ export default class tableFunctions {
 
       return (
         <div className={footerClass}>
-          <div className={rowClass}>
-            <p>Rows Displayed: </p>
-            <select
-              className="form-select"
-              onChange={onRowUpdate}
-              defaultValue={rowOptions.selected}
-            >
-              {rowOptionEls}
-            </select>
-          </div>
+          {rowOptions ? (
+            <div className={rowClass}>
+              <p>Rows Displayed: </p>
+              <select
+                className="form-select"
+                onChange={onRowUpdate}
+                defaultValue={rowOptions.selected}
+              >
+                {rowOptionEls}
+              </select>
+            </div>
+          ) : null}
+
           <nav aria-label="Page navigation example">
             <ul className="pagination">{paginationEls}</ul>
           </nav>
@@ -295,7 +299,7 @@ export default class tableFunctions {
     let currRow = (currPage - 1) * rowFilter
     let numRows = 0
 
-    while ((numRows < rowFilter || !pagination) && currRow < maxRows) {
+    while ((numRows < rowFilter || !footerObj.rowOptions) && currRow < maxRows) {
       const row = rows[numRows]
       numRows += 1
       currRow += 1
@@ -324,7 +328,7 @@ export default class tableFunctions {
       <div className={wrapperClassName}>
         <div className={tableClassName}>
           {headers ? (
-            <table className={tableClassName}>
+            <table className={tableClassName} onWheel={handleScroll}>
               <thead>
                 <tr className={headers.className} onClick={headers.onClick}>
                   {headers.headers.map((header) => (

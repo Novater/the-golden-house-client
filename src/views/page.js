@@ -160,7 +160,7 @@ export default class Page extends Component {
           {this.renderPosts()}
           {isTableTab ? (
             <Suspense fallback={<LoadingSpinner />}>
-              {this.state.tableHeaders ?
+              {this.state.tableHeaders ? (
                 <Table
                   key={`${this.props.title}-datatable`}
                   defaultSortKey="Time"
@@ -169,10 +169,8 @@ export default class Page extends Component {
                   searchable={true}
                   rowSelectOptions={this.state.rowSelectOptions}
                   dataSource={this.state.records}
-                  pagination={false}
-                /> : null
-              }
-
+                />
+              ) : null}
             </Suspense>
           ) : (
             ''

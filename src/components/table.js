@@ -296,6 +296,14 @@ export default class Table extends Component {
     }
   }
 
+  handleScroll = (event) => {
+    if (event.currentTarget.getBoundingClientRect().bottom <= event.currentTarget.parentNode.getBoundingClientRect().bottom)
+    this.loadMore()
+  }
+
+  loadMore = () => {
+  }
+
   // This will display the table with all records
   render() {
     let { headers } = this.props
@@ -364,7 +372,9 @@ export default class Table extends Component {
             this.state.currPage,
             this.state.pageRows,
             footerObj,
-            this.props.pagination,
+            this.props.lazyLoad,
+            this.props.loadNum,
+            this.handleScroll
           )}
         </div>
       </div>
