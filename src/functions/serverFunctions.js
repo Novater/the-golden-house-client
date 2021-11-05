@@ -2,7 +2,7 @@ export default class serverFunctions {
   static getServerURL() {
     // return process.env.REACT_APP_PRODUCTION_SERVER_URL
 
-    if (process.env.NODE_ENV === 'production') {
+    if (process.env.REACT_NODE_ENV === 'production') {
       return process.env.REACT_APP_PRODUCTION_SERVER_URL
     }
 
