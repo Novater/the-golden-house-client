@@ -140,7 +140,7 @@ export default class Table extends Component {
           if (appendRec) {
             searchedRecords.push({
               thisRec,
-              trClass: 'info-row',
+              trClass: this.props.rowClass || 'info-row',
             })
           }
         }
@@ -153,7 +153,7 @@ export default class Table extends Component {
         if (appendRec) {
           searchedRecords.push({
             thisRec,
-            trClass: 'info-row',
+            trClass: this.props.rowClass || 'info-row',
           })
         }
       }
@@ -317,7 +317,8 @@ export default class Table extends Component {
     if (
       event.currentTarget.getBoundingClientRect().bottom <=
         event.currentTarget.parentNode.getBoundingClientRect().bottom &&
-      !this.state.loadingContent && this.props.lazyLoadFn
+      !this.state.loadingContent &&
+      this.props.lazyLoadFn
     ) {
       this.setState({ loadingContent: true })
       const newData = await this.props.lazyLoadFn()
@@ -369,25 +370,31 @@ export default class Table extends Component {
 
     if (headers) {
       headers = _generate.tableFunctions.initializeTableHeaders(
-        'leaderboard-row',
+        this.props.headerClass || 'table-header-row',
         headers,
         this.sortByKey,
       )
     }
 
-    const footerObj = !this.props.lazyLoadFn ? {
-      footerClass: 'table-footer',
-      rowClass: 'numrows-select',
-      rowOptions: this.state.rowSelectOptions,
-      onRowUpdate: this.updateFilter,
-      paginationFunc: this.updatePage,
-    } : {}
+    const footerObj = !this.props.lazyLoadFn
+      ? {
+          footerClass: this.props.footerClass || 'table-footer',
+          rowClass: 'numrows-select',
+          rowOptions: this.state.rowSelectOptions,
+          onRowUpdate: this.updateFilter,
+          paginationFunc: this.updatePage,
+        }
+      : {}
 
     return (
-      <div className="table-container">
-        <div className="filter-container">{generatedFilters}</div>
+      <div className={this.props.containerClass || 'table-container'}>
+        <div className={this.props.filterContainerClass || 'filter-container'}>
+          {generatedFilters}
+        </div>
         {searchable ? (
-          <div className="search-container">
+          <div
+            className={this.props.searchContainerClass || 'search-container'}
+          >
             <input
               type="text"
               id="table-search"
@@ -398,7 +405,7 @@ export default class Table extends Component {
         ) : (
           ''
         )}
-        <div className="web-table">
+        <div className={this.props.tableClass || "web-table"}>
           {_generate.tableFunctions.createTable(
             'table-wrapper',
             'table table-hover',

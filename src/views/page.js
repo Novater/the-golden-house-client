@@ -180,8 +180,14 @@ export default class Page extends Component {
                   headers={this.state.tableHeaders}
                   searchable={true}
                   dataSource={this.state.records}
-                  lazyLoadFn={this.lazyLoadTable.bind(this)}
-                  // rowSelectOptions={this.state.rowSelectOptions}
+                  rowSelectOptions={this.state.rowSelectOptions}
+                  // lazyLoadFn={this.lazyLoadTable.bind(this)}
+                  // containerClass="table-container"
+                  // tableClass="web-table"
+                  // filterContainerClass="filter-container"
+                  // searchContainerClass="search-container"
+                  // headerClass="leaderboard-row"
+                  // footerClass="table-footer"
                 />
               ) : null}
             </Suspense>
