@@ -28,13 +28,13 @@ export default class Page extends Component {
     this.setState({ tabName: this.props.tabName });
 
     let SERVER_URL = _generate.serverFunctions.getServerURL();
-    const posts = await axios.get(`${SERVER_URL || 'https://calm-plains-52439.herokuapp.com'}/post/${this.props.tabName}`);
+    const posts = await axios.get(`${SERVER_URL}/post/${this.props.tabName}`);
     const postData  = posts.data;
 
     let data = [];
 
     if (this.props.dataSource) {
-      const dataSource = await axios.get(`${SERVER_URL || 'https://calm-plains-52439.herokuapp.com'}${this.props.dataSource}`);
+      const dataSource = await axios.get(`${SERVER_URL}${this.props.dataSource}`);
       data = dataSource.data;
     }
 
