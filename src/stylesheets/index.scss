@@ -26,6 +26,16 @@ body, html {
   grid-template-columns: 1fr 4fr 1fr;
 }
 
+.table-spinner {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  z-index: 1;
+}
 .spinner-container {
   display: grid;
   place-items: center;
@@ -242,6 +252,7 @@ body, html {
 
 .table-wrapper {
   width: 100%;
+  position: relative;
 }
 
 .blog-post {

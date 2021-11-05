@@ -4,6 +4,7 @@ import React, { Component } from 'react'
 import _generate from '../functions/index'
 import 'bootstrap/dist/css/bootstrap.css'
 import PropTypes from 'prop-types'
+import LoadingSpinner from './loadingspinner'
 
 export default class Table extends Component {
   constructor(props) {
@@ -257,9 +258,7 @@ export default class Table extends Component {
     console.log(records)
 
     records.sort((a, b) => {
-
       if (!isNaN(b.sortVal) || !isNaN(a.sortVal)) {
-
         if (isNaN(a.sortVal)) return -1 * sortDirection
         if (isNaN(b.sortVal)) return 1 * sortDirection
 
@@ -314,12 +313,31 @@ export default class Table extends Component {
     }
   }
 
-  handleScroll = (event) => {
-    if (event.currentTarget.getBoundingClientRect().bottom <= event.currentTarget.parentNode.getBoundingClientRect().bottom)
-    this.loadMore()
-  }
-
-  loadMore = () => {
+  async handleScroll(event) {
+    if (
+      event.currentTarget.getBoundingClientRect().bottom <=
+        event.currentTarget.parentNode.getBoundingClientRect().bottom &&
+      !this.state.loadingContent && this.props.lazyLoadFn
+    ) {
+      this.setState({ loadingContent: true })
+      const newData = await this.props.lazyLoadFn()
+      this.setState({
+        records: [...this.state.records].concat(newData),
+      })
+      // if (this.state.sortKey) {
+      //   this.sortTable(
+      //     this.state.sortKey,
+      //     this.state.sortDir || 1,
+      //     [...this.state.records].concat(newData),
+      //     true,
+      //   )
+      // } else {
+      //   this.setState({
+      //     records: [...this.state.records].concat(newData),
+      //   })
+      // }
+      this.setState({ loadingContent: false })
+    }
   }
 
   // This will display the table with all records
@@ -357,13 +375,13 @@ export default class Table extends Component {
       )
     }
 
-    const footerObj = {
+    const footerObj = !this.props.lazyLoadFn ? {
       footerClass: 'table-footer',
       rowClass: 'numrows-select',
       rowOptions: this.state.rowSelectOptions,
       onRowUpdate: this.updateFilter,
       paginationFunc: this.updatePage,
-    }
+    } : {}
 
     return (
       <div className="table-container">
@@ -388,11 +406,10 @@ export default class Table extends Component {
             this.tableList(),
             this.state.search,
             this.state.currPage,
-            this.state.pageRows,
+            !this.props.lazyLoadFn ? this.state.pageRows : null,
             footerObj,
-            this.props.lazyLoad,
-            this.props.loadNum,
-            this.handleScroll
+            this.handleScroll.bind(this),
+            this.state.loadingContent,
           )}
         </div>
       </div>

@@ -3,6 +3,7 @@
 import React from 'react'
 import _generate from '../functions/index'
 import axios from 'axios'
+import LoadingSpinner from '../components/loadingspinner'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons'
 const config = require('../config/index')
@@ -129,9 +130,8 @@ export default class tableFunctions {
     currPage,
     rowFilter,
     footerObj,
-    lazyLoad,
-    loadNum,
     handleScroll,
+    loadingContent,
   ) {
     function initializeTableFooters({
       footerClass,
@@ -299,7 +299,10 @@ export default class tableFunctions {
     let currRow = (currPage - 1) * rowFilter
     let numRows = 0
 
-    while ((numRows < rowFilter || !footerObj.rowOptions) && currRow < maxRows) {
+    while (
+      (numRows < rowFilter || !footerObj.rowOptions) &&
+      currRow < maxRows
+    ) {
       const row = rows[numRows]
       numRows += 1
       currRow += 1
@@ -352,6 +355,7 @@ export default class tableFunctions {
             </table>
           ) : null}
         </div>
+        {loadingContent ? <LoadingSpinner className="table-spinner" /> : null}
         {footer}
       </div>
     )

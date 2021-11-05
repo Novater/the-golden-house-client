@@ -143,6 +143,18 @@ export default class Page extends Component {
     )
   }
 
+  async lazyLoadTable() {
+    let SERVER_URL = _generate.serverFunctions.getServerURL()
+    let data = []
+    if (this.props.dataSource) {
+      const dataSource = await axios.get(
+        `${SERVER_URL}${this.props.dataSource}`,
+      )
+      data = dataSource.data
+    }
+
+    return data
+  }
   // This will display the table with all records
   render() {
     const isTableTab = this.props.tableName ? true : false
@@ -167,8 +179,9 @@ export default class Page extends Component {
                   defaultSortDir={1}
                   headers={this.state.tableHeaders}
                   searchable={true}
-                  rowSelectOptions={this.state.rowSelectOptions}
                   dataSource={this.state.records}
+                  lazyLoadFn={this.lazyLoadTable.bind(this)}
+                  // rowSelectOptions={this.state.rowSelectOptions}
                 />
               ) : null}
             </Suspense>
