@@ -2,7 +2,8 @@
 
 import React from 'react'
 import _generate from '../functions/index'
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons'
 const config = require('../config/index')
 
 export default class tableFunctions {
@@ -301,11 +302,23 @@ export default class tableFunctions {
             headers ?
             <table className={tableClassName}>
               <thead>
-              <tr className={headers.className} onClick={headers.onClick}>
-                {headers.headers.map((header) => (
-                  <th name={header.title}>{header.title}</th>
-                ))}
-              </tr>
+                <tr className={headers.className} onClick={headers.onClick}>
+                  {headers.headers.map((header) => (
+                    <th name={header.title}>
+                      {header.title}
+                      {/* <div>
+                        <FontAwesomeIcon
+                          title="Toggle Sort Up"
+                          icon={faSortUp}
+                        />
+                        <FontAwesomeIcon
+                          title="Toggle Sort Down"
+                          icon={faSortDown}
+                        />
+                      </div> */}
+                    </th>
+                  ))}
+                </tr>
               </thead>
               <tbody>{tableBuildRows}</tbody>
             </table> : null

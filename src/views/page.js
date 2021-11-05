@@ -68,7 +68,7 @@ export default class Page extends Component {
     });    
   }
 
-  generatePage(tabName, objFunc) {
+  generatePage = (tabName, objFunc) => {
     let content = objFunc.generatePage(tabName);
     return (
       <div className='pageContainer'>
@@ -77,12 +77,12 @@ export default class Page extends Component {
     );
   }
 
-  renderBackdrop(image) {
-    if (!image) return '';
+  renderBackdrop = (image) => {
+    if (!image) return null;
 
     return (
       <LazyLoadImage
-        src= { image }
+        src= { image.default }
         className='banner-img'
         effect='opacity'
         alt='banner'
@@ -128,6 +128,7 @@ export default class Page extends Component {
 
   // This will display the table with all records
   render() {
+    console.log('pagestate', this.state)
     const isTableTab = this.props.tableName ? true : false;
 
     const { rowSelectOptions, headers, filters } = config.getTableConfigs(this.props.tableName);

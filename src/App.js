@@ -7,6 +7,7 @@ import Page from './views/page'
 import './stylesheets/index.scss'
 import _generate from './functions/index'
 import BannerImg from './assets/banner-image-tgh-2.png'
+import axios from 'axios'
 
 require('dotenv').config()
 
@@ -18,7 +19,16 @@ export default class App extends Component {
       isEditMode: false,
       showEditModal: false,
       isLoggedIn: false,
+      pages: [],
     }
+  }
+
+  async componentDidMount() {
+    const SERVER_URL = _generate.serverFunctions.getServerURL()
+    const loadedPages = await axios.get(
+      `${SERVER_URL || 'https://calm-plains-52439.herokuapp.com'}/page`,
+    )
+    this.setState({ pages: loadedPages.data })
   }
 
   updateEditMode = () => {
@@ -41,6 +51,13 @@ export default class App extends Component {
     path,
     { title, tabName, backgroundImage, tableName, navBar, dataSource },
   ) => {
+    let backgroundURL
+    try {
+      backgroundURL = require(`${backgroundImage}`)
+    } catch (e) {
+      backgroundURL = null
+    }
+
     return (
       <Route exact path={path}>
         <Page
@@ -48,7 +65,7 @@ export default class App extends Component {
           tabName={tabName}
           isEdit={this.state.isEdit}
           isEditMode={this.state.isEditMode}
-          backgroundImage={backgroundImage}
+          backgroundImage={backgroundURL}
           tableName={tableName}
           navBar={navBar}
           dataSource={dataSource}
@@ -64,6 +81,7 @@ export default class App extends Component {
   }
 
   render() {
+    console.log('this.state', this.state)
     return (
       <div className="app-container">
         <Route
@@ -95,7 +113,18 @@ export default class App extends Component {
             Log In
           </button>
         </Route>
-        {this.createExactPage('/', {
+        {this.state.pages.map(
+          ({ url, title, tabName, backgroundImage, dataSource, tableName }) => {
+            return this.createExactPage(url, {
+              title,
+              tabName,
+              backgroundImage,
+              tableName,
+              dataSource,
+            })
+          },
+        )}
+        {/* {this.createExactPage('/', {
           title: 'Welcome to the Golden House',
           tabName: 'home',
           backgroundImage: BannerImg,
@@ -127,7 +156,7 @@ export default class App extends Component {
           title: 'Partners',
           tabName: 'partners',
           backgroundImage: BannerImg,
-        })}
+        })} */}
         {_generate.createFunctions.createModal(
           this.state.isEdit ? 'Leave Edit Mode?' : 'Enter Edit Mode?',
           this.state.isEdit
