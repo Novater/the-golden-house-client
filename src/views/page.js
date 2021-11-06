@@ -18,6 +18,7 @@ export default class Page extends Component {
       isEdit: this.props.isEdit,
       isEditMode: this.props.isEditMode,
       records: [],
+      adminRecords: [],
       rowSelectOptions: '',
       tableHeaders: '',
       tableFilters: '',
@@ -35,8 +36,15 @@ export default class Page extends Component {
     const postData = posts.data
 
     let data = []
-
+    let adminData = []
     if (this.props.dataSource) {
+      if (this.props.tableEditable) {
+        const dataSource = await axios.get(
+          `${SERVER_URL}${this.props.dataSource}/admin`,
+        )
+        adminData = dataSource.data
+      }
+
       const dataSource = await axios.get(
         `${SERVER_URL}${this.props.dataSource}`,
       )
@@ -46,6 +54,7 @@ export default class Page extends Component {
     this.setState({
       posts: postData,
       records: data,
+      adminRecords: adminData,
     })
 
     if (this.props.tableName) {
@@ -58,7 +67,7 @@ export default class Page extends Component {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  async componentDidUpdate(prevProps) {
     if (
       prevProps.isEdit !== this.props.isEdit ||
       prevProps.isEditMode !== this.props.isEditMode
@@ -67,17 +76,34 @@ export default class Page extends Component {
         isEdit: this.props.isEdit,
         isEditMode: this.props.isEditMode,
       })
+      let data = []
+      let adminData = []
+      let SERVER_URL = _generate.serverFunctions.getServerURL()
+      if (this.props.dataSource) {
+        if (this.props.tableEditable) {
+          const dataSource = await axios.get(
+            `${SERVER_URL}${this.props.dataSource}/admin`,
+          )
+          adminData = dataSource.data
+        }
+
+        const dataSource = await axios.get(
+          `${SERVER_URL}${this.props.dataSource}`,
+        )
+        data = dataSource.data
+      }
+
+      this.setState({
+        records: data,
+        adminRecords: adminData,
+      })
     }
   }
 
   updatePosts = () => {
     let SERVER_URL = _generate.serverFunctions.getServerURL()
     axios
-      .get(
-        `${SERVER_URL}/post/${
-          this.props.tabName
-        }`,
-      )
+      .get(`${SERVER_URL}/post/${this.props.tabName}`)
       .then((response) => {
         console.log(response)
         this.setState({
@@ -156,34 +182,19 @@ export default class Page extends Component {
     return data
   }
 
-  // handleCloseCreate = () => {
-  //   this.setState({ showCreateModal: false })
-  // }
-
-  handleCloseDelete = () => {
-    this.setState({ showTableRowDeleteModal: false })
-  }
-
   handleDeleteRow = (record) => {
     let SERVER_URL = _generate.serverFunctions.getServerURL()
-    console.log('recordId', record)
     axios.post(`${SERVER_URL}${this.props.dataSource}/delete/${record._id}`)
   }
 
   handleApproveRow = (record) => {
     let SERVER_URL = _generate.serverFunctions.getServerURL()
-    console.log('recordId', record)
-    // axios.post(`${SERVER_URL}${this.props.dataSource}/delete/:${docId}`)
-  }
-
-  handleEditRow = (record) => {
-    let SERVER_URL = _generate.serverFunctions.getServerURL()
-    console.log('recordId', record)
-    // axios.post(`${SERVER_URL}${this.props.dataSource}/delete/:${docId}`)
+    axios.post(`${SERVER_URL}${this.props.dataSource}/approve/${record._id}`)
   }
 
   // This will display the table with all records
   render() {
+    console.log(this.state)
     const isTableTab = this.props.tableName ? true : false
 
     const buttonClasses = {
@@ -212,15 +223,19 @@ export default class Page extends Component {
                   defaultSortDir={1}
                   headers={this.state.tableHeaders}
                   searchable={true}
-                  dataSource={this.state.records}
+                  dataSource={
+                    this.state.isEdit && this.props.tableEditable
+                      ? this.state.adminRecords
+                      : this.state.records
+                  }
                   rowSelectOptions={this.state.rowSelectOptions}
-                  editTablePermission={true}
-                  deleteButtonClass={buttonClasses.deleteButtonClass}
+                  editTablePermission={
+                    this.state.isEdit && this.props.tableEditable
+                  }
                   approveButtonClass={buttonClasses.approveButtonClass}
-                  editButtonClass={buttonClasses.editButtonClass}
-                  deleteRowOnClick={this.handleDeleteRow}
-                  editRowOnClick={this.handleEditRow}
                   approveRowOnClick={this.handleApproveRow}
+                  deleteButtonClass={buttonClasses.deleteButtonClass}
+                  deleteRowOnClick={this.handleDeleteRow}
                   // lazyLoadFn={this.lazyLoadTable.bind(this)}
                   // containerClass="table-container"
                   // tableClass="web-table"

@@ -134,10 +134,8 @@ export default class tableFunctions {
     handleScroll,
     loadingContent,
     deleteButtonClass,
-    editButtonClass,
     approveButtonClass,
     deleteOnClick,
-    editOnClick,
     approveOnClick,
   ) {
     function initializeTableFooters({
@@ -262,7 +260,7 @@ export default class tableFunctions {
 
       return (
         <tr key={record._id} className={props.className || ''}>
-          {hasEditPermission ? (
+          {hasEditPermission && approveOnClick ? (
             <td>
               <button
                 className={approveButtonClass || 'approve-button'}
@@ -274,19 +272,7 @@ export default class tableFunctions {
               </button>
             </td>
           ) : null}
-          {hasEditPermission ? (
-            <td>
-              <button
-                className={editButtonClass || 'edit-button'}
-                type="button"
-                id={`e_${record._id}`}
-                onClick={editOnClick}
-              >
-                ?
-              </button>
-            </td>
-          ) : null}
-          {hasEditPermission ? (
+          {hasEditPermission && deleteOnClick ? (
             <td>
               <button
                 className={deleteButtonClass || 'delete-button'}
@@ -377,9 +363,8 @@ export default class tableFunctions {
             <table className={tableClassName} onWheel={handleScroll}>
               <thead>
                 <tr className={headers.className} onClick={headers.onClick}>
-                  {hasEditPermission ? <th name="Approve">Approve</th> : null}
-                  {hasEditPermission ? <th name="Edit">Edit</th> : null}
-                  {hasEditPermission ? <th name="Delete">Delete</th> : null}
+                  {hasEditPermission && approveOnClick ? <th name="Approve">Approve</th> : null}
+                  {hasEditPermission && deleteOnClick ? <th name="Delete">Delete</th> : null}
                   {headers.headers.map((header) => (
                     <th name={header.title}>
                       {header.title}

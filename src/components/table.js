@@ -10,9 +10,18 @@ import LoadingSpinner from './loadingspinner'
 export default class Table extends Component {
   constructor(props) {
     super(props)
+    const {
+      headers,
+      dataSource,
+      adminDataSource,
+      defaultSortKey,
+      defaultSortDir,
+      rowSelectOptions,
+      editTablePermission,
+    } = this.props
 
     const filterObj = {}
-    this.props.headers.map((header) => {
+    headers.map((header) => {
       const { filterValues, filterStyle } = header
 
       if (filterValues) {
@@ -37,21 +46,17 @@ export default class Table extends Component {
     })
 
     this.state = {
-      records: this.props.dataSource,
+      records: dataSource,
       search: '',
-      sortKey: this.props.defaultSortKey || '',
-      sortDir: this.props.defaultSortDir || 1,
-      pageRows: this.props.rowSelectOptions
-        ? this.props.rowSelectOptions.selected
-        : '',
+      sortKey: defaultSortKey || '',
+      sortDir: defaultSortDir || 1,
+      pageRows: rowSelectOptions ? rowSelectOptions.selected : '',
       filters: filterObj,
-      rowSelectOptions: this.props.rowSelectOptions,
+      rowSelectOptions: rowSelectOptions,
       currPage: 1,
       loadingContent: false,
-      showTableRowEditModal: false,
       showTableRowApproveModal: false,
       showTableRowDeleteModal: false,
-      editLineId: '',
       approveLineId: '',
       deleteLineId: '',
     }
@@ -174,10 +179,6 @@ export default class Table extends Component {
     this.setState({ showTableRowDeleteModal: false })
   }
 
-  handleCloseEdit = () => {
-    this.setState({ showTableRowEditModal: false })
-  }
-
   handleCloseApprove = () => {
     this.setState({ showTableRowApproveModal: false })
   }
@@ -187,14 +188,6 @@ export default class Table extends Component {
     const buttonId = event.target.id
     const targetId = buttonId.substring(buttonId.indexOf('_') + 1)
     this.setState({ showTableRowDeleteModal: true, deleteLineId: targetId })
-  }
-
-  editLine = (event) => {
-    console.log(`Edit: ${event.target.id}`)
-    const buttonId = event.target.id
-    const targetId = buttonId.substring(buttonId.indexOf('_') + 1)
-    console.log(this)
-    this.setState({ showTableRowEditModal: true, editLineId: targetId })
   }
 
   approveLine = (event) => {
@@ -208,22 +201,26 @@ export default class Table extends Component {
     this.props.deleteRowOnClick(
       _.find(this.state.records, { _id: this.state.deleteLineId }),
     )
-    this.setState({ showTableRowDeleteModal: false, deleteLineId: '' })
-  }
-
-  selfHandleEditOnClick = () => {
-    this.props.editRowOnClick(
-      _.find(this.state.records, { _id: this.state.editLineId }),
-    )
-    this.setState({ showTableRowEditModal: false, editLineId: '' })
+    let copiedRecs = [...this.state.records]
+    _.remove(copiedRecs, (el) => el._id == this.state.deleteLineId)
+    this.setState({
+      showTableRowDeleteModal: false,
+      deleteLineId: '',
+      records: copiedRecs,
+    })
   }
 
   selfHandleApproveOnClick = () => {
-    console.log(this.state.approveLineId)
     this.props.approveRowOnClick(
       _.find(this.state.records, { _id: this.state.approveLineId }),
     )
-    this.setState({ showTableRowApproveModal: false, approveLineId: '' })
+    let copiedRecs = [...this.state.records]
+    _.remove(copiedRecs, (el) => el._id == this.state.approveLineId)
+    this.setState({
+      showTableRowApproveModal: false,
+      approveLineId: '',
+      records: copiedRecs,
+    })
   }
 
   updateSearch = (event) => {
@@ -298,8 +295,6 @@ export default class Table extends Component {
     let headerObj
     const { headers } = this.props
 
-    console.log(sortKey)
-    console.log(headers)
     for (let i = 0; i < headers.length; i += 1) {
       if (headers[i].title === sortKey) headerObj = headers[i]
     }
@@ -316,8 +311,6 @@ export default class Table extends Component {
       }
       records[i].sortVal = isNaN(stringRep) ? stringRep : Number(stringRep)
     }
-
-    console.log(records)
 
     records.sort((a, b) => {
       if (!isNaN(b.sortVal) || !isNaN(a.sortVal)) {
@@ -405,13 +398,37 @@ export default class Table extends Component {
 
   // This will display the table with all records
   render() {
-    let { headers } = this.props
-    const { searchable } = this.props
+    let {
+      searchable,
+      deleteButtonClass,
+      approveButtonClass,
+      lazyLoadFn,
+      approveRowOnClick,
+      deleteRowOnClick,
+      editTablePermission,
+      footerClass,
+      containerClass,
+      tableClass,
+      headerClass,
+      filterContainerClass,
+      searchContainerClass,
+      headers,
+    } = this.props
+    let {
+      filters,
+      rowSelectOptions,
+      search,
+      currPage,
+      pageRows,
+      loadingContent,
+      showTableRowApproveModal,
+      showTableRowDeleteModal,
+    } = this.state
 
     const generatedFilters = []
 
-    Object.keys(this.state.filters).map((key) => {
-      const filterObj = this.state.filters[key]
+    Object.keys(filters).map((key) => {
+      const filterObj = filters[key]
       const filterForDefault = filterObj.rows.filter(
         (filter) => filter.selected,
       )
@@ -432,31 +449,29 @@ export default class Table extends Component {
 
     if (headers) {
       headers = _generate.tableFunctions.initializeTableHeaders(
-        this.props.headerClass || 'table-header-row',
+        headerClass || 'table-header-row',
         headers,
         this.sortByKey,
       )
     }
 
-    const footerObj = !this.props.lazyLoadFn
+    const footerObj = !lazyLoadFn
       ? {
-          footerClass: this.props.footerClass || 'table-footer',
+          footerClass: footerClass || 'table-footer',
           rowClass: 'numrows-select',
-          rowOptions: this.state.rowSelectOptions,
+          rowOptions: rowSelectOptions,
           onRowUpdate: this.updateFilter,
           paginationFunc: this.updatePage,
         }
       : {}
 
     return (
-      <div className={this.props.containerClass || 'table-container'}>
-        <div className={this.props.filterContainerClass || 'filter-container'}>
+      <div className={containerClass || 'table-container'}>
+        <div className={filterContainerClass || 'filter-container'}>
           {generatedFilters}
         </div>
         {searchable ? (
-          <div
-            className={this.props.searchContainerClass || 'search-container'}
-          >
+          <div className={searchContainerClass || 'search-container'}>
             <input
               type="text"
               id="table-search"
@@ -467,48 +482,43 @@ export default class Table extends Component {
         ) : (
           ''
         )}
-        <div className={this.props.tableClass || 'web-table'}>
+        <div className={tableClass || 'web-table'}>
           {_generate.tableFunctions.createTable(
             'table-wrapper',
             'table table-hover',
             headers,
             this.tableList(),
-            this.props.editTablePermission,
-            this.state.search,
-            this.state.currPage,
-            !this.props.lazyLoadFn ? this.state.pageRows : null,
+            editTablePermission,
+            search,
+            currPage,
+            !lazyLoadFn ? pageRows : null,
             footerObj,
             this.handleScroll.bind(this),
-            this.state.loadingContent,
-            this.props.deleteButtonClass,
-            this.props.editButtonClass,
-            this.props.approveButtonClass,
-            this.deleteLine,
-            this.editLine,
-            this.approveLine,
+            loadingContent,
+            deleteButtonClass,
+            approveButtonClass,
+            deleteRowOnClick ? this.deleteLine : null,
+            approveRowOnClick ? this.approveLine : null,
           )}
         </div>
-        {_generate.createFunctions.createModal(
-          'Approve',
-          'Approve this line?',
-          this.state.showTableRowApproveModal,
-          this.selfHandleApproveOnClick,
-          this.handleCloseApprove,
-        )}
-        {_generate.createFunctions.createModal(
-          'Edit',
-          'Edit this line?',
-          this.state.showTableRowEditModal,
-          this.selfHandleEditOnClick,
-          this.handleCloseEdit,
-        )}
-        {_generate.createFunctions.createModal(
-          'Delete',
-          'Delete this entry?',
-          this.state.showTableRowDeleteModal,
-          this.selfHandleDeleteOnClick,
-          this.handleCloseDelete,
-        )}
+        {approveRowOnClick
+          ? _generate.createFunctions.createModal(
+              'Approve',
+              'Approve this line?',
+              showTableRowApproveModal,
+              this.selfHandleApproveOnClick,
+              this.handleCloseApprove,
+            )
+          : null}
+        {deleteRowOnClick
+          ? _generate.createFunctions.createModal(
+              'Delete',
+              'Delete this entry?',
+              showTableRowDeleteModal,
+              this.selfHandleDeleteOnClick,
+              this.handleCloseDelete,
+            )
+          : null}
       </div>
     )
   }

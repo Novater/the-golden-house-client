@@ -17,6 +17,7 @@ export default class App extends Component {
     this.state = {
       isEdit: false,
       isEditMode: false,
+      tableEditable: false,
       showEditModal: false,
       isLoggedIn: false,
       pages: [],
@@ -25,9 +26,7 @@ export default class App extends Component {
 
   async componentDidMount() {
     const SERVER_URL = _generate.serverFunctions.getServerURL()
-    const loadedPages = await axios.get(
-      `${SERVER_URL}/page`,
-    )
+    const loadedPages = await axios.get(`${SERVER_URL}/page`)
     this.setState({ pages: loadedPages.data })
   }
 
@@ -36,6 +35,7 @@ export default class App extends Component {
   }
 
   changeEditMode = () => {
+    console.log(this.state.isEdit)
     this.setState((prevState) => ({
       showEditModal: false,
       isEdit: !prevState.isEdit,
@@ -65,6 +65,7 @@ export default class App extends Component {
           tabName={tabName}
           isEdit={this.state.isEdit}
           isEditMode={this.state.isEditMode}
+          tableEditable={this.state.tableEditable}
           backgroundImage={backgroundURL}
           tableName={tableName}
           navBar={navBar}
@@ -77,6 +78,13 @@ export default class App extends Component {
   loginUser = () => {
     this.setState({
       isLoggedIn: true,
+    })
+  }
+
+  loginAdminUser = () => {
+    this.setState({
+      isLoggedIn: true,
+      tableEditable: true,
     })
   }
 
@@ -110,6 +118,13 @@ export default class App extends Component {
             type="button"
           >
             Log In
+          </button>
+          <button
+            style={{ position: 'absolute', left: '50%', top: '45%' }}
+            onClick={this.loginAdminUser}
+            type="button"
+          >
+            Admin Log In
           </button>
         </Route>
         {this.state.pages.map(
