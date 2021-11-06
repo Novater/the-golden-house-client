@@ -182,14 +182,14 @@ export default class Page extends Component {
     return data
   }
 
-  handleDeleteRow = (record) => {
+  handleDeleteRows = (records) => {
     let SERVER_URL = _generate.serverFunctions.getServerURL()
-    axios.post(`${SERVER_URL}${this.props.dataSource}/delete/${record._id}`)
+    axios.post(`${SERVER_URL}${this.props.dataSource}/delete`, { records: records })
   }
 
-  handleApproveRow = (record) => {
+  handleApproveRows = (records) => {
     let SERVER_URL = _generate.serverFunctions.getServerURL()
-    axios.post(`${SERVER_URL}${this.props.dataSource}/approve/${record._id}`)
+    axios.post(`${SERVER_URL}${this.props.dataSource}/approve`, { records: records })
   }
 
   // This will display the table with all records
@@ -233,9 +233,9 @@ export default class Page extends Component {
                     this.state.isEdit && this.props.tableEditable
                   }
                   approveButtonClass={buttonClasses.approveButtonClass}
-                  approveRowOnClick={this.handleApproveRow}
+                  approveRows={this.handleApproveRows}
                   deleteButtonClass={buttonClasses.deleteButtonClass}
-                  deleteRowOnClick={this.handleDeleteRow}
+                  deleteRows={this.handleDeleteRows}
                   // lazyLoadFn={this.lazyLoadTable.bind(this)}
                   // containerClass="table-container"
                   // tableClass="web-table"

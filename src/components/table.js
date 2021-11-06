@@ -55,10 +55,11 @@ export default class Table extends Component {
       rowSelectOptions: rowSelectOptions,
       currPage: 1,
       loadingContent: false,
-      showTableRowApproveModal: false,
-      showTableRowDeleteModal: false,
-      approveLineId: '',
-      deleteLineId: '',
+      showTableSaveModal: false,
+      showTableCancelModal: false,
+      approveLineIds: [],
+      deleteLineIds: [],
+      currIdSelected: '',
     }
   }
 
@@ -175,51 +176,82 @@ export default class Table extends Component {
     return searchedRecords
   }
 
-  handleCloseDelete = () => {
-    this.setState({ showTableRowDeleteModal: false })
+  handleCloseCancel = () => {
+    this.setState({ showTableCancelModal: false })
   }
 
-  handleCloseApprove = () => {
-    this.setState({ showTableRowApproveModal: false })
+  handleCloseSave = () => {
+    this.setState({ showTableSaveModal: false })
+  }
+
+  onClickCancel = () => {
+    this.setState({ showTableCancelModal: true })
+  }
+
+  onClickSave = () => {
+    this.setState({ showTableSaveModal: true })
   }
 
   deleteLine = (event) => {
-    console.log(`Delete: ${event.target.id}`)
     const buttonId = event.target.id
     const targetId = buttonId.substring(buttonId.indexOf('_') + 1)
-    this.setState({ showTableRowDeleteModal: true, deleteLineId: targetId })
-  }
 
-  approveLine = (event) => {
-    console.log(`Approve: ${event.target.id}`)
-    const buttonId = event.target.id
-    const targetId = buttonId.substring(buttonId.indexOf('_') + 1)
-    this.setState({ showTableRowApproveModal: true, approveLineId: targetId })
-  }
-
-  selfHandleDeleteOnClick = () => {
-    this.props.deleteRowOnClick(
-      _.find(this.state.records, { _id: this.state.deleteLineId }),
-    )
-    let copiedRecs = [...this.state.records]
-    _.remove(copiedRecs, (el) => el._id == this.state.deleteLineId)
-    this.setState({
-      showTableRowDeleteModal: false,
-      deleteLineId: '',
-      records: copiedRecs,
+    this.setState((prevState) => {
+      let copiedDeleteLines = [...prevState.deleteLineIds]
+      let copiedApproveLines = [...prevState.approveLineIds]
+      _.remove(copiedDeleteLines, (el) => el == targetId)
+      _.remove(copiedApproveLines, (el) => el == targetId)
+      return {
+        deleteLineIds: [...copiedDeleteLines, targetId],
+        approveLineIds: copiedApproveLines,
+      }
     })
   }
 
-  selfHandleApproveOnClick = () => {
-    this.props.approveRowOnClick(
-      _.find(this.state.records, { _id: this.state.approveLineId }),
-    )
-    let copiedRecs = [...this.state.records]
-    _.remove(copiedRecs, (el) => el._id == this.state.approveLineId)
+  approveLine = (event) => {
+    const buttonId = event.target.id
+    const targetId = buttonId.substring(buttonId.indexOf('_') + 1)
+    this.setState((prevState) => {
+      let copiedDeleteLines = [...prevState.deleteLineIds]
+      let copiedApproveLines = [...prevState.approveLineIds]
+      _.remove(copiedDeleteLines, (el) => el == targetId)
+      _.remove(copiedApproveLines, (el) => el == targetId)
+      return {
+        deleteLineIds: copiedDeleteLines,
+        approveLineIds: [...copiedApproveLines, targetId],
+      }
+    })
+  }
+
+  saveTableUpdates = () => {
+    if (this.props.approveRows) {
+      this.props.approveRows(
+        _.filter(
+          this.state.records,
+          (record) => this.state.approveLineIds.indexOf(record._id) >= 0,
+        ),
+      )
+    }
+    if (this.props.deleteRows) {
+      this.props.deleteRows(
+        _.filter(
+          this.state.records,
+          (record) => this.state.deleteLineIds.indexOf(record._id) >= 0,
+        ),
+      )
+    }
     this.setState({
-      showTableRowApproveModal: false,
-      approveLineId: '',
-      records: copiedRecs,
+      approveLineIds: [],
+      deleteLineIds: [],
+      showTableSaveModal: false,
+    })
+  }
+
+  cancelTableUpdates = () => {
+    this.setState({
+      approveLineIds: [],
+      deleteLineIds: [],
+      showTableCancelModal: false,
     })
   }
 
@@ -403,8 +435,8 @@ export default class Table extends Component {
       deleteButtonClass,
       approveButtonClass,
       lazyLoadFn,
-      approveRowOnClick,
-      deleteRowOnClick,
+      approveRows,
+      deleteRows,
       editTablePermission,
       footerClass,
       containerClass,
@@ -421,8 +453,10 @@ export default class Table extends Component {
       currPage,
       pageRows,
       loadingContent,
-      showTableRowApproveModal,
-      showTableRowDeleteModal,
+      showTableSaveModal,
+      showTableCancelModal,
+      approveLineIds,
+      deleteLineIds,
     } = this.state
 
     const generatedFilters = []
@@ -497,26 +531,30 @@ export default class Table extends Component {
             loadingContent,
             deleteButtonClass,
             approveButtonClass,
-            deleteRowOnClick ? this.deleteLine : null,
-            approveRowOnClick ? this.approveLine : null,
+            this.deleteLine,
+            this.approveLine,
+            deleteLineIds,
+            approveLineIds,
+            this.onClickSave,
+            this.onClickCancel,
           )}
         </div>
-        {approveRowOnClick
+        {approveRows
           ? _generate.createFunctions.createModal(
-              'Approve',
-              'Approve this line?',
-              showTableRowApproveModal,
-              this.selfHandleApproveOnClick,
-              this.handleCloseApprove,
+              'Save Updates',
+              'Are you sure you want to save these updates?',
+              showTableSaveModal,
+              this.saveTableUpdates,
+              this.handleCloseSave,
             )
           : null}
-        {deleteRowOnClick
+        {deleteRows
           ? _generate.createFunctions.createModal(
-              'Delete',
-              'Delete this entry?',
-              showTableRowDeleteModal,
-              this.selfHandleDeleteOnClick,
-              this.handleCloseDelete,
+              'Cancel Updates',
+              'Cancel your updates?',
+              showTableCancelModal,
+              this.cancelTableUpdates,
+              this.handleCloseCancel,
             )
           : null}
       </div>

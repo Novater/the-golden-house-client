@@ -3,6 +3,7 @@
 import React from 'react'
 import _generate from '../functions/index'
 import axios from 'axios'
+import _ from 'lodash'
 import LoadingSpinner from '../components/loadingspinner'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons'
@@ -137,6 +138,10 @@ export default class tableFunctions {
     approveButtonClass,
     deleteOnClick,
     approveOnClick,
+    deleteLineIds,
+    approveLineIds,
+    onClickSave,
+    onClickCancel,
   ) {
     function initializeTableFooters({
       footerClass,
@@ -257,9 +262,15 @@ export default class tableFunctions {
     function TableEntry(props) {
       const { record } = props
       const headerKeyFormats = headers.headers
-
+      const deletedClass =
+        deleteLineIds.indexOf(props.record._id) >= 0 ? 'deleted-el' : ''
+      const approvedClass =
+        approveLineIds.indexOf(props.record._id) >= 0 ? 'approved-el' : ''
+      const rowClasses = [props.className, deletedClass, approvedClass].join(
+        ' ',
+      )
       return (
-        <tr key={record._id} className={props.className || ''}>
+        <tr key={record._id} className={rowClasses}>
           {hasEditPermission && approveOnClick ? (
             <td>
               <button
@@ -363,8 +374,12 @@ export default class tableFunctions {
             <table className={tableClassName} onWheel={handleScroll}>
               <thead>
                 <tr className={headers.className} onClick={headers.onClick}>
-                  {hasEditPermission && approveOnClick ? <th name="Approve">Approve</th> : null}
-                  {hasEditPermission && deleteOnClick ? <th name="Delete">Delete</th> : null}
+                  {hasEditPermission && approveOnClick ? (
+                    <th name="Approve">Approve</th>
+                  ) : null}
+                  {hasEditPermission && deleteOnClick ? (
+                    <th name="Delete">Delete</th>
+                  ) : null}
                   {headers.headers.map((header) => (
                     <th name={header.title}>
                       {header.title}
@@ -386,6 +401,26 @@ export default class tableFunctions {
             </table>
           ) : null}
         </div>
+        {hasEditPermission ? (
+          <div className="admin-editing">
+            <button
+              type="button"
+              className="save-button"
+              name="Save"
+              onClick={onClickSave}
+            >
+              Save
+            </button>
+            <button
+              type="button"
+              className="save-button"
+              name="Cancel"
+              onClick={onClickCancel}
+            >
+              Cancel
+            </button>
+          </div>
+        ) : null}
         {loadingContent ? <LoadingSpinner className="table-spinner" /> : null}
         {footer}
       </div>
