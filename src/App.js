@@ -26,7 +26,7 @@ export default class App extends Component {
   async componentDidMount() {
     const SERVER_URL = _generate.serverFunctions.getServerURL()
     const loadedPages = await axios.get(
-      `${SERVER_URL || 'https://calm-plains-52439.herokuapp.com'}/page`,
+      `${SERVER_URL}/page`,
     )
     this.setState({ pages: loadedPages.data })
   }
@@ -81,7 +81,6 @@ export default class App extends Component {
   }
 
   render() {
-    console.log('this.state', this.state)
     return (
       <div className="app-container">
         <Route

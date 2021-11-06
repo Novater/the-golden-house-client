@@ -74,7 +74,7 @@ export default class Page extends Component {
     let SERVER_URL = _generate.serverFunctions.getServerURL()
     axios
       .get(
-        `${SERVER_URL || 'https://calm-plains-52439.herokuapp.com'}/post/${
+        `${SERVER_URL}/post/${
           this.props.tabName
         }`,
       )
@@ -164,27 +164,21 @@ export default class Page extends Component {
     this.setState({ showTableRowDeleteModal: false })
   }
 
-  handleDeleteRow = (event) => {
+  handleDeleteRow = (record) => {
     let SERVER_URL = _generate.serverFunctions.getServerURL()
-    console.log(event.target.id)
-    const docId = event.target.id.split('_')[1]
-    console.log('docid', docId)
-    axios.post(`${SERVER_URL}${this.props.dataSource}/delete/:${docId}`)
+    console.log('recordId', record)
+    axios.post(`${SERVER_URL}${this.props.dataSource}/delete/${record._id}`)
   }
 
-  handleApproveRow = (event) => {
+  handleApproveRow = (record) => {
     let SERVER_URL = _generate.serverFunctions.getServerURL()
-    console.log(event.target.id)
-    const docId = event.target.id.split('_')[1]
-    console.log('docid', docId)
+    console.log('recordId', record)
     // axios.post(`${SERVER_URL}${this.props.dataSource}/delete/:${docId}`)
   }
 
-  handleEditRow = (event) => {
+  handleEditRow = (record) => {
     let SERVER_URL = _generate.serverFunctions.getServerURL()
-    console.log(event.target.id)
-    const docId = event.target.id.split('_')[1]
-    console.log('docid', docId)
+    console.log('recordId', record)
     // axios.post(`${SERVER_URL}${this.props.dataSource}/delete/:${docId}`)
   }
 

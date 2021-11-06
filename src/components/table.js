@@ -2,6 +2,7 @@
 
 import React, { Component } from 'react'
 import _generate from '../functions/index'
+import _ from 'lodash'
 import 'bootstrap/dist/css/bootstrap.css'
 import PropTypes from 'prop-types'
 import LoadingSpinner from './loadingspinner'
@@ -50,6 +51,9 @@ export default class Table extends Component {
       showTableRowEditModal: false,
       showTableRowApproveModal: false,
       showTableRowDeleteModal: false,
+      editLineId: '',
+      approveLineId: '',
+      deleteLineId: '',
     }
   }
 
@@ -180,32 +184,46 @@ export default class Table extends Component {
 
   deleteLine = (event) => {
     console.log(`Delete: ${event.target.id}`)
-    this.setState({ showTableRowDeleteModal: true })
+    const buttonId = event.target.id
+    const targetId = buttonId.substring(buttonId.indexOf('_') + 1)
+    this.setState({ showTableRowDeleteModal: true, deleteLineId: targetId })
   }
 
   editLine = (event) => {
     console.log(`Edit: ${event.target.id}`)
-    this.setState({ showTableRowEditModal: true })
+    const buttonId = event.target.id
+    const targetId = buttonId.substring(buttonId.indexOf('_') + 1)
+    console.log(this)
+    this.setState({ showTableRowEditModal: true, editLineId: targetId })
   }
 
   approveLine = (event) => {
     console.log(`Approve: ${event.target.id}`)
-    this.setState({ showTableRowApproveModal: true })
+    const buttonId = event.target.id
+    const targetId = buttonId.substring(buttonId.indexOf('_') + 1)
+    this.setState({ showTableRowApproveModal: true, approveLineId: targetId })
   }
 
-  selfHandleDeleteOnClick = (event) => {
-    this.props.deleteRowOnClick(event)
-    this.setState({ showTableRowDeleteModal: false })
+  selfHandleDeleteOnClick = () => {
+    this.props.deleteRowOnClick(
+      _.find(this.state.records, { _id: this.state.deleteLineId }),
+    )
+    this.setState({ showTableRowDeleteModal: false, deleteLineId: '' })
   }
 
-  selfHandleEditOnClick = (event) => {
-    this.props.editRowOnClick(event)
-    this.setState({ showTableRowEditModal: false })
+  selfHandleEditOnClick = () => {
+    this.props.editRowOnClick(
+      _.find(this.state.records, { _id: this.state.editLineId }),
+    )
+    this.setState({ showTableRowEditModal: false, editLineId: '' })
   }
 
-  selfHandleApproveOnClick = (event) => {
-    this.props.approveRowOnClick(event)
-    this.setState({ showTableRowApproveModal: false })
+  selfHandleApproveOnClick = () => {
+    console.log(this.state.approveLineId)
+    this.props.approveRowOnClick(
+      _.find(this.state.records, { _id: this.state.approveLineId }),
+    )
+    this.setState({ showTableRowApproveModal: false, approveLineId: '' })
   }
 
   updateSearch = (event) => {
@@ -477,7 +495,7 @@ export default class Table extends Component {
           this.selfHandleApproveOnClick,
           this.handleCloseApprove,
         )}
-                {_generate.createFunctions.createModal(
+        {_generate.createFunctions.createModal(
           'Edit',
           'Edit this line?',
           this.state.showTableRowEditModal,
