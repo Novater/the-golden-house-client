@@ -46,6 +46,10 @@ export default class Table extends Component {
       filters: filterObj,
       rowSelectOptions: this.props.rowSelectOptions,
       currPage: 1,
+      loadingContent: false,
+      showTableRowEditModal: false,
+      showTableRowApproveModal: false,
+      showTableRowDeleteModal: false,
     }
   }
 
@@ -162,6 +166,48 @@ export default class Table extends Component {
     return searchedRecords
   }
 
+  handleCloseDelete = () => {
+    this.setState({ showTableRowDeleteModal: false })
+  }
+
+  handleCloseEdit = () => {
+    this.setState({ showTableRowEditModal: false })
+  }
+
+  handleCloseApprove = () => {
+    this.setState({ showTableRowApproveModal: false })
+  }
+
+  deleteLine = (event) => {
+    console.log(`Delete: ${event.target.id}`)
+    this.setState({ showTableRowDeleteModal: true })
+  }
+
+  editLine = (event) => {
+    console.log(`Edit: ${event.target.id}`)
+    this.setState({ showTableRowEditModal: true })
+  }
+
+  approveLine = (event) => {
+    console.log(`Approve: ${event.target.id}`)
+    this.setState({ showTableRowApproveModal: true })
+  }
+
+  selfHandleDeleteOnClick = (event) => {
+    this.props.deleteRowOnClick(event)
+    this.setState({ showTableRowDeleteModal: false })
+  }
+
+  selfHandleEditOnClick = (event) => {
+    this.props.editRowOnClick(event)
+    this.setState({ showTableRowEditModal: false })
+  }
+
+  selfHandleApproveOnClick = (event) => {
+    this.props.approveRowOnClick(event)
+    this.setState({ showTableRowApproveModal: false })
+  }
+
   updateSearch = (event) => {
     this.setState({ search: event.target.value, currPage: 1 })
   }
@@ -186,8 +232,6 @@ export default class Table extends Component {
 
     const copiedFilters = { ...this.state.filters }
     copiedFilters[filterFrom].rows = filterArr
-    // const filterIndex = this.props.filters.headers.indexOf(filter);
-    // const filterKey = this.props.filters.values[filterIndex];
 
     this.setState({
       filters: copiedFilters,
@@ -405,20 +449,48 @@ export default class Table extends Component {
         ) : (
           ''
         )}
-        <div className={this.props.tableClass || "web-table"}>
+        <div className={this.props.tableClass || 'web-table'}>
           {_generate.tableFunctions.createTable(
             'table-wrapper',
             'table table-hover',
             headers,
             this.tableList(),
+            this.props.editTablePermission,
             this.state.search,
             this.state.currPage,
             !this.props.lazyLoadFn ? this.state.pageRows : null,
             footerObj,
             this.handleScroll.bind(this),
             this.state.loadingContent,
+            this.props.deleteButtonClass,
+            this.props.editButtonClass,
+            this.props.approveButtonClass,
+            this.deleteLine,
+            this.editLine,
+            this.approveLine,
           )}
         </div>
+        {_generate.createFunctions.createModal(
+          'Approve',
+          'Approve this line?',
+          this.state.showTableRowApproveModal,
+          this.selfHandleApproveOnClick,
+          this.handleCloseApprove,
+        )}
+                {_generate.createFunctions.createModal(
+          'Edit',
+          'Edit this line?',
+          this.state.showTableRowEditModal,
+          this.selfHandleEditOnClick,
+          this.handleCloseEdit,
+        )}
+        {_generate.createFunctions.createModal(
+          'Delete',
+          'Delete this entry?',
+          this.state.showTableRowDeleteModal,
+          this.selfHandleDeleteOnClick,
+          this.handleCloseDelete,
+        )}
       </div>
     )
   }

@@ -155,9 +155,48 @@ export default class Page extends Component {
 
     return data
   }
+
+  // handleCloseCreate = () => {
+  //   this.setState({ showCreateModal: false })
+  // }
+
+  handleCloseDelete = () => {
+    this.setState({ showTableRowDeleteModal: false })
+  }
+
+  handleDeleteRow = (event) => {
+    let SERVER_URL = _generate.serverFunctions.getServerURL()
+    console.log(event.target.id)
+    const docId = event.target.id.split('_')[1]
+    console.log('docid', docId)
+    axios.post(`${SERVER_URL}${this.props.dataSource}/delete/:${docId}`)
+  }
+
+  handleApproveRow = (event) => {
+    let SERVER_URL = _generate.serverFunctions.getServerURL()
+    console.log(event.target.id)
+    const docId = event.target.id.split('_')[1]
+    console.log('docid', docId)
+    // axios.post(`${SERVER_URL}${this.props.dataSource}/delete/:${docId}`)
+  }
+
+  handleEditRow = (event) => {
+    let SERVER_URL = _generate.serverFunctions.getServerURL()
+    console.log(event.target.id)
+    const docId = event.target.id.split('_')[1]
+    console.log('docid', docId)
+    // axios.post(`${SERVER_URL}${this.props.dataSource}/delete/:${docId}`)
+  }
+
   // This will display the table with all records
   render() {
     const isTableTab = this.props.tableName ? true : false
+
+    const buttonClasses = {
+      deleteButtonClass: 'table-delete',
+      approveButtonClass: 'table-approve',
+      editButtonClass: 'table-edit',
+    }
 
     return (
       <div className="pageContainer">
@@ -181,6 +220,13 @@ export default class Page extends Component {
                   searchable={true}
                   dataSource={this.state.records}
                   rowSelectOptions={this.state.rowSelectOptions}
+                  editTablePermission={true}
+                  deleteButtonClass={buttonClasses.deleteButtonClass}
+                  approveButtonClass={buttonClasses.approveButtonClass}
+                  editButtonClass={buttonClasses.editButtonClass}
+                  deleteRowOnClick={this.handleDeleteRow}
+                  editRowOnClick={this.handleEditRow}
+                  approveRowOnClick={this.handleApproveRow}
                   // lazyLoadFn={this.lazyLoadTable.bind(this)}
                   // containerClass="table-container"
                   // tableClass="web-table"

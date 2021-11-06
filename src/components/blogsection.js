@@ -58,15 +58,10 @@ export default class BlogSection extends Component {
     const SERVER_URL = _generate.serverFunctions.getServerURL()
 
     axios
-      .post(
-        `${
-          SERVER_URL || 'https://calm-plains-52439.herokuapp.com'
-        }/post/create`,
-        {
-          index: this.props.index,
-          tabname: this.props.tabName,
-        },
-      )
+      .post(`${SERVER_URL}/post/create`, {
+        index: this.props.index,
+        tabname: this.props.tabName,
+      })
       .then((response) => {
         this.props.updatePosts()
         this.setState({ showCreateModal: false })
@@ -82,14 +77,9 @@ export default class BlogSection extends Component {
     const SERVER_URL = _generate.serverFunctions.getServerURL()
 
     axios
-      .post(
-        `${
-          SERVER_URL || 'https://calm-plains-52439.herokuapp.com'
-        }/post/delete`,
-        {
-          id: this.state.id,
-        },
-      )
+      .post(`${SERVER_URL}/post/delete`, {
+        id: this.state.id,
+      })
       .then((response) => {
         console.log(response)
         this.props.updatePosts()
@@ -260,16 +250,11 @@ export default class BlogSection extends Component {
     const SERVER_URL = _generate.serverFunctions.getServerURL()
 
     axios
-      .post(
-        `${
-          SERVER_URL || 'https://calm-plains-52439.herokuapp.com'
-        }/post/update`,
-        {
-          id: this.state.id,
-          title: this.state.title,
-          content: this.state.content,
-        },
-      )
+      .post(`${SERVER_URL}/post/update`, {
+        id: this.state.id,
+        title: this.state.title,
+        content: this.state.content,
+      })
       .then((response) => {
         console.log(response)
       })

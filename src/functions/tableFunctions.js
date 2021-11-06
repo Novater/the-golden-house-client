@@ -20,7 +20,7 @@ export default class tableFunctions {
 
     const SERVER_URL = _generate.serverFunctions.getServerURL()
     const tableConfig = await axios.get(`${SERVER_URL}/table/${tableName}`)
-    const { _id, rowSelectOptions, headers } = tableConfig.data
+    const { rowSelectOptions, headers } = tableConfig.data
 
     return {
       rowSelectOptions: JSON.parse(rowSelectOptions),
@@ -126,12 +126,19 @@ export default class tableFunctions {
     tableClassName,
     headers,
     rows,
+    hasEditPermission,
     search,
     currPage,
     rowFilter,
     footerObj,
     handleScroll,
     loadingContent,
+    deleteButtonClass,
+    editButtonClass,
+    approveButtonClass,
+    deleteOnClick,
+    editOnClick,
+    approveOnClick,
   ) {
     function initializeTableFooters({
       footerClass,
@@ -255,6 +262,42 @@ export default class tableFunctions {
 
       return (
         <tr key={record._id} className={props.className || ''}>
+          {hasEditPermission ? (
+            <td>
+              <button
+                className={approveButtonClass || 'approve-button'}
+                type="button"
+                id={`a_${record._id}`}
+                onClick={approveOnClick}
+              >
+                ✓
+              </button>
+            </td>
+          ) : null}
+          {hasEditPermission ? (
+            <td>
+              <button
+                className={editButtonClass || 'edit-button'}
+                type="button"
+                id={`e_${record._id}`}
+                onClick={editOnClick}
+              >
+                ?
+              </button>
+            </td>
+          ) : null}
+          {hasEditPermission ? (
+            <td>
+              <button
+                className={deleteButtonClass || 'delete-button'}
+                type="button"
+                id={`d_${record._id}`}
+                onClick={deleteOnClick}
+              >
+                X
+              </button>
+            </td>
+          ) : null}
           {headerKeyFormats.map((header) => {
             if (header.title === 'Rank') {
               return (
@@ -334,6 +377,9 @@ export default class tableFunctions {
             <table className={tableClassName} onWheel={handleScroll}>
               <thead>
                 <tr className={headers.className} onClick={headers.onClick}>
+                  {hasEditPermission ? <th name="Approve">Approve</th> : null}
+                  {hasEditPermission ? <th name="Edit">Edit</th> : null}
+                  {hasEditPermission ? <th name="Delete">Delete</th> : null}
                   {headers.headers.map((header) => (
                     <th name={header.title}>
                       {header.title}
