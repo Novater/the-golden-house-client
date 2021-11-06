@@ -9,7 +9,8 @@ import _generate from './functions/index'
 import axios from 'axios'
 import { connect } from 'react-redux'
 import store from './store/store'
-import { authenticateUser } from './store/actions/authActions'
+import { authenticateUser } from './store/reducers/authSlice'
+const AUTH_CONSTANTS = require('./constants/authConstants')
 
 require('dotenv').config()
 
@@ -77,7 +78,7 @@ export default class App extends Component {
   }
 
   async loginUser() {
-    this.props.dispatch(authenticateUser('testUser'))
+    store.dispatch(authenticateUser)
   }
 
   render() {
