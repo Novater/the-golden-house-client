@@ -30,7 +30,7 @@ export default class navbarFunctions {
         <ul className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
           {names.map((name, idx) => (
             <li>
-              <NavLink className="dropdown-item" to={paths[idx]}>
+              <NavLink key={`nav-${idx}`} className="dropdown-item" to={paths[idx]}>
                 {name}
               </NavLink>
             </li>

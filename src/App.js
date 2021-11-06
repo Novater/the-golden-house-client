@@ -35,7 +35,6 @@ export default class App extends Component {
   }
 
   changeEditMode = () => {
-    console.log(this.state.isEdit)
     this.setState((prevState) => ({
       showEditModal: false,
       isEdit: !prevState.isEdit,
@@ -59,7 +58,7 @@ export default class App extends Component {
     }
 
     return (
-      <Route exact path={path}>
+      <Route key={`route-${title}`} exact path={path}>
         <Page
           title={title}
           tabName={tabName}
