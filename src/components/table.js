@@ -60,6 +60,7 @@ export default class Table extends Component {
       approveLineIds: [],
       deleteLineIds: [],
       currIdSelected: '',
+      tableSaving: false,
     }
   }
 
@@ -223,9 +224,10 @@ export default class Table extends Component {
     })
   }
 
-  saveTableUpdates = () => {
+  async saveTableUpdates() {
+    this.setState({ tableSaving: true })
     if (this.props.approveRows) {
-      this.props.approveRows(
+      await this.props.approveRows(
         _.filter(
           this.state.records,
           (record) => this.state.approveLineIds.indexOf(record._id) >= 0,
@@ -233,17 +235,27 @@ export default class Table extends Component {
       )
     }
     if (this.props.deleteRows) {
-      this.props.deleteRows(
+      await this.props.deleteRows(
         _.filter(
           this.state.records,
           (record) => this.state.deleteLineIds.indexOf(record._id) >= 0,
         ),
       )
     }
+
+    const newRecords = _.filter(this.state.records, (record) => {
+      return (
+        this.state.approveLineIds.indexOf(record._id) < 0 &&
+        this.state.deleteLineIds.indexOf(record._id) < 0
+      )
+    })
+
     this.setState({
       approveLineIds: [],
       deleteLineIds: [],
       showTableSaveModal: false,
+      tableSaving: false,
+      records: newRecords,
     })
   }
 
@@ -457,6 +469,7 @@ export default class Table extends Component {
       showTableCancelModal,
       approveLineIds,
       deleteLineIds,
+      tableSaving,
     } = this.state
 
     const generatedFilters = []
@@ -516,35 +529,40 @@ export default class Table extends Component {
         ) : (
           ''
         )}
-        <div className={tableClass || 'web-table'}>
-          {_generate.tableFunctions.createTable(
-            'table-wrapper',
-            'table table-hover',
-            headers,
-            this.tableList(),
-            editTablePermission,
-            search,
-            currPage,
-            !lazyLoadFn ? pageRows : null,
-            footerObj,
-            this.handleScroll.bind(this),
-            loadingContent,
-            deleteButtonClass,
-            approveButtonClass,
-            this.deleteLine,
-            this.approveLine,
-            deleteLineIds,
-            approveLineIds,
-            this.onClickSave,
-            this.onClickCancel,
-          )}
-        </div>
+        {tableSaving ? (
+          <LoadingSpinner />
+        ) : (
+          <div className={tableClass || 'web-table'}>
+            {_generate.tableFunctions.createTable(
+              'table-wrapper',
+              'table table-hover',
+              headers,
+              this.tableList(),
+              editTablePermission,
+              search,
+              currPage,
+              !lazyLoadFn ? pageRows : null,
+              footerObj,
+              this.handleScroll.bind(this),
+              loadingContent,
+              deleteButtonClass,
+              approveButtonClass,
+              this.deleteLine,
+              this.approveLine,
+              deleteLineIds,
+              approveLineIds,
+              this.onClickSave,
+              this.onClickCancel,
+            )}
+          </div>
+        )}
+
         {approveRows
           ? _generate.createFunctions.createModal(
               'Save Updates',
               'Are you sure you want to save these updates?',
               showTableSaveModal,
-              this.saveTableUpdates,
+              this.saveTableUpdates.bind(this),
               this.handleCloseSave,
             )
           : null}
