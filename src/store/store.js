@@ -1,4 +1,6 @@
 import { applyMiddleware, compose, createStore } from 'redux'
+import rootReducer from './reducers/index'
 import thunkMiddleware from 'redux-thunk'
 
-import monitorReducersEnhancer from './reducers'
+export default store = createStore(rootReducer)
+

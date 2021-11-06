@@ -1,7 +1,13 @@
 import { combineReducers } from 'redux'
 
-import monitorReducerEnhancer from './monitorReducerEnhancer'
+import authReducer from './authSlice'
 
-export default combinerReducers({
-  monitor: monitorReducerEnhancer,
+// {type: 'auth/login', payload: userPermissions }
+// {type: 'auth/logout' }
+// {type: 'editMode' }
+//
+const rootReducer = combineReducers({
+  auth: authReducer,
 })
+
+export default rootReducer

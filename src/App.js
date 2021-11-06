@@ -6,8 +6,10 @@ import Navbar from './components/navbar'
 import Page from './views/page'
 import './stylesheets/index.scss'
 import _generate from './functions/index'
-import BannerImg from './assets/banner-image-tgh-2.png'
 import axios from 'axios'
+import { connect } from 'react-redux'
+import store from './store/store'
+import { authenticateUser } from './store/actions/authActions'
 
 require('dotenv').config()
 
@@ -74,17 +76,8 @@ export default class App extends Component {
     )
   }
 
-  loginUser = () => {
-    this.setState({
-      isLoggedIn: true,
-    })
-  }
-
-  loginAdminUser = () => {
-    this.setState({
-      isLoggedIn: true,
-      tableEditable: true,
-    })
+  async loginUser() {
+    this.props.dispatch(authenticateUser('testUser'))
   }
 
   render() {
@@ -117,13 +110,6 @@ export default class App extends Component {
             type="button"
           >
             Log In
-          </button>
-          <button
-            style={{ position: 'absolute', left: '50%', top: '45%' }}
-            onClick={this.loginAdminUser}
-            type="button"
-          >
-            Admin Log In
           </button>
         </Route>
         {this.state.pages.map(
