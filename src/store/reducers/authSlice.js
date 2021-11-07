@@ -7,8 +7,9 @@ const initialState = { loggedIn: false, loggingIn: false }
 export default function authReducer(state = initialState, action) {
   switch (action.type) {
     case AUTH_CONSTANTS.AUTH_LOGIN_REQUEST: {
-      console.log('Logging in user.', action.payload.userId)
-      return { ...state, loggingIn: true, userId: action.payload.userId }
+      console.log('Logging in user.', action.payload.username)
+      const { username, password } = action.payload
+      return { ...state, loggingIn: true, username, password }
     }
     case AUTH_CONSTANTS.AUTH_LOGIN_SUCCESS: {
       const { data } = action.payload
@@ -25,18 +26,10 @@ export default function authReducer(state = initialState, action) {
 }
 
 export async function authenticateUser(dispatch, getState) {
-  console.log('Sending auth request for user', getState().auth.userId)
-
-  dispatch({
-    type: AUTH_CONSTANTS.AUTH_LOGIN_REQUEST,
-    payload: {
-      userId: 'test-user'
-    }
-  })
 
   const SERVER_URL = _generate.serverFunctions.getServerURL()
   try {
-    const response = await axios.get(`${SERVER_URL}/login`)
+    const response = await axios.get(`${SERVER_URL}/login/:username/:password`)
     console.log(response)
     dispatch({
       type: AUTH_CONSTANTS.AUTH_LOGIN_SUCCESS,

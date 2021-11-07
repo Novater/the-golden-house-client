@@ -7,10 +7,7 @@ import Page from './views/page'
 import './stylesheets/index.scss'
 import _generate from './functions/index'
 import axios from 'axios'
-import { connect } from 'react-redux'
-import store from './store/store'
-import { authenticateUser } from './store/reducers/authSlice'
-const AUTH_CONSTANTS = require('./constants/authConstants')
+import LoginPage from './views/loginPage'
 
 require('dotenv').config()
 
@@ -61,7 +58,7 @@ export default class App extends Component {
     }
 
     return (
-      <Route key={`route-${title}`} exact path={path}>
+      <Route exact path={path}>
         <Page
           title={title}
           tabName={tabName}
@@ -75,10 +72,6 @@ export default class App extends Component {
         />
       </Route>
     )
-  }
-
-  async loginUser() {
-    store.dispatch(authenticateUser)
   }
 
   render() {
@@ -105,13 +98,7 @@ export default class App extends Component {
           }
         />
         <Route exact path="/secret-login/12345">
-          <button
-            style={{ position: 'absolute', left: '50%', top: '50%' }}
-            onClick={this.loginUser}
-            type="button"
-          >
-            Log In
-          </button>
+          <LoginPage />
         </Route>
         {this.state.pages.map(
           ({ url, title, tabName, backgroundImage, dataSource, tableName }) => {
