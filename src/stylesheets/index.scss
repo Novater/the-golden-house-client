@@ -10,18 +10,21 @@ $color-faded-white: rgb(255 255 255 / 0.3);
 $color-opaque-black: rgb(0 0 0 / 0.6);
 $height-nav: 60px;
 
+/* The typing effect */
+@keyframes typing {
+  from { width: 0 }
+  to { width: 80% }
+}
+
 @keyframes blinking {
   0% {
-    color: transparent;
+    border-color: $color-neutral;
   }
   50% {
-    color: $color-neutral;
-  }
-  60% {
-    color: transparent;
+    border-color: transparent;
   }
   100% {
-    color: transparent;
+    border-color: $color-neutral;
   }
 }
 
@@ -579,7 +582,6 @@ thead {
 }
 
 .auth-message {
-  font-weight: bold;
   color: $color-watermelon;
 }
 
@@ -615,13 +617,13 @@ thead {
 
 .login-message {
   position: relative;
+  white-space: nowrap;
   color: $color-neutral;
   font-weight: normal;
-  &:after {
-    position: absolute;
-    content: '|';
-    animation: blinking 1s infinite;
-  }
+  font-family: monospace;
+  animation: typing 4s steps(44), blinking 0.5s step-end infinite alternate;
+  border-right: 3px solid;
+  overflow: hidden;
 }
 
 .search-container {

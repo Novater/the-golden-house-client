@@ -37,13 +37,12 @@ export default function authReducer(state = initialState, action) {
     }
     case AUTH_CONSTANTS.AUTH_LOGIN_FAIL: {
       const { error } = action.payload
-      console.log('error', error)
       return {
         ...state,
         loggingIn: false,
         role: null,
         authMessage:
-          'You have entered an incorrect username and password combination.',
+          'Invalid username/password combination.',
       }
     }
     case AUTH_CONSTANTS.AUTH_CHECK_LOGGED_IN: {
@@ -78,10 +77,7 @@ export async function checkLoggedIn(dispatch, getState) {
     })
   } catch (error) {
     dispatch({
-      type: AUTH_CONSTANTS.AUTH_LOGIN_FAIL,
-      payload: {
-        error: error,
-      },
+      type: AUTH_CONSTANTS.AUTH_LOGOUT,
     })
   }
 }
