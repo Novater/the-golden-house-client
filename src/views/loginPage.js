@@ -20,12 +20,11 @@ class LoginPage extends Component {
   async loginUser() {
     const salt = bcrypt.genSaltSync(10)
     const hashedPassword = bcrypt.hashSync(this.state.password, salt)
-
     store.dispatch({
       type: AUTH_CONSTANTS.AUTH_LOGIN_REQUEST,
       payload: {
         username: this.state.username,
-        password: hashedPassword,
+        password: this.state.password,
       },
     })
 
