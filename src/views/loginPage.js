@@ -30,6 +30,10 @@ class LoginPage extends Component {
     })
 
     store.dispatch(authenticateUser)
+    this.setState({
+      username: '',
+      password: ''
+    })
   }
 
   handleChangeUserName = (event) => {
