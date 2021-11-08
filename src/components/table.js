@@ -198,8 +198,20 @@ export default class Table extends Component {
     const targetId = buttonId.substring(buttonId.indexOf('_') + 1)
 
     this.setState((prevState) => {
-      let copiedDeleteLines = [...prevState.deleteLineIds]
       let copiedApproveLines = [...prevState.approveLineIds]
+      let copiedDeleteLines = [...prevState.deleteLineIds]
+
+      if (copiedDeleteLines.indexOf(targetId) >= 0) {
+        const newDeleteLines = _.filter(
+          copiedDeleteLines,
+          (el) => el != targetId,
+        )
+        return {
+          deleteLineIds: newDeleteLines,
+          approveLineIds: copiedApproveLines,
+        }
+      }
+
       _.remove(copiedDeleteLines, (el) => el == targetId)
       _.remove(copiedApproveLines, (el) => el == targetId)
       return {
@@ -215,6 +227,18 @@ export default class Table extends Component {
     this.setState((prevState) => {
       let copiedDeleteLines = [...prevState.deleteLineIds]
       let copiedApproveLines = [...prevState.approveLineIds]
+
+      if (copiedApproveLines.indexOf(targetId) >= 0) {
+        const newApproveLines = _.filter(
+          copiedApproveLines,
+          (el) => el != targetId,
+        )
+        return {
+          deleteLineIds: copiedDeleteLines,
+          approveLineIds: newApproveLines,
+        }
+      }
+
       _.remove(copiedDeleteLines, (el) => el == targetId)
       _.remove(copiedApproveLines, (el) => el == targetId)
       return {

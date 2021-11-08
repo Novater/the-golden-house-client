@@ -280,7 +280,7 @@ export default class tableFunctions {
                 id={`a_${record._id}`}
                 onClick={approveOnClick}
               >
-                ✓
+                {approvedClass ? "\u2015" : '✓' }
               </button>
             </td>
           ) : null}
@@ -292,7 +292,7 @@ export default class tableFunctions {
                 id={`d_${record._id}`}
                 onClick={deleteOnClick}
               >
-                X
+                {deletedClass ? "\u2015" : 'X' }
               </button>
             </td>
           ) : null}
