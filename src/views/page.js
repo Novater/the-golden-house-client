@@ -210,62 +210,63 @@ class Page extends Component {
 
     return (
       <div className="pageContainer">
-        { this.props.loggingOut ? 
-          <><div>Logging Out...</div>
-          <LoadingSpinner /></>
-          : 
-        <>
-          <div className="leftContainer"></div>
-          <div className="midContainer">
-            <div className="blog-section">
-              {_generate.createFunctions.createBackdrop(
-                this.props.backgroundImage,
-              )}
-              <div className="welcome-banner">
-                <h1>{this.props.title}</h1>
+        {this.props.loggingOut ? (
+          <>
+            <div>Logging Out...</div>
+            <LoadingSpinner />
+          </>
+        ) : (
+          <>
+            <div className="leftContainer"></div>
+            <div className="midContainer">
+              <div className="blog-section">
+                {_generate.createFunctions.createBackdrop(
+                  this.props.backgroundImage,
+                )}
+                <div className="welcome-banner">
+                  <h1>{this.props.title}</h1>
+                </div>
               </div>
+              {this.renderPosts()}
+              {isTableTab ? (
+                <Suspense fallback={<LoadingSpinner />}>
+                  {this.state.tableHeaders ? (
+                    <Table
+                      key={`${this.props.title}-datatable`}
+                      defaultSortKey="Time"
+                      defaultSortDir={1}
+                      headers={this.state.tableHeaders}
+                      searchable={true}
+                      dataSource={
+                        this.props.inEditMode && this.state.tableEditPermission
+                          ? this.state.adminRecords
+                          : this.state.records
+                      }
+                      rowSelectOptions={this.state.rowSelectOptions}
+                      editTablePermission={
+                        this.props.inEditMode && this.state.tableEditPermission
+                      }
+                      approveButtonClass={buttonClasses.approveButtonClass}
+                      approveRows={this.handleApproveRows}
+                      deleteButtonClass={buttonClasses.deleteButtonClass}
+                      // deleteRows={this.handleDeleteRows}
+                      // lazyLoadFn={this.lazyLoadTable.bind(this)}
+                      // containerClass="table-container"
+                      // tableClass="web-table"
+                      // filterContainerClass="filter-container"
+                      // searchContainerClass="search-container"
+                      // headerClass="leaderboard-row"
+                      // footerClass="table-footer"
+                    />
+                  ) : null}
+                </Suspense>
+              ) : (
+                ''
+              )}
             </div>
-            {this.renderPosts()}
-            {isTableTab ? (
-              <Suspense fallback={<LoadingSpinner />}>
-                {this.state.tableHeaders ? (
-                  <Table
-                    key={`${this.props.title}-datatable`}
-                    defaultSortKey="Time"
-                    defaultSortDir={1}
-                    headers={this.state.tableHeaders}
-                    searchable={true}
-                    dataSource={
-                      this.props.inEditMode && this.state.tableEditPermission
-                        ? this.state.adminRecords
-                        : this.state.records
-                    }
-                    rowSelectOptions={this.state.rowSelectOptions}
-                    editTablePermission={
-                      this.props.inEditMode && this.state.tableEditPermission
-                    }
-                    approveButtonClass={buttonClasses.approveButtonClass}
-                    approveRows={this.handleApproveRows}
-                    deleteButtonClass={buttonClasses.deleteButtonClass}
-                    // deleteRows={this.handleDeleteRows}
-                    // lazyLoadFn={this.lazyLoadTable.bind(this)}
-                    // containerClass="table-container"
-                    // tableClass="web-table"
-                    // filterContainerClass="filter-container"
-                    // searchContainerClass="search-container"
-                    // headerClass="leaderboard-row"
-                    // footerClass="table-footer"
-                  />
-                ) : null}
-              </Suspense>
-            ) : (
-              ''
-            )}
-          </div>
-          <div className="rightContainer"></div>
-        </>
-        }
-        
+            <div className="rightContainer"></div>
+          </>
+        )}
       </div>
     )
   }

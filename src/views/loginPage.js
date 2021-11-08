@@ -59,35 +59,36 @@ class LoginPage extends Component {
 
   render() {
     return (
-      
-      <div className="login-form">
-        {
-          this.props.loggingIn ? <div>Logging in...</div> :
-          <>
-            <h1 className="login-title">Login Dashboard</h1>
-            <h4 className="login-message">How are you doing today?</h4>
-            <p className="auth-message">{this.props.authMessage}</p>
-            <label htmlFor="username">Username:</label>
-            <input
-              type="text"
-              placeholder="Username..."
-              name="username"
-              className='login-username'
-              onChange={this.handleChangeUserName}
-            ></input>
-            <label htmlFor="password">Password:</label>
-            <input
-              type="password"
-              placeholder="Password..."
-              name="password"
-              className='login-password'
-              onChange={this.handleChangePassword}
-            ></input>
-            <button onClick={this.loginUser.bind(this)}>Log In</button>
-            {this.renderBackdrop(this.props.backgroundImage)}
-          </>
-        }
-      </div>
+      <>
+        <div className="login-form">
+          {
+            this.props.loggingIn ? <div>Logging in...</div> :
+            <>
+              <h1 className="login-title">Login Dashboard</h1>
+              <h4 className="login-message">How are you doing today?</h4>
+              <p className="auth-message">{this.props.authMessage}</p>
+              <label htmlFor="username">Username:</label>
+              <input
+                type="text"
+                placeholder="Username..."
+                name="username"
+                className='login-username'
+                onChange={this.handleChangeUserName}
+              ></input>
+              <label htmlFor="password">Password:</label>
+              <input
+                type="password"
+                placeholder="Password..."
+                name="password"
+                className='login-password'
+                onChange={this.handleChangePassword}
+              ></input>
+              <button className="login-button" onClick={this.loginUser.bind(this)}>Log In</button>
+            </>
+          }
+        </div>
+        {this.renderBackdrop(this.props.backgroundImage)}
+      </>
     )
   }
 }
