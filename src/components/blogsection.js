@@ -4,14 +4,16 @@ import React, { Component } from 'react'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash, faPen, faPlus } from '@fortawesome/free-solid-svg-icons'
+import { userSelector } from 'react-redux'
 import axios from 'axios'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 import ContentEditor from './contenteditor'
 import _generate from '../functions/index'
 
 const config = require('../config/index')
 
-export default class BlogSection extends Component {
+class BlogSection extends Component {
   constructor(props) {
     super(props)
 
@@ -21,8 +23,7 @@ export default class BlogSection extends Component {
       content: this.props.content,
       loadedTitle: this.props.title,
       loadedContent: this.props.content,
-      isEdit: this.props.isEdit,
-      isEditMode: false,
+      isEditing: this.props.isEditing,
       showCreateModal: false,
       showDeleteModal: false,
     }
@@ -46,7 +47,7 @@ export default class BlogSection extends Component {
     this.setState((prevState) => ({
       title: prevState.loadedTitle,
       content: prevState.loadedContent,
-      isEditMode: false,
+      isEditing: false,
     }))
   }
 
@@ -98,7 +99,7 @@ export default class BlogSection extends Component {
   }
 
   editBlogPost = () => {
-    this.setState({ isEditMode: true })
+    this.setState({ isEditing: true })
   }
 
   getBlogEditMode = () => {
@@ -154,7 +155,7 @@ export default class BlogSection extends Component {
   getBlogViewMode = () => {
     return (
       <div className="blog-post" id={this.state.id}>
-        {this.state.isEdit ? (
+        {this.props.inEditMode ? (
           <div className="new-post-above" onClick={this.createNewPost}>
             <FontAwesomeIcon icon={faPlus} />
           </div>
@@ -171,7 +172,7 @@ export default class BlogSection extends Component {
               ),
             }}
           ></h4>
-          {this.state.isEdit ? (
+          {this.props.inEditMode ? (
             <div className="edit">
               <FontAwesomeIcon icon={faPen} onClick={this.editBlogPost} />
               <FontAwesomeIcon icon={faTrash} onClick={this.deleteBlogPost} />
@@ -191,7 +192,7 @@ export default class BlogSection extends Component {
             }}
           ></p>
         </div>
-        {this.state.isEdit ? (
+        {this.props.inEditMode ? (
           <div className="new-post-below" onClick={this.createNewPost}>
             <FontAwesomeIcon icon={faPlus} />
           </div>
@@ -265,12 +266,12 @@ export default class BlogSection extends Component {
     this.setState({
       loadedTitle: this.state.title,
       loadedContent: this.state.content,
-      isEditMode: false,
+      isEditing: false,
     })
   }
 
   render() {
-    return this.state.isEditMode
+    return this.state.isEditing
       ? this.getBlogEditMode()
       : this.getBlogViewMode()
   }
@@ -280,9 +281,15 @@ BlogSection.propTypes = {
   id: PropTypes.string.isRequired,
   title: PropTypes.string,
   content: PropTypes.string,
-  isEdit: PropTypes.bool,
-  isEditMode: PropTypes.bool,
   index: PropTypes.string,
   tabName: PropTypes.string.isRequired,
   updatePosts: PropTypes.func,
 }
+
+const mapState = (state) => ({
+  inEditMode: state.edit.inEditMode,
+  showEditModal: state.edit.showEditModal,
+  loggedIn: state.auth.loggedIn,  
+})
+
+export default connect(mapState)(BlogSection)

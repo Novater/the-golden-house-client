@@ -8,6 +8,7 @@ import LoadingSpinner from '../components/loadingspinner'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons'
 const config = require('../config/index')
+axios.defaults.withCredentials = true
 
 export default class tableFunctions {
   static async getTableConfigs(tableName) {
