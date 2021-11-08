@@ -4,7 +4,14 @@ import axios from 'axios'
 
 axios.defaults.withCredentials = true
 
-const initialState = { loggedIn: false, loggingIn: false, role: null, id: null, authMessage: '' }
+const initialState = {
+  loggedIn: false,
+  loggingIn: false,
+  loggingOut: false,
+  role: null,
+  id: null,
+  authMessage: '',
+}
 
 export default function authReducer(state = initialState, action) {
   switch (action.type) {
@@ -12,8 +19,11 @@ export default function authReducer(state = initialState, action) {
       const { username, password } = action.payload
       return { ...state, loggingIn: true, username, password, authMessage: '' }
     }
+    case AUTH_CONSTANTS.AUTH_LOGOUT_REQUEST: {
+      return { ...state, loggingOut: true }
+    }
     case AUTH_CONSTANTS.AUTH_LOGOUT: {
-      return { ...state, loggedIn: false }
+      return { ...state, loggedIn: false, loggingOut: false }
     }
     case AUTH_CONSTANTS.AUTH_LOGIN_SUCCESS: {
       const { data } = action.payload
@@ -28,7 +38,13 @@ export default function authReducer(state = initialState, action) {
     case AUTH_CONSTANTS.AUTH_LOGIN_FAIL: {
       const { error } = action.payload
       console.log('error', error)
-      return { ...state, loggingIn: false, role: null, authMessage: 'You have entered an incorrect username and password combination.' }
+      return {
+        ...state,
+        loggingIn: false,
+        role: null,
+        authMessage:
+          'You have entered an incorrect username and password combination.',
+      }
     }
     case AUTH_CONSTANTS.AUTH_CHECK_LOGGED_IN: {
       const { data } = action.payload

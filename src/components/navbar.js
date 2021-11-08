@@ -11,6 +11,7 @@ import { connect } from 'react-redux'
 import { logoutUser } from '../store/reducers/authSlice'
 
 const EDIT_CONSTANTS = require('../constants/editConstants')
+const AUTH_CONSTANTS = require('../constants/authConstants')
 
 class Navbar extends Component {
   constructor(props) {
@@ -24,6 +25,7 @@ class Navbar extends Component {
   }
 
   logOut() {
+    store.dispatch({ type: AUTH_CONSTANTS.AUTH_LOGOUT_REQUEST })
     store.dispatch(logoutUser)
   }
   render() {
