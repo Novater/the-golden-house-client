@@ -64,7 +64,7 @@ class LoginPage extends Component {
           {
             this.props.loggingIn ? <div>Logging in...</div> :
             <>
-              <h1 className="login-title">Login Dashboard</h1>
+              <h1 className="login-title">User Login Dashboard</h1>
               <h4 className="login-message">How are you doing today?</h4>
               <p className="auth-message">{this.props.authMessage}</p>
               <label htmlFor="username">Username:</label>
