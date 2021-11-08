@@ -1,54 +1,57 @@
 /* eslint-disable */
 
 import { React, Component } from 'react'
-import { Route } from 'react-router-dom'
+import { Route, Redirect } from 'react-router-dom'
 import Navbar from './components/navbar'
 import Page from './views/page'
 import './stylesheets/index.scss'
 import _generate from './functions/index'
 import axios from 'axios'
 import LoginPage from './views/loginPage'
+import store from './store/store'
+import { checkLoggedIn } from './store/reducers/authSlice'
+import { connect } from 'react-redux'
 
+const EDIT_CONSTANTS = require('./constants/editConstants')
+axios.defaults.withCredentials = true
 require('dotenv').config()
 
-export default class App extends Component {
+class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      isEdit: false,
-      isEditMode: false,
-      tableEditable: false,
-      showEditModal: false,
-      isLoggedIn: false,
+      editTablePermissions: ['ADMIN'],
       pages: [],
     }
   }
 
   async componentDidMount() {
+    store.dispatch(checkLoggedIn)
     const SERVER_URL = _generate.serverFunctions.getServerURL()
     const loadedPages = await axios.get(`${SERVER_URL}/page`)
     this.setState({ pages: loadedPages.data })
   }
 
   updateEditMode = () => {
-    this.setState({ showEditModal: true })
+    store.dispatch({ type: EDIT_CONSTANTS.SHOW_EDIT_MODAL })
   }
 
   changeEditMode = () => {
-    this.setState((prevState) => ({
-      showEditModal: false,
-      isEdit: !prevState.isEdit,
-      isEditMode: false,
-    }))
+    store.dispatch({ type: EDIT_CONSTANTS.CHANGE_EDIT_MODE })
+    // this.setState((prevState) => ({
+    //   showEditModal: false,
+    //   isEdit: !prevState.isEdit,
+    //   isEditMode: false,
+    // }))
   }
 
   closeModal = () => {
-    this.setState({ showEditModal: false })
+    store.dispatch({ type: EDIT_CONSTANTS.CLOSE_EDIT_MODAL })
   }
 
   createExactPage = (
     path,
-    { title, tabName, backgroundImage, tableName, navBar, dataSource },
+    { title, tabName, backgroundImage, tableName, navBar, dataSource, _id },
   ) => {
     let backgroundURL
     try {
@@ -58,13 +61,12 @@ export default class App extends Component {
     }
 
     return (
-      <Route exact path={path}>
+      <Route key={`route-${_id}`} exact path={path}>
         <Page
+          key={_id}
           title={title}
           tabName={tabName}
-          isEdit={this.state.isEdit}
-          isEditMode={this.state.isEditMode}
-          tableEditable={this.state.tableEditable}
+          editTablePermissions={this.state.editTablePermissions}
           backgroundImage={backgroundURL}
           tableName={tableName}
           navBar={navBar}
@@ -82,41 +84,52 @@ export default class App extends Component {
             ['/speedrun/leaderboard/fullpage'].includes(location.pathname) ? (
               <Navbar
                 setEditMode={this.updateEditMode}
-                isEdit={this.state.isEdit}
                 title="Abyss Leaderboard"
-                isLoggedIn={this.state.isLoggedIn}
                 standAlone
               />
             ) : (
               <Navbar
                 setEditMode={this.updateEditMode}
-                isEdit={this.state.isEdit}
                 title="The Golden House"
-                isLoggedIn={this.state.isLoggedIn}
               />
             )
           }
         />
-        <Route exact path="/secret-login/12345">
-          <LoginPage />
+        <Route exact path="/admin">
+          {this.props.loggedIn ? (
+            <Redirect to="/" />
+          ) : (
+            <LoginPage
+              backgroundImage={require('./assets/banner-image-tgh-2.png')}
+            />
+          )}
         </Route>
         {this.state.pages.map(
-          ({ url, title, tabName, backgroundImage, dataSource, tableName }) => {
+          ({
+            url,
+            title,
+            tabName,
+            backgroundImage,
+            dataSource,
+            tableName,
+            _id,
+          }) => {
             return this.createExactPage(url, {
               title,
               tabName,
               backgroundImage,
               tableName,
               dataSource,
+              _id,
             })
           },
         )}
         {_generate.createFunctions.createModal(
-          this.state.isEdit ? 'Leave Edit Mode?' : 'Enter Edit Mode?',
-          this.state.isEdit
+          this.props.isEditing ? 'Leave Edit Mode?' : 'Enter Edit Mode?',
+          this.props.isEditing
             ? 'Are you sure you want to leave edit mode?'
             : 'Are you sure you want to enter edit mode?',
-          this.state.showEditModal,
+          this.props.showEditModal,
           this.changeEditMode,
           this.closeModal,
         )}
@@ -124,3 +137,12 @@ export default class App extends Component {
     )
   }
 }
+
+const mapState = (state) => ({
+  inEditMode: state.edit.inEditMode,
+  isEditing: state.edit.isEditing,
+  showEditModal: state.edit.showEditModal,
+  loggedIn: state.auth.loggedIn,
+})
+
+export default connect(mapState)(App)

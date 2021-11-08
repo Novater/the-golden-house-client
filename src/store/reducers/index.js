@@ -1,13 +1,10 @@
 import { combineReducers } from 'redux'
-
 import authReducer from './authSlice'
+import editReducer from './editSlice'
 
-// {type: 'auth/login', payload: userPermissions }
-// {type: 'auth/logout' }
-// {type: 'editMode' }
-//
 const rootReducer = combineReducers({
   auth: authReducer,
+  edit: editReducer,
 })
 
 export default rootReducer

@@ -1,4 +1,5 @@
 import { Modal } from 'react-bootstrap'
+import { LazyLoadImage } from 'react-lazy-load-image-component'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import React from 'react'
 
@@ -23,6 +24,18 @@ export default class createFunctions {
           </button>
         </Modal.Footer>
       </Modal>
+    )
+  }
+
+  static createBackdrop(image) {
+    if (!image) return null
+    return (
+      <LazyLoadImage
+        src={image.default}
+        className="banner-img"
+        effect="opacity"
+        alt="banner"
+      />
     )
   }
 }

@@ -6,27 +6,29 @@ import { faEye, faPenFancy } from '@fortawesome/free-solid-svg-icons'
 import { NavLink } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import _generate from '../functions/index'
+import store from '../store/store'
+import { connect } from 'react-redux'
+import { logoutUser } from '../store/reducers/authSlice'
 
-export default class Navbar extends Component {
+const EDIT_CONSTANTS = require('../constants/editConstants')
+
+class Navbar extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      isEdit: false,
-    }
   }
 
   componentDidMount() {}
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.isEdit !== this.props.isEdit) {
-      // eslint-disable-next-line
-      this.setState({
-        isEdit: this.props.isEdit,
-      })
-    }
+  setEditMode() {
+    store.dispatch({ type: EDIT_CONSTANTS.SHOW_EDIT_MODAL})
   }
 
+  logOut() {
+    store.dispatch(logoutUser)
+  }
   render() {
+    const loggedIn = this.props.loggedIn
+
     return (
       <nav className="navbar navbar-expand-lg bg-dark main-nav">
         {this.props.standAlone ? (
@@ -89,23 +91,45 @@ export default class Navbar extends Component {
                   'Contact Us',
                   '/contact-us',
                 )}
+                {
+                  this.props.loggedIn ?
+                  <li className="nav-item dropdown user-display">
+                    <a
+                      className="nav-link dropdown-toggle"
+                      href="#"
+                      id="navbarDropdownMenuLink"
+                      role="button"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      {this.props.id}
+                    </a>
+                    <ul className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                      <li>
+                        <div key='nav-logout' className="dropdown-item" onClick={this.logOut}>
+                          Logout
+                        </div>
+                      </li>
+                    </ul>
+                  </li>: null
+                }
               </ul>
             </div>
           </div>
         )}
-        {this.props.isLoggedIn ? (
+        {loggedIn ? (
           <div className="edit-icon">
-            {this.state.isEdit ? (
+            {this.props.inEditMode ? (
               <FontAwesomeIcon
                 title="Toggle Edit"
                 icon={faEye}
-                onClick={this.props.setEditMode}
+                onClick={this.setEditMode}
               />
             ) : (
               <FontAwesomeIcon
                 title="Toggle Edit"
                 icon={faPenFancy}
-                onClick={this.props.setEditMode}
+                onClick={this.setEditMode}
               />
             )}
           </div>
@@ -117,10 +141,19 @@ export default class Navbar extends Component {
   }
 }
 
+const mapState = (state) => ({
+  inEditMode: state.edit.inEditMode,
+  isEditing: state.edit.isEditing,
+  showEditModal: state.edit.showEditModal,
+  loggedIn: state.auth.loggedIn,
+  id: state.auth.id
+})
+
 Navbar.propTypes = {
-  isEdit: PropTypes.bool.isRequired,
   standAlone: PropTypes.bool,
   title: PropTypes.string,
   setEditMode: PropTypes.func,
-  isLoggedIn: PropTypes.bool,
+  loggedIn: PropTypes.bool.isRequired,
 }
+
+export default connect(mapState)(Navbar)

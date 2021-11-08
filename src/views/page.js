@@ -5,23 +5,23 @@ import React, { Component, Suspense } from 'react'
 import _generate from '../functions/index'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
 import LoadingSpinner from '../components/loadingspinner'
+import { connect } from 'react-redux'
 
 const Table = React.lazy(() => import('../components/table'))
 const BlogSection = React.lazy(() => import('../components/blogsection'))
-const config = require('../config/index')
+axios.defaults.withCredentials = true
 
-export default class Page extends Component {
+class Page extends Component {
   constructor(props) {
     super(props)
     this.state = {
       posts: [],
-      isEdit: this.props.isEdit,
-      isEditMode: this.props.isEditMode,
       records: [],
       adminRecords: [],
       rowSelectOptions: '',
       tableHeaders: '',
       tableFilters: '',
+      tableEditPermission: false,
     }
   }
 
@@ -29,16 +29,19 @@ export default class Page extends Component {
 
   // This method will get the data from the database
   async componentDidMount() {
+    console.log('this.props', this.props)
     this.setState({ tabName: this.props.tabName })
 
     let SERVER_URL = _generate.serverFunctions.getServerURL()
     const posts = await axios.get(`${SERVER_URL}/post/${this.props.tabName}`)
     const postData = posts.data
-
     let data = []
     let adminData = []
     if (this.props.dataSource) {
-      if (this.props.tableEditable) {
+      const role = this.props.role
+      const hasPermission = this.props.editTablePermissions.indexOf(role) >= 0
+      this.setState({ tableEditPermission: hasPermission })
+      if (hasPermission) {
         const dataSource = await axios.get(
           `${SERVER_URL}${this.props.dataSource}/admin`,
         )
@@ -122,7 +125,6 @@ export default class Page extends Component {
 
   renderBackdrop = (image) => {
     if (!image) return null
-
     return (
       <LazyLoadImage
         src={image.default}
@@ -184,17 +186,20 @@ export default class Page extends Component {
 
   handleDeleteRows = (records) => {
     let SERVER_URL = _generate.serverFunctions.getServerURL()
-    axios.post(`${SERVER_URL}${this.props.dataSource}/delete`, { records: records })
+    axios.post(`${SERVER_URL}${this.props.dataSource}/delete`, {
+      records: records,
+    })
   }
 
   handleApproveRows = (records) => {
     let SERVER_URL = _generate.serverFunctions.getServerURL()
-    axios.post(`${SERVER_URL}${this.props.dataSource}/approve`, { records: records })
+    axios.post(`${SERVER_URL}${this.props.dataSource}/approve`, {
+      records: records,
+    })
   }
 
   // This will display the table with all records
   render() {
-    console.log(this.state)
     const isTableTab = this.props.tableName ? true : false
 
     const buttonClasses = {
@@ -208,7 +213,9 @@ export default class Page extends Component {
         <div className="leftContainer"></div>
         <div className="midContainer">
           <div className="blog-section">
-            {this.renderBackdrop(this.props.backgroundImage)}
+            {_generate.createFunctions.createBackdrop(
+              this.props.backgroundImage,
+            )}
             <div className="welcome-banner">
               <h1>{this.props.title}</h1>
             </div>
@@ -224,18 +231,18 @@ export default class Page extends Component {
                   headers={this.state.tableHeaders}
                   searchable={true}
                   dataSource={
-                    this.state.isEdit && this.props.tableEditable
+                    this.props.inEditMode && this.state.tableEditPermission
                       ? this.state.adminRecords
                       : this.state.records
                   }
                   rowSelectOptions={this.state.rowSelectOptions}
                   editTablePermission={
-                    this.state.isEdit && this.props.tableEditable
+                    this.props.inEditMode && this.state.tableEditPermission
                   }
                   approveButtonClass={buttonClasses.approveButtonClass}
                   approveRows={this.handleApproveRows}
                   deleteButtonClass={buttonClasses.deleteButtonClass}
-                  deleteRows={this.handleDeleteRows}
+                  // deleteRows={this.handleDeleteRows}
                   // lazyLoadFn={this.lazyLoadTable.bind(this)}
                   // containerClass="table-container"
                   // tableClass="web-table"
@@ -255,3 +262,11 @@ export default class Page extends Component {
     )
   }
 }
+
+const mapState = (state) => ({
+  role: state.auth.role,
+  loggedIn: state.auth.loggedIn,
+  inEditMode: state.edit.inEditMode,
+})
+
+export default connect(mapState)(Page)
