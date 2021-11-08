@@ -29,7 +29,6 @@ class Page extends Component {
 
   // This method will get the data from the database
   async componentDidMount() {
-    console.log('this.props', this.props)
     this.setState({ tabName: this.props.tabName })
 
     let SERVER_URL = _generate.serverFunctions.getServerURL()
