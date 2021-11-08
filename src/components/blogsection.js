@@ -24,6 +24,7 @@ class BlogSection extends Component {
       loadedTitle: this.props.title,
       loadedContent: this.props.content,
       isEditing: this.props.isEditing,
+      createFromId: null,
       showCreateModal: false,
       showDeleteModal: false,
     }
@@ -33,8 +34,8 @@ class BlogSection extends Component {
 
   componentDidUpdate(prevProps) {
     if (
-      prevProps.isEdit !== this.props.isEdit ||
-      prevProps.isEditMode !== this.props.isEditMode
+      prevProps.isLoggedIn !== this.props.isLoggedIn ||
+      prevProps.inEditMode !== this.props.inEditMode
     ) {
       this.setState({
         isEdit: this.props.isEdit,
@@ -51,21 +52,24 @@ class BlogSection extends Component {
     }))
   }
 
-  createNewPost = () => {
-    this.setState({ showCreateModal: true })
+  createNewPost = (event) => {
+    console.log('creating posts from ', event.target.id)
+    this.setState({ showCreateModal: true, createFromId: event.target.id })
   }
 
   confirmCreate = () => {
+    console.log('confirm create');
     const SERVER_URL = _generate.serverFunctions.getServerURL()
-
+    this.setState({ showCreateModal: false })
     axios
       .post(`${SERVER_URL}/post/create`, {
-        index: this.props.index,
+        index: this.state.createFromId,
         tabname: this.props.tabName,
       })
       .then((response) => {
+        console.log('response' , response);
         this.props.updatePosts()
-        this.setState({ showCreateModal: false })
+        this.setState({ createFromId: null })
       })
       .catch((err) => {})
   }
@@ -76,7 +80,7 @@ class BlogSection extends Component {
 
   confirmDelete = () => {
     const SERVER_URL = _generate.serverFunctions.getServerURL()
-
+    this.setState({ showDeleteModal: false })
     axios
       .post(`${SERVER_URL}/post/delete`, {
         id: this.state.id,
@@ -155,8 +159,12 @@ class BlogSection extends Component {
   getBlogViewMode = () => {
     return (
       <div className="blog-post" id={this.state.id}>
-        {this.props.inEditMode ? (
-          <div className="new-post-above" onClick={this.createNewPost}>
+        {this.props.inEditMode && !this.props.isDummy ? (
+          <div
+            className="new-post-above"
+            id={`prev-${this.state.id}`}
+            onClick={this.createNewPost}
+          >
             <FontAwesomeIcon icon={faPlus} />
           </div>
         ) : (
@@ -172,7 +180,7 @@ class BlogSection extends Component {
               ),
             }}
           ></h4>
-          {this.props.inEditMode ? (
+          {this.props.inEditMode && !this.props.isDummy ? (
             <div className="edit">
               <FontAwesomeIcon icon={faPen} onClick={this.editBlogPost} />
               <FontAwesomeIcon icon={faTrash} onClick={this.deleteBlogPost} />
@@ -193,7 +201,11 @@ class BlogSection extends Component {
           ></p>
         </div>
         {this.props.inEditMode ? (
-          <div className="new-post-below" onClick={this.createNewPost}>
+          <div
+            className="new-post-below"
+            id={`next-${this.state.id}`}
+            onClick={this.createNewPost}
+          >
             <FontAwesomeIcon icon={faPlus} />
           </div>
         ) : (
@@ -289,7 +301,7 @@ BlogSection.propTypes = {
 const mapState = (state) => ({
   inEditMode: state.edit.inEditMode,
   showEditModal: state.edit.showEditModal,
-  loggedIn: state.auth.loggedIn,  
+  loggedIn: state.auth.loggedIn,
 })
 
 export default connect(mapState)(BlogSection)

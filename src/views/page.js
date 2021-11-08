@@ -71,18 +71,19 @@ class Page extends Component {
 
   async componentDidUpdate(prevProps) {
     if (
-      prevProps.isEdit !== this.props.isEdit ||
-      prevProps.isEditMode !== this.props.isEditMode
+      prevProps.loggedIn !== this.props.loggedIn ||
+      prevProps.inEditMode !== this.props.inEditMode
     ) {
-      this.setState({
-        isEdit: this.props.isEdit,
-        isEditMode: this.props.isEditMode,
-      })
+
       let data = []
       let adminData = []
       let SERVER_URL = _generate.serverFunctions.getServerURL()
       if (this.props.dataSource) {
-        if (this.props.tableEditable) {
+        const role = this.props.role
+        const hasPermission = this.props.editTablePermissions.indexOf(role) >= 0
+        this.setState({ tableEditPermission: hasPermission })
+
+        if (hasPermission) {
           const dataSource = await axios.get(
             `${SERVER_URL}${this.props.dataSource}/admin`,
           )
@@ -103,6 +104,7 @@ class Page extends Component {
   }
 
   updatePosts = () => {
+    console.log('updating posts')
     let SERVER_URL = _generate.serverFunctions.getServerURL()
     axios
       .get(`${SERVER_URL}/post/${this.props.tabName}`)
@@ -146,13 +148,12 @@ class Page extends Component {
               key={post._id}
               id={post._id}
               updatePosts={this.updatePosts}
-              isEdit={this.state.isEdit}
               tabName={this.props.tabName}
             />
           </Suspense>
         )
       })
-    ) : this.state.isEdit ? (
+    ) : this.props.inEditMode ? (
       <Suspense key="" fallback={<LoadingSpinner />}>
         <BlogSection
           title="Looks like you don't have any posts on this page yet..."
@@ -161,8 +162,8 @@ class Page extends Component {
           id=""
           key=""
           updatePosts={this.updatePosts}
-          isEdit={this.state.isEdit}
           tabName={this.props.tabName}
+          isDummy={true}
         />
       </Suspense>
     ) : (
@@ -248,7 +249,7 @@ class Page extends Component {
                       approveButtonClass={buttonClasses.approveButtonClass}
                       approveRows={this.handleApproveRows}
                       deleteButtonClass={buttonClasses.deleteButtonClass}
-                      // deleteRows={this.handleDeleteRows}
+                      deleteRows={this.handleDeleteRows}
                       // lazyLoadFn={this.lazyLoadTable.bind(this)}
                       // containerClass="table-container"
                       // tableClass="web-table"
