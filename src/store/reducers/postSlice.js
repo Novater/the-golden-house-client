@@ -1,14 +1,9 @@
 const POST_CONSTANTS = require('../../constants/postConstants')
 import _generate from '../../functions/index'
 import SampleDataGenerator from '../../config/sampleData'
-<<<<<<< HEAD
 import axios from 'axios'
 
 const ObjectId = require('bson-objectid')
-=======
-
-import axios from 'axios'
->>>>>>> master
 
 axios.defaults.withCredentials = true
 
