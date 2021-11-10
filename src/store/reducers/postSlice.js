@@ -47,10 +47,7 @@ export default function postReducer(state = initialState, action) {
       const newRow = action.payload.newRow
       const row = action.payload.row
       const col = action.payload.col
-<<<<<<< HEAD
       action.payload.post._id = new ObjectId()
-=======
->>>>>>> master
 
       let copiedPosts = []
 
@@ -166,11 +163,8 @@ export async function loadPosts(dispatch, getState) {
 
 export async function savePosts(dispatch, getState) {
   dispatch({ type: POST_CONSTANTS.SAVING_POSTS })
-<<<<<<< HEAD
 
   const SERVER_URL = _generate.serverFunctions.getServerURL()
-=======
->>>>>>> master
   const posts = getState().post.posts
   const tab = getState().post.tab
   try {

@@ -43,15 +43,17 @@ class BlogSection extends Component {
   }
 
   createNewPost = (event) => {
-    console.log('Row: ', this.props.row)
-    console.log('Col: ', this.props.col)
     const direction = event.target.id.split('-')[0]
     const newPost = {
       tite: 'Enter title here.',
       content: 'Enter content here.',
+      row: 0,
+      col: 0,
     }
     switch (direction) {
       case 'up': {
+        newPost.row = this.props.row
+        newPost.col = 0
         return store.dispatch({
           type: POST_CONSTANTS.INSERT_POST,
           payload: {
@@ -62,6 +64,8 @@ class BlogSection extends Component {
         })
       }
       case 'down': {
+        newPost.row = this.props.row + 1
+        newPost.col = 0
         return store.dispatch({
           type: POST_CONSTANTS.INSERT_POST,
           payload: {
@@ -72,6 +76,8 @@ class BlogSection extends Component {
         })
       }
       case 'left': {
+        newPost.row = this.props.row
+        newPost.col = this.props.col
         return store.dispatch({
           type: POST_CONSTANTS.INSERT_POST,
           payload: {
@@ -82,6 +88,8 @@ class BlogSection extends Component {
         })
       }
       case 'right': {
+        newPost.row = this.props.row
+        newPost.col = this.props.col + 1
         return store.dispatch({
           type: POST_CONSTANTS.INSERT_POST,
           payload: {
@@ -311,6 +319,8 @@ BlogSection.propTypes = {
   index: PropTypes.string,
   tabName: PropTypes.string.isRequired,
   updatePosts: PropTypes.func,
+  row: PropTypes.number.isRequired,
+  col: PropTypes.number.isRequired,
 }
 
 const mapState = (state) => ({

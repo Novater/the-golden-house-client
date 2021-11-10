@@ -387,6 +387,10 @@ body, html {
       background: #A9A9A9;
       cursor: pointer;
     }
+
+    svg {
+      pointer-events: none;
+    }
   }
 
   .new-post-left, .new-post-right {
@@ -402,6 +406,10 @@ body, html {
     &:hover {
       background: #A9A9A9;
       cursor: pointer;
+    }
+
+    svg {
+      pointer-events: none;
     }
   }
 
@@ -707,7 +715,7 @@ thead {
   place-items: center;
   height: fit-content;
   margin: 10px;
-  
+
   svg {
     font-size: 25px;
     color: $color-carbon;
