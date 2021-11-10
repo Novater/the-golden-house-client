@@ -14,17 +14,17 @@ export default class SampleDataGenerator {
       ],
       [
         {
-          _id: 4,
+          _id: 2,
           title: 'First',
           content: 'Hello this is a sample long post \n Hello this is a sample long post \n Hello this is a sample long post \n Hello this is a sample long post \n Hello this is a sample long post \n Hello this is a sample long post \n Hello this is a sample long post \n Hello this is a sample long post \n Hello this is a sample long post \n Hello this is a sample long post \n',
         },
         {
-          _id: 5,
+          _id: 3,
           title: 'Second',
           content: 'Hello this is a sample post',
         },
         {
-          _id: 6,
+          _id: 4,
           title: 'Third',
           content: 'Hello this is a sample post',
         },
