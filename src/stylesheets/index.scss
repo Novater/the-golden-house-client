@@ -6,6 +6,7 @@ $color-neutral: #EFEFEF;
 $color-gold: #C9B037;
 $color-silver: #D7D7D7;
 $color-bronze: #AD8A56;
+$color-nav: #212529;
 $color-faded-white: rgb(255 255 255 / 0.3);
 $color-opaque-black: rgb(0 0 0 / 0.6);
 $height-nav: 60px;
@@ -336,9 +337,14 @@ body, html {
   }
 
   .content-area {
+    display: flex;
     width: 100%;
     height: fit-content;
     margin-top: 20px;
+
+    p {
+      flex-grow: 1;
+    }
   }
 
   .blog-form {
@@ -381,6 +387,34 @@ body, html {
       background: #A9A9A9;
       cursor: pointer;
     }
+  }
+
+  .new-post-left, .new-post-right {
+    width: fit-content;
+    height: 100%;
+    background: rgb(0 0 0 / 0.2);
+    display: grid;
+    place-items: center;
+    padding-left: 5px;
+    padding-right: 5px;
+    position: absolute;
+
+    &:hover {
+      background: #A9A9A9;
+      cursor: pointer;
+    }
+  }
+
+  .new-post-left {
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .new-post-right {
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
   }
 
   .new-post-above {
@@ -653,14 +687,44 @@ thead {
   margin-bottom: 10px;
 }
 
-.edit-icon {
-  position: absolute;
-  left: 50%;
-  top: 50%;
+.edit-bar {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: $height-nav;
+  background-color: $color-nav;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+
+  .container-fluid {
+    display: none;
+  }
+}
+
+.save-icon {
   display: grid;
   place-items: center;
   height: fit-content;
-  transform: translate(-50%, -50%);
+  margin: 10px;
+  
+  svg {
+    font-size: 25px;
+    color: $color-carbon;
+
+    &:hover {
+      color: $color-gold;
+      cursor: pointer;
+    }
+  }
+}
+
+.edit-icon {
+
+  display: grid;
+  place-items: center;
+  height: fit-content;
+  margin: 10px;
 
   svg {
     font-size: 25px;

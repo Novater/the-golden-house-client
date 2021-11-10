@@ -2,16 +2,18 @@ import { React, Component } from 'react'
 
 import 'bootstrap/dist/css/bootstrap.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEye, faPenFancy } from '@fortawesome/free-solid-svg-icons'
+import { faEye, faPenFancy, faSave } from '@fortawesome/free-solid-svg-icons'
 import { NavLink } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import _generate from '../functions/index'
 import store from '../store/store'
 import { connect } from 'react-redux'
 import { logoutUser } from '../store/reducers/authSlice'
+import { savePosts } from '../store/reducers/postSlice'
 
 const EDIT_CONSTANTS = require('../constants/editConstants')
 const AUTH_CONSTANTS = require('../constants/authConstants')
+const POST_CONSTANTS = require('../constants/postConstants')
 
 class Navbar extends Component {
   constructor(props) {
@@ -24,15 +26,19 @@ class Navbar extends Component {
     store.dispatch({ type: EDIT_CONSTANTS.SHOW_EDIT_MODAL})
   }
 
+  handleClickSave = () => {
+    store.dispatch({ type: POST_CONSTANTS.SHOW_SAVE_MODAL })
+  }
+
   logOut() {
     store.dispatch({ type: AUTH_CONSTANTS.AUTH_LOGOUT_REQUEST })
     store.dispatch(logoutUser)
   }
   render() {
-    const loggedIn = this.props.loggedIn
+    const { loggedIn, inEditMode, id, className, edit, showProfile } = this.props
 
     return (
-      <nav className="navbar navbar-expand-lg bg-dark main-nav">
+      <nav className={`navbar navbar-expand-lg bg-dark ${className}`}>
         {this.props.standAlone ? (
           <div className="container-fluid">
             <NavLink className="navbar-brand" to="/" target="_blank">
@@ -94,7 +100,7 @@ class Navbar extends Component {
                   '/contact-us',
                 )}
                 {
-                  this.props.loggedIn ?
+                  loggedIn && showProfile ?
                   <li className="nav-item dropdown user-display">
                     <a
                       className="nav-link dropdown-toggle"
@@ -104,7 +110,7 @@ class Navbar extends Component {
                       data-bs-toggle="dropdown"
                       aria-expanded="false"
                     >
-                      {this.props.id}
+                      Welcome {id}
                     </a>
                     <ul className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                       <li>
@@ -119,9 +125,9 @@ class Navbar extends Component {
             </div>
           </div>
         )}
-        {loggedIn ? (
+        {loggedIn && edit ? (
           <div className="edit-icon">
-            {this.props.inEditMode ? (
+            {inEditMode ? (
               <FontAwesomeIcon
                 title="Toggle Edit"
                 icon={faEye}
@@ -138,6 +144,19 @@ class Navbar extends Component {
         ) : (
           ''
         )}
+        {loggedIn && inEditMode && edit ? (
+          <div className="save-icon">
+            {this.props.inEditMode ? (
+              <FontAwesomeIcon
+                title="Save Edit"
+                icon={faSave}
+                onClick={this.handleClickSave}
+              />
+            ) : null}
+          </div>
+        ) : (
+          ''
+        )}
       </nav>
     )
   }
@@ -148,7 +167,7 @@ const mapState = (state) => ({
   isEditing: state.edit.isEditing,
   showEditModal: state.edit.showEditModal,
   loggedIn: state.auth.loggedIn,
-  id: state.auth.id
+  id: state.auth.id,
 })
 
 Navbar.propTypes = {

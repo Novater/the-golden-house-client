@@ -5,17 +5,21 @@ import React, { Component, Suspense } from 'react'
 import _generate from '../functions/index'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
 import LoadingSpinner from '../components/loadingspinner'
+import SampleDataGenerator from '../config/sampleData'
 import { connect } from 'react-redux'
+import { loadPosts, savePosts } from '../store/reducers/postSlice'
+import store from '../store/store'
 
 const Table = React.lazy(() => import('../components/table'))
 const BlogSection = React.lazy(() => import('../components/blogsection'))
+const POST_CONSTANTS = require('../constants/postConstants')
+
 axios.defaults.withCredentials = true
 
 class Page extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      posts: [],
       records: [],
       adminRecords: [],
       rowSelectOptions: '',
@@ -29,11 +33,14 @@ class Page extends Component {
 
   // This method will get the data from the database
   async componentDidMount() {
-    this.setState({ tabName: this.props.tabName })
+    store.dispatch({
+      type: POST_CONSTANTS.SET_TAB,
+      payload: { tab: this.props.tabName },
+    })
+
+    store.dispatch(loadPosts)
 
     let SERVER_URL = _generate.serverFunctions.getServerURL()
-    const posts = await axios.get(`${SERVER_URL}/post/${this.props.tabName}`)
-    const postData = posts.data
     let data = []
     let adminData = []
     if (this.props.dataSource) {
@@ -54,7 +61,7 @@ class Page extends Component {
     }
 
     this.setState({
-      posts: postData,
+      // posts: SampleDataGenerator.samplePostData(), // postData,
       records: data,
       adminRecords: adminData,
     })
@@ -74,7 +81,6 @@ class Page extends Component {
       prevProps.loggedIn !== this.props.loggedIn ||
       prevProps.inEditMode !== this.props.inEditMode
     ) {
-
       let data = []
       let adminData = []
       let SERVER_URL = _generate.serverFunctions.getServerURL()
@@ -107,7 +113,7 @@ class Page extends Component {
     console.log('updating posts')
     let SERVER_URL = _generate.serverFunctions.getServerURL()
     axios
-      .get(`${SERVER_URL}/post/${this.props.tabName}`)
+      .get(`${SERVER_URL}/post/${this.props.tab}`)
       .then((response) => {
         console.log(response)
         this.setState({
@@ -137,35 +143,51 @@ class Page extends Component {
   }
 
   renderPosts() {
-    return this.state.posts.length > 0 ? (
-      this.state.posts.map((post) => {
+    return this.props.posts.length > 0 ? (
+      this.props.posts.map((row, idxRow) => {
+        const randomKey = Math.random()
         return (
-          <Suspense key={post._id} fallback={<LoadingSpinner />}>
-            <BlogSection
-              title={post.title}
-              content={post.content}
-              index={post.index}
-              key={post._id}
-              id={post._id}
-              updatePosts={this.updatePosts}
-              tabName={this.props.tabName}
-            />
-          </Suspense>
+          <div className="blog-section" key={`row-${randomKey}`}>
+            {row.map((post, idxCol) => {
+              return (
+                <Suspense
+                  key={`loading-${randomKey}-${idxRow}-${idxCol}`}
+                  fallback={<LoadingSpinner />}
+                >
+                  <BlogSection
+                    title={post.title}
+                    content={post.content}
+                    index={post.index}
+                    key={`${randomKey}-${idxRow}-${idxCol}`}
+                    id={`${idxRow}-${idxCol}`}
+                    row={idxRow}
+                    col={idxCol}
+                    updatePosts={this.updatePosts}
+                    tabName={this.props.tab}
+                  />
+                </Suspense>
+              )
+            })}
+          </div>
         )
       })
     ) : this.props.inEditMode ? (
-      <Suspense key="" fallback={<LoadingSpinner />}>
-        <BlogSection
-          title="Looks like you don't have any posts on this page yet..."
-          content=""
-          index=""
-          id=""
-          key=""
-          updatePosts={this.updatePosts}
-          tabName={this.props.tabName}
-          isDummy={true}
-        />
-      </Suspense>
+      <div className="blog-section">
+        <Suspense key="" fallback={<LoadingSpinner />}>
+          <BlogSection
+            title="Looks like you don't have any posts on this page yet..."
+            content=""
+            index=""
+            id=""
+            key=""
+            row={-1}
+            col={-1}
+            updatePosts={this.updatePosts}
+            tabName={this.props.tab}
+            isDummy={true}
+          />
+        </Suspense>
+      </div>
     ) : (
       ''
     )
@@ -201,7 +223,7 @@ class Page extends Component {
   // This will display the table with all records
   render() {
     const isTableTab = this.props.tableName ? true : false
-
+    console.log('props', this.props)
     const buttonClasses = {
       deleteButtonClass: 'table-delete',
       approveButtonClass: 'table-approve',
@@ -212,6 +234,9 @@ class Page extends Component {
       <div className="pageContainer">
         {this.props.loggingOut ? (
           <>
+            {
+              // NEED MORE DESCRIPTIVE MESSAGE & IMPLEMENT AUTO LOGOUT SESSION
+            }
             <div>Logging Out...</div>
             <LoadingSpinner />
           </>
@@ -227,8 +252,7 @@ class Page extends Component {
                   <h1>{this.props.title}</h1>
                 </div>
               </div>
-              <div className="blog-section">{this.renderPosts()}</div>
-              
+              {this.renderPosts()}
               {isTableTab ? (
                 <Suspense fallback={<LoadingSpinner />}>
                   {this.state.tableHeaders ? (
@@ -278,6 +302,10 @@ const mapState = (state) => ({
   loggedIn: state.auth.loggedIn,
   loggingOut: state.auth.loggingOut,
   inEditMode: state.edit.inEditMode,
+  posts: state.post.posts,
+  savingPosts: state.post.savingPosts,
+  loadingPosts: state.post.loadingPosts,
+  tab: state.post.tab,
 })
 
 export default connect(mapState)(Page)
