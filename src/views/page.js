@@ -227,7 +227,8 @@ class Page extends Component {
                   <h1>{this.props.title}</h1>
                 </div>
               </div>
-              {this.renderPosts()}
+              <div className="blog-section">{this.renderPosts()}</div>
+              
               {isTableTab ? (
                 <Suspense fallback={<LoadingSpinner />}>
                   {this.state.tableHeaders ? (

@@ -68,13 +68,13 @@ export default class tableFunctions {
                 type="checkbox"
                 name={title}
                 value={el.title}
-                id="filterCheckbox"
+                id={`filter-${el.title}`}
                 onChange={onChange}
                 checked={!!el.selected}
               />
               <label
                 className="form-check-label filter-label"
-                htmlFor="filterCheckbox"
+                for={`filter-${el.title}`}
               >
                 {el.title}
               </label>

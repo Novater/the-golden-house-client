@@ -111,8 +111,7 @@ class BlogSection extends Component {
       <div className="blog-post" id={this.state.id}>
         <form className="blog-form" onSubmit={this.handleSubmit}>
           <div className="form-group row">
-            <label className="col-sm-2 col-form-label">Title: </label>
-            <div className="col-sm-10">
+            <div className="col-sm-12 blog-title">
               <input
                 type="text"
                 id={`title-${this.state.id}`}
@@ -124,8 +123,7 @@ class BlogSection extends Component {
             </div>
           </div>
           <div className="form-group row">
-            <label className="col-sm-2 col-form-label">Content: </label>
-            <div className="col-sm-10">
+            <div className="col-sm-12">
               <ContentEditor
                 onChange={this.handleEditorChange}
                 content={this.state.content}

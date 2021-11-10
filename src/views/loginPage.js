@@ -3,7 +3,6 @@ import store from '../store/store'
 import { authenticateUser } from '../store/reducers/authSlice'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
 import _generate from '../functions/index'
-import bcrypt from 'bcryptjs'
 import { connect } from 'react-redux'
 
 const AUTH_CONSTANTS = require('../constants/authConstants')
@@ -18,8 +17,6 @@ class LoginPage extends Component {
   }
 
   async loginUser() {
-    const salt = bcrypt.genSaltSync(10)
-    const hashedPassword = bcrypt.hashSync(this.state.password, salt)
     store.dispatch({
       type: AUTH_CONSTANTS.AUTH_LOGIN_REQUEST,
       payload: {
@@ -31,7 +28,7 @@ class LoginPage extends Component {
     store.dispatch(authenticateUser)
     this.setState({
       username: '',
-      password: ''
+      password: '',
     })
   }
 
@@ -51,7 +48,7 @@ class LoginPage extends Component {
         className="banner-img"
         effect="opacity"
         alt="banner"
-        style= {{ zIndex: -1 }}
+        style={{ zIndex: -1 }}
       />
     )
   }
@@ -60,8 +57,9 @@ class LoginPage extends Component {
     return (
       <>
         <div className="login-form">
-          {
-            this.props.loggingIn ? <div>Logging in...</div> :
+          {this.props.loggingIn ? (
+            <div>Logging in...</div>
+          ) : (
             <>
               <h1 className="login-title">User Login Dashboard</h1>
               <h4 className="login-message">How are you doing today?</h4>
@@ -71,7 +69,7 @@ class LoginPage extends Component {
                 type="text"
                 placeholder="Username..."
                 name="username"
-                className='login-username'
+                className="login-username"
                 onChange={this.handleChangeUserName}
               ></input>
               <label htmlFor="password">Password:</label>
@@ -79,12 +77,17 @@ class LoginPage extends Component {
                 type="password"
                 placeholder="Password..."
                 name="password"
-                className='login-password'
+                className="login-password"
                 onChange={this.handleChangePassword}
               ></input>
-              <button className="login-button" onClick={this.loginUser.bind(this)}>Log In</button>
+              <button
+                className="login-button"
+                onClick={this.loginUser.bind(this)}
+              >
+                Log In
+              </button>
             </>
-          }
+          )}
         </div>
         {this.renderBackdrop(this.props.backgroundImage)}
       </>

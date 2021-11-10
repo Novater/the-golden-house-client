@@ -14,18 +14,20 @@ export default class ContentEditor extends Component {
           menubar: false,
           plugins: [
             'advlist autolink lists link image charmap print preview anchor',
-            'searchreplace visualblocks code fullscreen',
-            'insertdatetime media table paste code help wordcount code textcolor image paste',
+            'searchreplace visualblocks code fullscreen link visualblocks',
+            'insertdatetime media table paste code help wordcount code textcolor image paste table',
           ],
           toolbar:
-            'undo redo | formatselect | ' +
-            'bold italic forecolor backcolor | alignleft aligncenter ' +
+            'undo redo | formatselect | visualblocks' +
+            'bold italic underline forecolor backcolor | fontselect | fontsizeselect | alignleft aligncenter ' +
             'alignright alignjustify | bullist numlist outdent indent | ' +
-            'removeformat | code | image | paste | help',
+            'removeformat | link | table | code | image | paste | help',
           content_style:
             'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
           images_upload_url: 'postAcceptor.php',
           file_picker_types: 'file image media',
+          fontsize_formats: '8pt 10pt 12pt 14pt 18pt 24pt 36pt',
+          visualblocks_default_state: true,
         }}
         id={`content-${this.props.id}`}
         onEditorChange={this.props.onChange}
