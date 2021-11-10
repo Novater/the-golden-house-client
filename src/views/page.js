@@ -146,20 +146,21 @@ class Page extends Component {
     return this.props.posts.length > 0 ? (
       this.props.posts.map((row, idxRow) => {
         const randomKey = Math.random()
+        const rowKey = row.map((post) => post._id).join('-')
         return (
-          <div className="blog-section" key={`row-${randomKey}`}>
+          <div className="blog-section" key={rowKey} id={rowKey}>
             {row.map((post, idxCol) => {
               return (
                 <Suspense
-                  key={`loading-${randomKey}-${idxRow}-${idxCol}`}
+                  key={`loading-${post._id}`}
                   fallback={<LoadingSpinner />}
                 >
                   <BlogSection
                     title={post.title}
                     content={post.content}
                     index={post.index}
-                    key={`${randomKey}-${idxRow}-${idxCol}`}
-                    id={`${idxRow}-${idxCol}`}
+                    key={post._id}
+                    id={post._id}
                     row={idxRow}
                     col={idxCol}
                     updatePosts={this.updatePosts}

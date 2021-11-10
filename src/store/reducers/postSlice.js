@@ -1,8 +1,9 @@
 const POST_CONSTANTS = require('../../constants/postConstants')
 import _generate from '../../functions/index'
 import SampleDataGenerator from '../../config/sampleData'
-
 import axios from 'axios'
+
+const ObjectId = require('bson-objectid')
 
 axios.defaults.withCredentials = true
 
@@ -46,6 +47,7 @@ export default function postReducer(state = initialState, action) {
       const newRow = action.payload.newRow
       const row = action.payload.row
       const col = action.payload.col
+      action.payload.post._id = new ObjectId()
 
       let copiedPosts = []
 
@@ -161,6 +163,8 @@ export async function loadPosts(dispatch, getState) {
 
 export async function savePosts(dispatch, getState) {
   dispatch({ type: POST_CONSTANTS.SAVING_POSTS })
+
+  const SERVER_URL = _generate.serverFunctions.getServerURL()
   const posts = getState().post.posts
   const tab = getState().post.tab
   try {
