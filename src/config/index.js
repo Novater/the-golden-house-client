@@ -7,4 +7,9 @@ module.exports = {
     'frameborder',
     'scrolling',
   ],
+  endpoints: {
+    login: '/login',
+    logout: '/logout',
+    loggedIn: '/logged-in',
+  },
 }
