@@ -1,5 +1,7 @@
 const POST_CONSTANTS = require('../../constants/postConstants')
 import _generate from '../../functions/index'
+import SampleDataGenerator from '../../config/sampleData'
+
 import axios from 'axios'
 
 axios.defaults.withCredentials = true
@@ -9,6 +11,7 @@ const initialState = {
   savingPosts: false,
   loadingPosts: false,
   tab: '',
+  showSaveModal: false,
 }
 
 export default function postReducer(state = initialState, action) {
@@ -43,11 +46,16 @@ export default function postReducer(state = initialState, action) {
       const newRow = action.payload.newRow
       const row = action.payload.row
       const col = action.payload.col
-      const copiedPosts = state.posts
+
+      let copiedPosts = []
+
+      for (let i = 0; i < state.posts.length; i += 1) {
+        copiedPosts[i] = state.posts[i].slice()
+      }
 
       if (newRow) {
         copiedPosts.splice(row, 0, [action.payload.post])
-
+        console.log(copiedPosts)
         return {
           ...state,
           posts: copiedPosts,
@@ -63,7 +71,11 @@ export default function postReducer(state = initialState, action) {
     case POST_CONSTANTS.EDIT_POST: {
       const row = action.payload.row
       const col = action.payload.col
-      const copiedPosts = [...state.posts]
+      let copiedPosts = []
+
+      for (let i = 0; i < state.posts.length; i += 1) {
+        copiedPosts[i] = state.posts[i].slice()
+      }
       copiedPosts[row][col] = action.payload.post
       return {
         ...state,
@@ -73,7 +85,11 @@ export default function postReducer(state = initialState, action) {
     case POST_CONSTANTS.DELETE_POST: {
       const row = action.payload.row
       const col = action.pay
-      const copiedPosts = state.posts
+      let copiedPosts = []
+
+      for (let i = 0; i < state.posts.length; i += 1) {
+        copiedPosts[i] = state.posts[i].slice()
+      }
       copiedPosts[row].splice(col, 1)
 
       if (copiedPosts[row].length === 0) copiedPosts.splice(row, 1)
@@ -83,10 +99,23 @@ export default function postReducer(state = initialState, action) {
         posts: copiedPosts,
       }
     }
+    case POST_CONSTANTS.SHOW_SAVE_MODAL: {
+      return {
+        ...state,
+        showSaveModal: true,
+      }
+    }
+    case POST_CONSTANTS.CLOSE_SAVE_MODAL: {
+      return {
+        ...state,
+        showSaveModal: false,
+      }
+    }
     case POST_CONSTANTS.SAVING_POSTS: {
       return {
         ...state,
         savingPosts: true,
+        showSaveModal: false,
       }
     }
     case POST_CONSTANTS.SAVING_POSTS_SUCCESS: {
@@ -102,6 +131,9 @@ export default function postReducer(state = initialState, action) {
         savingPosts: false,
       }
     }
+    default: {
+      return { ...state }
+    }
   }
 }
 
@@ -116,7 +148,7 @@ export async function loadPosts(dispatch, getState) {
     dispatch({
       type: POST_CONSTANTS.LOADING_POSTS_SUCCESS,
       payload: {
-        posts: postData,
+        posts: SampleDataGenerator.samplePostData(), // postData,
       },
     })
   } catch (error) {
@@ -129,10 +161,12 @@ export async function loadPosts(dispatch, getState) {
 
 export async function savePosts(dispatch, getState) {
   dispatch({ type: POST_CONSTANTS.SAVING_POSTS })
-  const postState = getState().post.posts
+  const posts = getState().post.posts
+  const tab = getState().post.tab
   try {
     const savePostRes = await axios.post(`${SERVER_URL}/post/submit`, {
-      postState,
+      posts,
+      tab,
     })
     dispatch({
       type: POST_CONSTANTS.SAVING_POSTS_SUCCESS,

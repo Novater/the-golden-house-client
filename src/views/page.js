@@ -6,7 +6,6 @@ import _generate from '../functions/index'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
 import LoadingSpinner from '../components/loadingspinner'
 import SampleDataGenerator from '../config/sampleData'
-import state from '../store/store'
 import { connect } from 'react-redux'
 import { loadPosts, savePosts } from '../store/reducers/postSlice'
 import store from '../store/store'
@@ -21,7 +20,6 @@ class Page extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      posts: [],
       records: [],
       adminRecords: [],
       rowSelectOptions: '',
@@ -147,17 +145,21 @@ class Page extends Component {
   renderPosts() {
     return this.props.posts.length > 0 ? (
       this.props.posts.map((row, idxRow) => {
+        const randomKey = Math.random()
         return (
-          <div className="blog-section">
+          <div className="blog-section" key={`row-${randomKey}`}>
             {row.map((post, idxCol) => {
               return (
-                <Suspense key={post._id} fallback={<LoadingSpinner />}>
+                <Suspense
+                  key={`loading-${randomKey}-${idxRow}-${idxCol}`}
+                  fallback={<LoadingSpinner />}
+                >
                   <BlogSection
                     title={post.title}
                     content={post.content}
                     index={post.index}
-                    key={post._id}
-                    id={post._id}
+                    key={`${randomKey}-${idxRow}-${idxCol}`}
+                    id={`${idxRow}-${idxCol}`}
                     row={idxRow}
                     col={idxCol}
                     updatePosts={this.updatePosts}
@@ -221,7 +223,7 @@ class Page extends Component {
   // This will display the table with all records
   render() {
     const isTableTab = this.props.tableName ? true : false
-
+    console.log('props', this.props)
     const buttonClasses = {
       deleteButtonClass: 'table-delete',
       approveButtonClass: 'table-approve',
@@ -232,6 +234,9 @@ class Page extends Component {
       <div className="pageContainer">
         {this.props.loggingOut ? (
           <>
+            {
+              // NEED MORE DESCRIPTIVE MESSAGE & IMPLEMENT AUTO LOGOUT SESSION
+            }
             <div>Logging Out...</div>
             <LoadingSpinner />
           </>

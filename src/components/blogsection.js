@@ -10,7 +10,9 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import ContentEditor from './contenteditor'
 import _generate from '../functions/index'
+import store from '../store/store'
 
+const POST_CONSTANTS = require('../constants/postConstants')
 const config = require('../config/index')
 
 class BlogSection extends Component {
@@ -32,18 +34,6 @@ class BlogSection extends Component {
 
   componentDidMount() {}
 
-  componentDidUpdate(prevProps) {
-    if (
-      prevProps.isLoggedIn !== this.props.isLoggedIn ||
-      prevProps.inEditMode !== this.props.inEditMode
-    ) {
-      this.setState({
-        isEdit: this.props.isEdit,
-        isEditMode: this.props.isEditMode,
-      })
-    }
-  }
-
   cancelSave = () => {
     this.setState((prevState) => ({
       title: prevState.loadedTitle,
@@ -53,53 +43,67 @@ class BlogSection extends Component {
   }
 
   createNewPost = (event) => {
-    console.log('creating posts from ', event.target.id)
-    this.setState({ showCreateModal: true, createFromId: event.target.id })
-  }
-
-  confirmCreate = () => {
-    console.log('confirm create');
-    const SERVER_URL = _generate.serverFunctions.getServerURL()
-    this.setState({ showCreateModal: false })
-    axios
-      .post(`${SERVER_URL}/post/create`, {
-        index: this.state.createFromId,
-        tabname: this.props.tabName,
-      })
-      .then((response) => {
-        console.log('response' , response);
-        this.props.updatePosts()
-        this.setState({ createFromId: null })
-      })
-      .catch((err) => {})
+    console.log('Row: ', this.props.row)
+    console.log('Col: ', this.props.col)
+    const direction = event.target.id.split('-')[0]
+    const newPost = {
+      tite: 'Enter title here.',
+      content: 'Enter content here.',
+    }
+    switch (direction) {
+      case 'up': {
+        return store.dispatch({
+          type: POST_CONSTANTS.INSERT_POST,
+          payload: {
+            row: this.props.row,
+            newRow: true,
+            post: newPost,
+          },
+        })
+      }
+      case 'down': {
+        return store.dispatch({
+          type: POST_CONSTANTS.INSERT_POST,
+          payload: {
+            row: this.props.row + 1,
+            newRow: true,
+            post: newPost,
+          },
+        })
+      }
+      case 'left': {
+        return store.dispatch({
+          type: POST_CONSTANTS.INSERT_POST,
+          payload: {
+            row: this.props.row,
+            col: this.props.col,
+            post: newPost,
+          },
+        })
+      }
+      case 'right': {
+        return store.dispatch({
+          type: POST_CONSTANTS.INSERT_POST,
+          payload: {
+            row: this.props.row,
+            col: this.props.col + 1,
+            post: newPost,
+          },
+        })
+      }
+      default:
+        break
+    }
   }
 
   deleteBlogPost = () => {
-    this.setState({ showDeleteModal: true })
-  }
-
-  confirmDelete = () => {
-    const SERVER_URL = _generate.serverFunctions.getServerURL()
-    this.setState({ showDeleteModal: false })
-    axios
-      .post(`${SERVER_URL}/post/delete`, {
-        id: this.state.id,
-      })
-      .then((response) => {
-        console.log(response)
-        this.props.updatePosts()
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-  }
-
-  handleCloseCreate = () => {
-    this.setState({ showCreateModal: false })
-  }
-
-  handleCloseDelete = () => {
-    this.setState({ showDeleteModal: false })
+    store.dispatch({
+      type: POST_CONSTANTS.DELETE_POST,
+      payload: {
+        row: this.props.row,
+        col: this.props.col,
+      },
+    })
   }
 
   editBlogPost = () => {
@@ -160,7 +164,7 @@ class BlogSection extends Component {
         {this.props.inEditMode && !this.props.isDummy ? (
           <div
             className="new-post-above"
-            id={`prev-${this.state.id}`}
+            id={`up-${this.state.id}`}
             onClick={this.createNewPost}
           >
             <FontAwesomeIcon icon={faPlus} />
@@ -188,6 +192,15 @@ class BlogSection extends Component {
           )}
         </div>
         <div className="content-area">
+          {this.props.inEditMode && !this.props.isDummy ? (
+            <div
+              className="new-post-left"
+              id={`left-${this.state.id}`}
+              onClick={this.createNewPost}
+            >
+              <FontAwesomeIcon icon={faPlus} />
+            </div>
+          ) : null}
           <p
             dangerouslySetInnerHTML={{
               __html: _generate.cleanHTML.clean(
@@ -197,11 +210,20 @@ class BlogSection extends Component {
               ),
             }}
           ></p>
+          {this.props.inEditMode && !this.props.isDummy ? (
+            <div
+              className="new-post-right"
+              id={`right-${this.state.id}`}
+              onClick={this.createNewPost}
+            >
+              <FontAwesomeIcon icon={faPlus} />
+            </div>
+          ) : null}
         </div>
         {this.props.inEditMode ? (
           <div
             className="new-post-below"
-            id={`next-${this.state.id}`}
+            id={`down-${this.state.id}`}
             onClick={this.createNewPost}
           >
             <FontAwesomeIcon icon={faPlus} />
@@ -258,24 +280,19 @@ class BlogSection extends Component {
   }
 
   saveBlogPost = () => {
-    const SERVER_URL = _generate.serverFunctions.getServerURL()
-
-    axios
-      .post(`${SERVER_URL}/post/update`, {
-        id: this.state.id,
-        title: this.state.title,
-        content: this.state.content,
-      })
-      .then((response) => {
-        console.log(response)
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+    store.dispatch({
+      type: POST_CONSTANTS.EDIT_POST,
+      payload: {
+        post: {
+          title: this.state.title,
+          content: this.state.content,
+        },
+        row: this.props.row,
+        col: this.props.col,
+      },
+    })
 
     this.setState({
-      loadedTitle: this.state.title,
-      loadedContent: this.state.content,
       isEditing: false,
     })
   }

@@ -10,9 +10,12 @@ import axios from 'axios'
 import LoginPage from './views/loginPage'
 import store from './store/store'
 import { checkLoggedIn } from './store/reducers/authSlice'
+import { savePosts } from './store/reducers/postSlice'
 import { connect } from 'react-redux'
 
 const EDIT_CONSTANTS = require('./constants/editConstants')
+const POST_CONSTANTS = require('./constants/postConstants')
+
 axios.defaults.withCredentials = true
 require('dotenv').config()
 
@@ -36,16 +39,19 @@ class App extends Component {
     store.dispatch({ type: EDIT_CONSTANTS.SHOW_EDIT_MODAL })
   }
 
-  changeEditMode = () => {
-    store.dispatch({ type: EDIT_CONSTANTS.CHANGE_EDIT_MODE })
-    // this.setState((prevState) => ({
-    //   showEditModal: false,
-    //   isEdit: !prevState.isEdit,
-    //   isEditMode: false,
-    // }))
+  saveContent = () => {
+    store.dispatch(savePosts)
   }
 
-  closeModal = () => {
+  closeSaveModal =() => {
+    store.dispatch({ type: POST_CONSTANTS.CLOSE_SAVE_MODAL })
+  }
+
+  changeEditMode = () => {
+    store.dispatch({ type: EDIT_CONSTANTS.CHANGE_EDIT_MODE })
+  }
+
+  closeEditModal = () => {
     store.dispatch({ type: EDIT_CONSTANTS.CLOSE_EDIT_MODAL })
   }
 
@@ -77,24 +83,19 @@ class App extends Component {
   }
 
   render() {
+    const { tab, loggedIn } = this.props
+    console.log(this.props)
     return (
       <div className="app-container">
-        <Route
-          render={({ location }) =>
-            ['/speedrun/leaderboard/fullpage'].includes(location.pathname) ? (
-              <Navbar
-                setEditMode={this.updateEditMode}
-                title="Abyss Leaderboard"
-                standAlone
-              />
-            ) : (
-              <Navbar
-                setEditMode={this.updateEditMode}
-                title="The Golden House"
-              />
-            )
-          }
-        />
+        {this.props.tab !== 'fullpage-table' ? (
+          <Navbar
+            className="main-nav"
+            showProfile={true}
+            edit={false}
+            showProfile={true}
+            title="The Golden House"
+          />
+        ) : null}
         <Route exact path="/admin">
           {this.props.loggedIn ? (
             <Redirect to="/" />
@@ -125,14 +126,29 @@ class App extends Component {
           },
         )}
         {_generate.createFunctions.createModal(
-          this.props.isEditing ? 'Leave Edit Mode?' : 'Enter Edit Mode?',
-          this.props.isEditing
+          this.props.inEditMode ? 'Leave Edit Mode?' : 'Enter Edit Mode?',
+          this.props.inEditMode
             ? 'Are you sure you want to leave edit mode?'
             : 'Are you sure you want to enter edit mode?',
           this.props.showEditModal,
           this.changeEditMode,
-          this.closeModal,
+          this.closeEditModal,
         )}
+        {_generate.createFunctions.createModal(
+          'Save Edits?',
+          'Are you sure you want to push your current page edits to the live site?',
+          this.props.showSaveModal,
+          this.saveContent,
+          this.closeSaveModal,
+        )}
+        {loggedIn ? (
+          <Navbar
+            className="edit-bar"
+            edit={true}
+            showProfile={false}
+            standAlone={true}
+          />
+        ) : null}
       </div>
     )
   }
@@ -142,7 +158,9 @@ const mapState = (state) => ({
   inEditMode: state.edit.inEditMode,
   isEditing: state.edit.isEditing,
   showEditModal: state.edit.showEditModal,
+  showSaveModal: state.post.showSaveModal,
   loggedIn: state.auth.loggedIn,
+  tab: state.post.tab,
 })
 
 export default connect(mapState)(App)

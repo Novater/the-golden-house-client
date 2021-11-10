@@ -1,5 +1,8 @@
 export default class SampleDataGenerator {
-  static samplePostData() {
+  static samplePostData(empty = false) {
+    if (empty) {
+      return []
+    }
     return [
       [
         {
