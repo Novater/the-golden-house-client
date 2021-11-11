@@ -87,12 +87,13 @@ export default function postReducer(state = initialState, action) {
     }
     case POST_CONSTANTS.DELETE_POST: {
       const row = action.payload.row
-      const col = action.pay
+      const col = action.payload.col
       let copiedPosts = []
 
       for (let i = 0; i < state.posts.length; i += 1) {
         copiedPosts[i] = state.posts[i].slice()
       }
+
       copiedPosts[row].splice(col, 1)
 
       if (copiedPosts[row].length === 0) copiedPosts.splice(row, 1)

@@ -106,6 +106,7 @@ class BlogSection extends Component {
   }
 
   deleteBlogPost = () => {
+    console.log(this.props.col)
     store.dispatch({
       type: POST_CONSTANTS.DELETE_POST,
       payload: {
