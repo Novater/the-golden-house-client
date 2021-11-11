@@ -47,8 +47,9 @@ export default function postReducer(state = initialState, action) {
       const newRow = action.payload.newRow
       const row = action.payload.row
       const col = action.payload.col
-      action.payload.post._id = new ObjectId()
 
+      action.payload.post._id = new ObjectId().id
+      console.log('post', action.payload.post)
       let copiedPosts = []
 
       for (let i = 0; i < state.posts.length; i += 1) {
@@ -150,7 +151,7 @@ export async function loadPosts(dispatch, getState) {
     dispatch({
       type: POST_CONSTANTS.LOADING_POSTS_SUCCESS,
       payload: {
-        posts: SampleDataGenerator.samplePostData(), // postData,
+        posts: postData.data, // SampleDataGenerator.samplePostData(),
       },
     })
   } catch (error) {

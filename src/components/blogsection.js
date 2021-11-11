@@ -49,6 +49,7 @@ class BlogSection extends Component {
       content: 'Enter content here.',
       row: 0,
       col: 0,
+      tabname: this.props.tab,
     }
     switch (direction) {
       case 'up': {
@@ -313,7 +314,6 @@ class BlogSection extends Component {
 }
 
 BlogSection.propTypes = {
-  id: PropTypes.string.isRequired,
   title: PropTypes.string,
   content: PropTypes.string,
   index: PropTypes.string,
@@ -327,6 +327,7 @@ const mapState = (state) => ({
   inEditMode: state.edit.inEditMode,
   showEditModal: state.edit.showEditModal,
   loggedIn: state.auth.loggedIn,
+  tab: state.post.tab,
 })
 
 export default connect(mapState)(BlogSection)

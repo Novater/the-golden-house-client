@@ -161,6 +161,7 @@ const mapState = (state) => ({
   showSaveModal: state.post.showSaveModal,
   loggedIn: state.auth.loggedIn,
   tab: state.post.tab,
+  posts: state.post.posts,
 })
 
 export default connect(mapState)(App)

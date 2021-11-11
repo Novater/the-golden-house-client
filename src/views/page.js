@@ -145,7 +145,6 @@ class Page extends Component {
   renderPosts() {
     return this.props.posts.length > 0 ? (
       this.props.posts.map((row, idxRow) => {
-        const randomKey = Math.random()
         const rowKey = row.map((post) => post._id).join('-')
         return (
           <div className="blog-section" key={rowKey} id={rowKey}>
