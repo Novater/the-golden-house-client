@@ -317,6 +317,10 @@ body, html {
     justify-content: space-between;
     width: 100%;
     color: $color-gold;
+
+    h4 { 
+      flex-grow: 1;
+    }
   }
 
   textarea {
