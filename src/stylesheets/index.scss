@@ -164,6 +164,39 @@ body, html {
   }
 }
 
+.dropdown-add-button {
+  width: 100%;
+
+  &:hover {
+    background-color: $color-gold;
+  }
+}
+
+.dropdown-title {
+  background-color: $color-faded-white;
+  border-radius: 5px;
+  overflow: hidden;
+  color: white;
+}
+.dropdown-edit-row {
+  display: flex;
+  width: fit-content;
+
+  .dropdown-item-name {
+    background-color: $color-nav;
+    color: white;
+  }
+
+  .dropdown-item-path {
+    background-color: $color-neutral;
+  }
+
+  .dropdown-item-remove {
+    background-color: $color-nav;
+    color: white;
+  }
+}
+
 .main-nav::after {
   position: absolute;
   background: linear-gradient(180deg, rgb(0 0 0 / 0.5), rgb(0 0 0 / 0));
@@ -749,9 +782,18 @@ thead {
   }
 }
 
-.welcome-banner {
+.banner {
   margin-top: 20px;
   color: $color-gold;
+  width: 100%;
+  z-index: 1;
+  input {
+    width: inherit;
+    text-align: center;
+    height: 50px;
+    font-size: 18px;
+    background-color: $color-faded-white;
+  }
 }
 
 @media (max-width: 900px) {
@@ -795,4 +837,25 @@ thead {
   .leftContainer, .rightContainer {
     display: none;
   }
+}
+
+.test-row-class {
+  color: black;
+  font-weight: bold;
+  background-color: white !important;
+}
+
+.test-filter-container-class {
+  width: 80%;
+  display: flex;
+  background-color: white !important;
+}
+
+.test-header {
+  color: blue;
+
+  th {
+    background-color: grey;
+  }
+  background-color: grey;
 }

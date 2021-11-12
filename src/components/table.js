@@ -135,7 +135,7 @@ export default class Table extends Component {
 
   tableList = () => {
     const searchedRecords = []
-    const { headers } = this.props
+    const { headers, rowClass } = this.props
 
     if (!this.state.records) return []
 
@@ -155,7 +155,7 @@ export default class Table extends Component {
           if (appendRec) {
             searchedRecords.push({
               thisRec,
-              trClass: this.props.rowClass || 'info-row',
+              trClass: rowClass || 'info-row',
             })
           }
         }
@@ -168,7 +168,7 @@ export default class Table extends Component {
         if (appendRec) {
           searchedRecords.push({
             thisRec,
-            trClass: this.props.rowClass || 'info-row',
+            trClass: rowClass || 'info-row',
           })
         }
       }
@@ -479,7 +479,9 @@ export default class Table extends Component {
       tableClass,
       headerClass,
       filterContainerClass,
+      filterClass,
       searchContainerClass,
+      searchClass,
       headers,
     } = this.props
     let {
@@ -508,7 +510,7 @@ export default class Table extends Component {
         generatedFilters.push(
           _generate.tableFunctions.initializeTableFilters({
             title: key,
-            filterClass: 'table-filters',
+            filterClass: filterClass || 'table-filters',
             filters: filterObj.rows,
             onChange: this.filterTable,
             defaultValues: filterForDefault,
@@ -548,6 +550,7 @@ export default class Table extends Component {
               id="table-search"
               onKeyUp={this.updateSearch}
               placeholder="Search Table..."
+              className={searchClass}
             />
           </div>
         ) : (
@@ -574,7 +577,7 @@ export default class Table extends Component {
               deleteRows ? this.deleteLine : null,
               approveRows ? this.approveLine : null,
               deleteRows ? deleteLineIds : [],
-              approveRows ? approveLineIds : {},
+              approveRows ? approveLineIds : [],
               this.onClickSave,
               this.onClickCancel,
             )}

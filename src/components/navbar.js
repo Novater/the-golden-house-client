@@ -9,8 +9,8 @@ import _generate from '../functions/index'
 import store from '../store/store'
 import { connect } from 'react-redux'
 import { logoutUser } from '../store/reducers/authSlice'
-import { savePosts } from '../store/reducers/postSlice'
-
+import NavSimpleElement from './navsimpleelement'
+import NavDropdownElement from './navdropdownelement'
 const EDIT_CONSTANTS = require('../constants/editConstants')
 const AUTH_CONSTANTS = require('../constants/authConstants')
 const POST_CONSTANTS = require('../constants/postConstants')
@@ -23,7 +23,7 @@ class Navbar extends Component {
   componentDidMount() {}
 
   setEditMode() {
-    store.dispatch({ type: EDIT_CONSTANTS.SHOW_EDIT_MODAL})
+    store.dispatch({ type: EDIT_CONSTANTS.SHOW_EDIT_MODAL })
   }
 
   handleClickSave = () => {
@@ -35,7 +35,8 @@ class Navbar extends Component {
     store.dispatch(logoutUser)
   }
   render() {
-    const { loggedIn, inEditMode, id, className, edit, showProfile } = this.props
+    const { loggedIn, inEditMode, id, className, edit, showProfile } =
+      this.props
 
     return (
       <nav className={`navbar navbar-expand-lg bg-dark ${className}`}>
@@ -67,40 +68,26 @@ class Navbar extends Component {
               id="navbarSupportedContent"
             >
               <ul className="navbar-nav ml-auto">
-                {_generate.navbarFunctions.createNavSimpleElement(
-                  'About',
-                  '/about',
-                )}
-                {_generate.navbarFunctions.createNavDropdownElement(
-                  'Speedrunning',
-                  {
-                    names: ['Leaderboards'],
-                    paths: ['/speedrun/leaderboard'],
-                  },
-                )}
-                {_generate.navbarFunctions.createNavDropdownElement('DPS', {
-                  names: ['Abyss', 'Events', 'Open World', 'Primo Geovishap'],
-                  paths: [
+                <NavSimpleElement title="About" path="/about" />
+                <NavDropdownElement
+                  title="Speedrunning"
+                  names={['Leaderboards']}
+                  paths={['/speedrun/leaderboard']}
+                />
+                <NavDropdownElement
+                  title="DPS"
+                  names={['Abyss', 'Events', 'Open World', 'Primo Geovishap']}
+                  paths={[
                     '/dps/abyss',
                     '/dps/events',
                     '/dps/openworld',
                     '/dps/primo-geovishap',
-                  ],
-                })}
-                {_generate.navbarFunctions.createNavSimpleElement(
-                  'Contests',
-                  '/contests',
-                )}
-                {_generate.navbarFunctions.createNavSimpleElement(
-                  'Partners',
-                  '/partners',
-                )}
-                {_generate.navbarFunctions.createNavSimpleElement(
-                  'Contact Us',
-                  '/contact-us',
-                )}
-                {
-                  loggedIn && showProfile ?
+                  ]}
+                />
+                <NavSimpleElement title="Contests" path="/contests" />
+                <NavSimpleElement title="Partners" path="/partners" />
+                <NavSimpleElement title="Contact Us" path="/contact-us" />
+                {loggedIn && showProfile ? (
                   <li className="nav-item dropdown user-display">
                     <a
                       className="nav-link dropdown-toggle"
@@ -112,15 +99,22 @@ class Navbar extends Component {
                     >
                       Welcome {id}
                     </a>
-                    <ul className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <ul
+                      className="dropdown-menu"
+                      aria-labelledby="navbarDropdownMenuLink"
+                    >
                       <li>
-                        <div key='nav-logout' className="dropdown-item" onClick={this.logOut}>
+                        <div
+                          key="nav-logout"
+                          className="dropdown-item"
+                          onClick={this.logOut}
+                        >
                           Logout
                         </div>
                       </li>
                     </ul>
-                  </li>: null
-                }
+                  </li>
+                ) : null}
               </ul>
             </div>
           </div>

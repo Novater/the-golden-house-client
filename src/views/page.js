@@ -26,6 +26,7 @@ class Page extends Component {
       tableHeaders: '',
       tableFilters: '',
       tableEditPermission: false,
+      title: this.props.title,
     }
   }
 
@@ -220,6 +221,11 @@ class Page extends Component {
     })
   }
 
+  updateTitle = (event) => {
+    this.setState({
+      title: event.target.value,
+    })
+  }
   // This will display the table with all records
   render() {
     const isTableTab = this.props.tableName ? true : false
@@ -248,8 +254,16 @@ class Page extends Component {
                 {_generate.createFunctions.createBackdrop(
                   this.props.backgroundImage,
                 )}
-                <div className="welcome-banner">
-                  <h1>{this.props.title}</h1>
+                <div className="banner">
+                  {this.props.inEditMode ? (
+                    <input
+                      type="text"
+                      value={this.state.title}
+                      onChange={this.updateTitle}
+                    ></input>
+                  ) : (
+                    <h1>{this.state.title}</h1>
+                  )}
                 </div>
               </div>
               {this.renderPosts()}
@@ -257,7 +271,7 @@ class Page extends Component {
                 <Suspense fallback={<LoadingSpinner />}>
                   {this.state.tableHeaders ? (
                     <Table
-                      key={`${this.props.title}-datatable`}
+                      key={`${this.state.title}-datatable`}
                       defaultSortKey="Time"
                       defaultSortDir={1}
                       headers={this.state.tableHeaders}
@@ -271,10 +285,18 @@ class Page extends Component {
                       editTablePermission={
                         this.props.inEditMode && this.state.tableEditPermission
                       }
-                      approveButtonClass={buttonClasses.approveButtonClass}
-                      approveRows={this.handleApproveRows}
-                      deleteButtonClass={buttonClasses.deleteButtonClass}
-                      deleteRows={this.handleDeleteRows}
+
+                      // SAMPLE DATA CONFIG
+                      // headers={SampleDataGenerator.sampleTableHeader()}
+                      // dataSource={SampleDataGenerator.sampleTableData()}
+                      // approveButtonClass={buttonClasses.approveButtonClass}
+                      // approveRows={this.handleApproveRows}
+                      // deleteButtonClass={buttonClasses.deleteButtonClass}
+                      // deleteRows={this.handleDeleteRows}
+                      // rowClass='test-row-class'
+                      // filterContainerClass='test-filter-container-class'
+                      // filterClass='test-filter'
+                      // headerClass='test-header'
                       // lazyLoadFn={this.lazyLoadTable.bind(this)}
                       // containerClass="table-container"
                       // tableClass="web-table"
