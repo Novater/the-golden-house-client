@@ -48,7 +48,7 @@ export default function postReducer(state = initialState, action) {
       const row = action.payload.row
       const col = action.payload.col
 
-      action.payload.post._id = new ObjectId().id
+      action.payload.post._id = new ObjectId()
       console.log('post', action.payload.post)
       let copiedPosts = []
 
