@@ -43,70 +43,6 @@ class BlogSection extends Component {
     }))
   }
 
-  createNewPost = (event) => {
-    const direction = event.target.id.split('-')[0]
-    const newPost = {
-      tite: 'Enter title here.',
-      content: 'Enter content here.',
-      row: 0,
-      col: 0,
-      tabname: this.props.tab,
-      type: 'post',
-    }
-    switch (direction) {
-      case 'up': {
-        newPost.row = this.props.row
-        newPost.col = 0
-        return store.dispatch({
-          type: POST_CONSTANTS.INSERT_POST,
-          payload: {
-            row: this.props.row,
-            newRow: true,
-            post: newPost,
-          },
-        })
-      }
-      case 'down': {
-        newPost.row = this.props.row + 1
-        newPost.col = 0
-        return store.dispatch({
-          type: POST_CONSTANTS.INSERT_POST,
-          payload: {
-            row: this.props.row + 1,
-            newRow: true,
-            post: newPost,
-          },
-        })
-      }
-      case 'left': {
-        newPost.row = this.props.row
-        newPost.col = this.props.col
-        return store.dispatch({
-          type: POST_CONSTANTS.INSERT_POST,
-          payload: {
-            row: this.props.row,
-            col: this.props.col,
-            post: newPost,
-          },
-        })
-      }
-      case 'right': {
-        newPost.row = this.props.row
-        newPost.col = this.props.col + 1
-        return store.dispatch({
-          type: POST_CONSTANTS.INSERT_POST,
-          payload: {
-            row: this.props.row,
-            col: this.props.col + 1,
-            post: newPost,
-          },
-        })
-      }
-      default:
-        break
-    }
-  }
-
   deleteBlogPost = () => {
     console.log(this.props.col)
     store.dispatch({
@@ -173,7 +109,6 @@ class BlogSection extends Component {
   getBlogViewMode = () => {
     return (
       <div className="blog-post" id={this.state.id}>
-        {this.props.above}
         <div className="header">
           <h4
             dangerouslySetInnerHTML={{
@@ -184,9 +119,7 @@ class BlogSection extends Component {
               ),
             }}
           ></h4>
-          {this.props.inEditMode &&
-          !this.props.isDummy &&
-          this.props.editPermission ? (
+          {this.props.editPermission ? (
             <div className="edit">
               <FontAwesomeIcon icon={faPen} onClick={this.editBlogPost} />
               <FontAwesomeIcon icon={faTrash} onClick={this.deleteBlogPost} />
@@ -241,6 +174,7 @@ class BlogSection extends Component {
   }
 
   saveBlogPost = () => {
+    console.log('saving', this.props)
     store.dispatch({
       type: POST_CONSTANTS.EDIT_POST,
       payload: {

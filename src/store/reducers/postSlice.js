@@ -72,14 +72,17 @@ export default function postReducer(state = initialState, action) {
       }
     }
     case POST_CONSTANTS.EDIT_POST: {
-      const row = action.payload.row
-      const col = action.payload.col
+      const { row, col, post } = action.payload
       let copiedPosts = []
 
       for (let i = 0; i < state.posts.length; i += 1) {
         copiedPosts[i] = state.posts[i].slice()
       }
-      copiedPosts[row][col] = action.payload.post
+      copiedPosts[row][col] = {
+        ...copiedPosts[row][col],
+        title: post.title,
+        content: post.content,
+      }
       return {
         ...state,
         posts: copiedPosts,

@@ -225,8 +225,16 @@ function PageSection({
               approveRows={handleApproveRows}
               // deleteButtonClass={buttonClasses.deleteButtonClass}
               // deleteRows={handleDeleteRows}
-              editPermission={permissionList.table.indexOf(role) >= 0 && isLoggedIn && inEditMode}
-              adminPermission={permissionList.table.indexOf(role) >= 0 && isLoggedIn && inEditMode}
+              editPermission={
+                permissionList.table.indexOf(role) >= 0 &&
+                isLoggedIn &&
+                inEditMode
+              }
+              adminPermission={
+                permissionList.table.indexOf(role) >= 0 &&
+                isLoggedIn &&
+                inEditMode
+              }
               // rowClass='test-row-class'
               // filterContainerClass='test-filter-container-class'
               // filterClass='test-filter'
