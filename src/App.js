@@ -31,9 +31,14 @@ class App extends Component {
 
   async componentDidMount() {
     store.dispatch(checkLoggedIn)
-    const SERVER_URL = _generate.serverFunctions.getServerURL()
-    const loadedPages = await axios.get(`${SERVER_URL}/page`)
-    this.setState({ pages: loadedPages.data })
+    try {
+      const SERVER_URL = _generate.serverFunctions.getServerURL()
+      const loadedPages = await axios.get(`${SERVER_URL}/page`)
+      this.setState({ pages: loadedPages.data })
+    } catch (error) {
+      console.log(error)
+    }
+
   }
 
   updateEditMode = () => {

@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import store from '../store/store'
 import { connect } from 'react-redux'
 
-function NavDropdownElement({ title, names, paths, inEditMode, titleTarget }) {
+function NavDropdownElement({ title, names, paths, inEditMode, isLoggedIn, titleTarget }) {
   const [navNames, setNames] = useState(names)
   const [navPaths, setPaths] = useState(paths)
   const [navTitle, setTitle] = useState(title)
@@ -53,7 +53,7 @@ function NavDropdownElement({ title, names, paths, inEditMode, titleTarget }) {
 
   return (
     <>
-      {(navPaths && navPaths.length > 0) || inEditMode ? (
+      {(navPaths && navPaths.length > 0) || (inEditMode && isLoggedIn) ? (
         <li className="nav-item dropdown">
           <a
             className="nav-link dropdown-toggle"
@@ -63,7 +63,7 @@ function NavDropdownElement({ title, names, paths, inEditMode, titleTarget }) {
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            {inEditMode ? (
+            {inEditMode && isLoggedIn ? (
               <input
                 value={navTitle}
                 onChange={setNavTitle}
@@ -79,7 +79,7 @@ function NavDropdownElement({ title, names, paths, inEditMode, titleTarget }) {
           >
             {navNames.map((name, idx) => (
               <li key={`nav-${name}-${idx}`}>
-                {inEditMode ? (
+                {inEditMode && isLoggedIn ? (
                   <div className="dropdown-edit-row">
                     <input
                       className="dropdown-item-name"
@@ -106,7 +106,7 @@ function NavDropdownElement({ title, names, paths, inEditMode, titleTarget }) {
                 )}
               </li>
             ))}
-            {inEditMode ? (
+            {inEditMode && isLoggedIn ? (
               <button
                 key={`nav-${title}-new`}
                 className="dropdown-add-button"
@@ -130,6 +130,7 @@ function NavDropdownElement({ title, names, paths, inEditMode, titleTarget }) {
 
 const mapState = (state) => ({
   inEditMode: state.edit.inEditMode,
+  isLoggedIn: state.auth.loggedIn,
 })
 
 export default connect(mapState)(NavDropdownElement)

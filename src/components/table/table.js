@@ -8,6 +8,8 @@ import _ from 'lodash'
 import 'bootstrap/dist/css/bootstrap.css'
 import PropTypes from 'prop-types'
 import LoadingSpinner from '../loadingspinner'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTrash, faPen } from '@fortawesome/free-solid-svg-icons'
 
 export default class Table extends Component {
   constructor(props) {
@@ -19,7 +21,7 @@ export default class Table extends Component {
       defaultSortKey,
       defaultSortDir,
       rowSelectOptions,
-      editTablePermission,
+      editPermission,
     } = this.props
 
     const filterObj = {}
@@ -63,6 +65,7 @@ export default class Table extends Component {
       deleteLineIds: [],
       currIdSelected: '',
       tableSaving: false,
+      editingTable: false,
     }
   }
 
@@ -75,6 +78,12 @@ export default class Table extends Component {
         true,
       )
     }
+  }
+
+  editTableConfig = () => {
+    this.setState({
+      editingTable: true,
+    })
   }
 
   // This method will get the data from the database
@@ -475,7 +484,8 @@ export default class Table extends Component {
       lazyLoadFn,
       approveRows,
       deleteRows,
-      editTablePermission,
+      editPermission,
+      adminPermission,
       footerClass,
       containerClass,
       tableClass,
@@ -498,8 +508,14 @@ export default class Table extends Component {
       approveLineIds,
       deleteLineIds,
       tableSaving,
+      editingTable
     } = this.state
 
+    if (editingTable) {
+      return (
+        <div>{JSON.stringify(headers)}</div>
+      )
+    }
     const generatedFilters = []
 
     Object.keys(filters).map((key) => {
@@ -542,6 +558,12 @@ export default class Table extends Component {
 
     return (
       <div className={containerClass || 'table-container'}>
+        {adminPermission ? (
+          <div className="edit">
+            <FontAwesomeIcon icon={faPen} onClick={this.editTableConfig} />
+            <FontAwesomeIcon icon={faTrash} />
+          </div>
+        ) : null}
         <div className={filterContainerClass || 'filter-container'}>
           {generatedFilters}
         </div>
@@ -567,7 +589,7 @@ export default class Table extends Component {
               'table table-hover',
               headers,
               this.tableList(),
-              editTablePermission,
+              editPermission,
               search,
               currPage,
               !lazyLoadFn ? pageRows : null,

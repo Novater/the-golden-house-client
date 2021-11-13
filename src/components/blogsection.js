@@ -51,7 +51,7 @@ class BlogSection extends Component {
       row: 0,
       col: 0,
       tabname: this.props.tab,
-      type: 'post'
+      type: 'post',
     }
     switch (direction) {
       case 'up': {
@@ -173,17 +173,7 @@ class BlogSection extends Component {
   getBlogViewMode = () => {
     return (
       <div className="blog-post" id={this.state.id}>
-        {this.props.inEditMode && !this.props.isDummy ? (
-          <div
-            className="new-post-above"
-            id={`up-${this.state.id}`}
-            onClick={this.createNewPost}
-          >
-            <FontAwesomeIcon icon={faPlus} />
-          </div>
-        ) : (
-          ''
-        )}
+        {this.props.above}
         <div className="header">
           <h4
             dangerouslySetInnerHTML={{
@@ -194,7 +184,9 @@ class BlogSection extends Component {
               ),
             }}
           ></h4>
-          {this.props.inEditMode && !this.props.isDummy ? (
+          {this.props.inEditMode &&
+          !this.props.isDummy &&
+          this.props.editPermission ? (
             <div className="edit">
               <FontAwesomeIcon icon={faPen} onClick={this.editBlogPost} />
               <FontAwesomeIcon icon={faTrash} onClick={this.deleteBlogPost} />
@@ -204,15 +196,6 @@ class BlogSection extends Component {
           )}
         </div>
         <div className="content-area">
-          {this.props.inEditMode && !this.props.isDummy ? (
-            <div
-              className="new-post-left"
-              id={`left-${this.state.id}`}
-              onClick={this.createNewPost}
-            >
-              <FontAwesomeIcon icon={faPlus} />
-            </div>
-          ) : null}
           <p
             dangerouslySetInnerHTML={{
               __html: _generate.cleanHTML.clean(
@@ -222,27 +205,7 @@ class BlogSection extends Component {
               ),
             }}
           ></p>
-          {this.props.inEditMode && !this.props.isDummy ? (
-            <div
-              className="new-post-right"
-              id={`right-${this.state.id}`}
-              onClick={this.createNewPost}
-            >
-              <FontAwesomeIcon icon={faPlus} />
-            </div>
-          ) : null}
         </div>
-        {this.props.inEditMode ? (
-          <div
-            className="new-post-below"
-            id={`down-${this.state.id}`}
-            onClick={this.createNewPost}
-          >
-            <FontAwesomeIcon icon={faPlus} />
-          </div>
-        ) : (
-          ''
-        )}
       </div>
     )
   }

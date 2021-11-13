@@ -201,7 +201,7 @@ body, html {
   background-color: black;
   color: white;
   border-radius: 5px;
-  
+
   &:hover {
     color: $color-gold;
   }
@@ -219,7 +219,7 @@ body, html {
 
 .blog-section {
   width: 100%;
-  margin-bottom: 80px;
+  margin-bottom: 40px;
   height: fit-content;
   display: flex;
   justify-content: center;
@@ -243,6 +243,22 @@ body, html {
   place-items: center;
   margin-top: 20px;
   z-index: 1;
+
+  .edit {
+    color: $color-carbon;
+    flex-shrink: 0;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+
+    svg {
+      margin-right: 10px;
+    }
+    svg:hover {
+      color: $color-sky;
+      cursor: pointer;
+    }
+  }
 }
 
 .table {
@@ -334,13 +350,13 @@ body, html {
   align-content: center;
 }
 
-.blog-post {
+.page-post {
   flex-grow: 1;
   width: fit-content;
-  padding-top: 25px;
-  padding-bottom: 25px;
-  padding-left: 20px;
-  padding-right: 20px;
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-top: 20px;
+  padding-bottom: 20px;
   margin: 20px;
   height: 100%;
   background-color: $color-opaque-black;
@@ -352,7 +368,97 @@ body, html {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
+  z-index: 1;
+
+  .new-post-up, .new-post-down {
+    position: absolute;
+    width: 100%;
+    height: fit-content;
+    background: rgb(0 0 0 / 0.2);
+    display: grid;
+    place-items: center;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    z-index: 1;
+
+    &:hover {
+      background: #A9A9A9;
+      cursor: pointer;
+    }
+
+    svg {
+      pointer-events: none;
+    }
+  }
+
+  .new-post-left, .new-post-right {
+    width: fit-content;
+    height: 100%;
+    background: rgb(0 0 0 / 0.2);
+    display: grid;
+    place-items: center;
+    padding-left: 5px;
+    padding-right: 5px;
+    position: absolute;
+
+    &:hover {
+      background: #A9A9A9;
+      cursor: pointer;
+    }
+
+    svg {
+      pointer-events: none;
+    }
+  }
+
+  .new-post-left {
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .new-post-right {
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .new-post-up {
+    left: 0;
+    top: 0;
+    margin-bottom: 5px;
+  }
+
+  .new-post-down {
+    left: 0;
+    bottom: 0;
+    margin-top: 5px;
+  }
+}
+
+.blog-post {
+  // flex-grow: 1;
+  // width: fit-content;
+  // padding-top: 25px;
+  // padding-bottom: 25px;
+  // padding-left: 20px;
+  // padding-right: 20px;
+  // margin: 20px;
+  // height: 100%;
+  // background-color: $color-opaque-black;
+  // color: $color-neutral;
+  // border-radius: 5px;
+  // box-shadow: 0px 0px 2px 2px rgb(0 0 0 / 0.15);
+  // white-space: pre-line;
+  // position: relative;
+  // overflow: hidden;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  flex-grow: 1;
   z-index: 1;
   
   .header {
@@ -418,70 +524,6 @@ body, html {
 
   .button-group {
     width: 70%;
-  }
-
-  .new-post-above, .new-post-below {
-    position: absolute;
-    width: 100%;
-    height: fit-content;
-    background: rgb(0 0 0 / 0.2);
-    display: grid;
-    place-items: center;
-    padding-top: 5px;
-    padding-bottom: 5px;
-
-    &:hover {
-      background: #A9A9A9;
-      cursor: pointer;
-    }
-
-    svg {
-      pointer-events: none;
-    }
-  }
-
-  .new-post-left, .new-post-right {
-    width: fit-content;
-    height: 100%;
-    background: rgb(0 0 0 / 0.2);
-    display: grid;
-    place-items: center;
-    padding-left: 5px;
-    padding-right: 5px;
-    position: absolute;
-
-    &:hover {
-      background: #A9A9A9;
-      cursor: pointer;
-    }
-
-    svg {
-      pointer-events: none;
-    }
-  }
-
-  .new-post-left {
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-
-  .new-post-right {
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-
-  .new-post-above {
-    left: 0;
-    top: 0;
-    margin-bottom: 5px;
-  }
-
-  .new-post-below {
-    left: 0;
-    bottom: 0;
-    margin-top: 5px;
   }
 }
 
@@ -727,6 +769,7 @@ thead {
 .search-container {
   width: 80%;
   height: fit-content;
+  display: flex;
   justify-content: flex-start;
   align-items: center;
   margin-bottom: 5px;
@@ -745,13 +788,15 @@ thead {
 .edit-bar {
   position: fixed;
   bottom: 0;
+  height: 50px !important;
   width: 100%;
   height: $height-nav;
   background-color: $color-nav;
   z-index: 2;
   display: flex;
   justify-content: center;
-
+  align-items: center;
+  
   .container-fluid {
     display: none;
   }
@@ -828,6 +873,9 @@ thead {
     font-size: 11px;
   }
 
+  .blog-section {
+    flex-direction: column;
+  }
   .search-container {
     width: 90%;
   }

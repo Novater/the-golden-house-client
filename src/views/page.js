@@ -43,73 +43,70 @@ class Page extends Component {
 
     store.dispatch(loadPosts)
 
-    let SERVER_URL = _generate.serverFunctions.getServerURL()
-    let data = []
-    let adminData = []
-    if (this.props.dataSource) {
-      const role = this.props.role
-      const hasPermission = this.props.editTablePermissions.indexOf(role) >= 0
-      this.setState({ tableEditPermission: hasPermission })
-      if (hasPermission) {
-        const dataSource = await axios.get(
-          `${SERVER_URL}${this.props.dataSource}/admin`,
-        )
-        adminData = dataSource.data
-      }
+    // let SERVER_URL = _generate.serverFunctions.getServerURL()
+    // let data = []
+    // let adminData = []
+    // if (this.props.dataSource) {
+    //   const role = this.props.role
+    //   const hasPermission = this.props.editTablePermissions.indexOf(role) >= 0
+    //   this.setState({ tableEditPermission: hasPermission })
+    //   if (hasPermission) {
+    //     const dataSource = await axios.get(
+    //       `${SERVER_URL}${this.props.dataSource}/admin`,
+    //     )
+    //     adminData = dataSource.data
+    //   }
 
-      const dataSource = await axios.get(
-        `${SERVER_URL}${this.props.dataSource}`,
-      )
-      data = dataSource.data
-    }
+    //   const dataSource = await axios.get(
+    //     `${SERVER_URL}${this.props.dataSource}`,
+    //   )
+    //   data = dataSource.data
+    // }
 
-    this.setState({
-      // posts: SampleDataGenerator.samplePostData(), // postData,
-      records: data,
-      adminRecords: adminData,
-    })
+    // this.setState({
+    //   // posts: SampleDataGenerator.samplePostData(), // postData,
+    //   records: data,
+    //   adminRecords: adminData,
+    // })
 
-    if (this.props.tableName) {
-      const { rowSelectOptions, headers } =
-        await _generate.tableFunctions.getTableConfigs(this.props.tableName)
-      this.setState({
-        rowSelectOptions,
-        tableHeaders: headers,
-      })
-    }
+    // if (this.props.tableName) {
+    //   const { rowSelectOptions, headers } =
+    //     await _generate.tableFunctions.getTableConfigs(this.props.tableName)
+    //   this.setState({
+    //     rowSelectOptions,
+    //     tableHeaders: headers,
+    //   })
+    // }
   }
 
   async componentDidUpdate(prevProps) {
-    if (
-      prevProps.loggedIn !== this.props.loggedIn ||
-      prevProps.inEditMode !== this.props.inEditMode
-    ) {
-      let data = []
-      let adminData = []
-      let SERVER_URL = _generate.serverFunctions.getServerURL()
-      if (this.props.dataSource) {
-        const role = this.props.role
-        const hasPermission = this.props.editTablePermissions.indexOf(role) >= 0
-        this.setState({ tableEditPermission: hasPermission })
-
-        if (hasPermission) {
-          const dataSource = await axios.get(
-            `${SERVER_URL}${this.props.dataSource}/admin`,
-          )
-          adminData = dataSource.data
-        }
-
-        const dataSource = await axios.get(
-          `${SERVER_URL}${this.props.dataSource}`,
-        )
-        data = dataSource.data
-      }
-
-      this.setState({
-        records: data,
-        adminRecords: adminData,
-      })
-    }
+    // if (
+    //   prevProps.loggedIn !== this.props.loggedIn ||
+    //   prevProps.inEditMode !== this.props.inEditMode
+    // ) {
+    //   let data = []
+    //   let adminData = []
+    //   let SERVER_URL = _generate.serverFunctions.getServerURL()
+    //   if (this.props.dataSource) {
+    //     const role = this.props.role
+    //     const hasPermission = this.props.editTablePermissions.indexOf(role) >= 0
+    //     this.setState({ tableEditPermission: hasPermission })
+    //     if (hasPermission) {
+    //       const dataSource = await axios.get(
+    //         `${SERVER_URL}${this.props.dataSource}/admin`,
+    //       )
+    //       adminData = dataSource.data
+    //     }
+    //     const dataSource = await axios.get(
+    //       `${SERVER_URL}${this.props.dataSource}`,
+    //     )
+    //     data = dataSource.data
+    //   }
+    //   this.setState({
+    //     records: data,
+    //     adminRecords: adminData,
+    //   })
+    // }
   }
 
   generatePage = (tabName, objFunc) => {
@@ -141,7 +138,13 @@ class Page extends Component {
                   key={`loading-${post._id}`}
                   fallback={<LoadingSpinner />}
                 >
-                  <PageSection type={post.type} data={post} role={this.props.role} row={idxRow} col={idxCol} />
+                  <PageSection
+                    type={post.type}
+                    data={post}
+                    role={this.props.role}
+                    row={idxRow}
+                    col={idxCol}
+                  />
                 </Suspense>
               )
             })}
@@ -204,11 +207,6 @@ class Page extends Component {
   render() {
     const isTableTab = this.props.tableName ? true : false
     console.log('props', this.props)
-    const buttonClasses = {
-      deleteButtonClass: 'table-delete',
-      approveButtonClass: 'table-approve',
-      editButtonClass: 'table-edit',
-    }
 
     return (
       <div className="pageContainer">
@@ -239,49 +237,6 @@ class Page extends Component {
                 </div>
               </div>
               {this.renderPosts()}
-              {isTableTab ? (
-                <Suspense fallback={<LoadingSpinner />}>
-                  {this.state.tableHeaders ? (
-                    <Table
-                      key={`${this.state.title}-datatable`}
-                      defaultSortKey="Time"
-                      defaultSortDir={1}
-                      headers={this.state.tableHeaders}
-                      searchable={true}
-                      dataSource={
-                        this.props.inEditMode && this.state.tableEditPermission
-                          ? this.state.adminRecords
-                          : this.state.records
-                      }
-                      rowSelectOptions={this.state.rowSelectOptions}
-                      editTablePermission={
-                        this.props.inEditMode && this.state.tableEditPermission
-                      }
-
-                      // SAMPLE DATA CONFIG
-                      // headers={SampleDataGenerator.sampleTableHeader()}
-                      // dataSource={SampleDataGenerator.sampleTableData()}
-                      // approveButtonClass={buttonClasses.approveButtonClass}
-                      // approveRows={this.handleApproveRows}
-                      // deleteButtonClass={buttonClasses.deleteButtonClass}
-                      // deleteRows={this.handleDeleteRows}
-                      // rowClass='test-row-class'
-                      // filterContainerClass='test-filter-container-class'
-                      // filterClass='test-filter'
-                      // headerClass='test-header'
-                      // lazyLoadFn={this.lazyLoadTable.bind(this)}
-                      // containerClass="table-container"
-                      // tableClass="web-table"
-                      // filterContainerClass="filter-container"
-                      // searchContainerClass="search-container"
-                      // headerClass="leaderboard-row"
-                      // footerClass="table-footer"
-                    />
-                  ) : null}
-                </Suspense>
-              ) : (
-                ''
-              )}
             </div>
             <div className="rightContainer"></div>
           </>

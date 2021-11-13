@@ -900,24 +900,30 @@ export default class SampleDataGenerator {
       {
         title: 'Contests',
         titleTarget: '/contests',
-        paths: []
+        paths: [],
       },
       {
         title: 'Partners',
         titleTarget: '/partners',
-        paths: []
+        paths: [],
       },
       {
         title: 'Contact Us',
         titleTarget: '/contact-us',
-        paths: []
-      }
+        paths: [],
+      },
     ]
   }
   static sampleContentTypes() {
     return {
       POST: 'post',
-      TABLE: 'table'
+      TABLE: 'table',
+    }
+  }
+  static samplePermissions() {
+    return {
+      table: ['MOD', 'ADMIN'],
+      post: ['ADMIN'],
     }
   }
 }

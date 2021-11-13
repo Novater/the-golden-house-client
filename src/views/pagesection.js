@@ -1,21 +1,32 @@
 import axios from 'axios'
 import React, { Component, Suspense, useEffect, useState } from 'react'
 import _generate from '../functions/index'
-import Backdrop from '../components/backdrop'
-import { LazyLoadImage } from 'react-lazy-load-image-component'
+import NewPost from '../components/newpostbutton'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTrash, faPen, faPlus } from '@fortawesome/free-solid-svg-icons'
 import LoadingSpinner from '../components/loadingspinner'
 import SampleDataGenerator from '../config/sampleData'
 import { connect } from 'react-redux'
-import { loadPosts, savePosts } from '../store/reducers/postSlice'
 import store from '../store/store'
 
 const Table = React.lazy(() => import('../components/table/table'))
 const BlogSection = React.lazy(() => import('../components/blogsection'))
+const POST_CONSTANTS = require('../constants/postConstants')
 
-export default function PageSection({ type, data, role, row, col }) {
-  const [tableHeaders, setTableHeaders] = useState(SampleDataGenerator.sampleTableHeader())
-  const [records, setTableRecords] = useState(SampleDataGenerator.sampleTableData())
-  const [rowSelectOptions, setRowSelectOptions] = useState(null)
+function PageSection({
+  type,
+  data,
+  role,
+  row,
+  col,
+  tab,
+  isLoggedIn,
+  inEditMode,
+}) {
+  const [records, setTableRecords] = useState(null)
+  const [permissionList, setPermissionList] = useState(
+    SampleDataGenerator.samplePermissions(),
+  )
 
   const CONTENT_TYPES = SampleDataGenerator.sampleContentTypes()
   const buttonClasses = {
@@ -25,61 +36,210 @@ export default function PageSection({ type, data, role, row, col }) {
   }
 
   useEffect(() => {
-    switch (type) {
-      case CONTENT_TYPES.TABLE:
+    if (data.dataSource) {
+      ;(async () => {
+        let SERVER_URL = _generate.serverFunctions.getServerURL()
+        switch (type) {
+          case CONTENT_TYPES.TABLE: {
+            const dataSource = await axios.get(
+              `${SERVER_URL}${data.dataSource}`,
+            )
+            data = dataSource.data
+            setTableRecords(data)
+          }
+          case CONTENT_TYPES.POST:
+          default:
+            break
+        }
+      })()
+    }
+  }, [inEditMode])
 
-      case CONTENT_TYPES.POST:
+  function createNewPost(event) {
+    const direction = event.target.id.split('-')[0]
+    const newPost = {
+      tite: 'Enter title here.',
+      content: 'Enter content here.',
+      row: 0,
+      col: 0,
+      tabname: tab,
+      type: 'post',
+    }
+    switch (direction) {
+      case 'up': {
+        newPost.row = row
+        newPost.col = 0
+        return store.dispatch({
+          type: POST_CONSTANTS.INSERT_POST,
+          payload: {
+            row: row,
+            newRow: true,
+            post: newPost,
+          },
+        })
+      }
+      case 'down': {
+        newPost.row = row + 1
+        newPost.col = 0
+        return store.dispatch({
+          type: POST_CONSTANTS.INSERT_POST,
+          payload: {
+            row: row + 1,
+            newRow: true,
+            post: newPost,
+          },
+        })
+      }
+      case 'left': {
+        newPost.row = row
+        newPost.col = col
+        return store.dispatch({
+          type: POST_CONSTANTS.INSERT_POST,
+          payload: {
+            row: row,
+            col: col,
+            post: newPost,
+          },
+        })
+      }
+      case 'right': {
+        newPost.row = row
+        newPost.col = col + 1
+        return store.dispatch({
+          type: POST_CONSTANTS.INSERT_POST,
+          payload: {
+            row: row,
+            col: col + 1,
+            post: newPost,
+          },
+        })
+      }
       default:
         break
     }
-  })
+  }
+
+  async function lazyLoadTable() {
+    let SERVER_URL = _generate.serverFunctions.getServerURL()
+    let data = []
+    if (this.props.dataSource) {
+      const dataSource = await axios.get(
+        `${SERVER_URL}${this.props.dataSource}`,
+      )
+      data = dataSource.data
+    }
+    return data
+  }
+
+  function handleDeleteRows(records) {
+    let SERVER_URL = _generate.serverFunctions.getServerURL()
+    axios.post(`${SERVER_URL}${data.dataSource}/delete`, {
+      records: records,
+    })
+  }
+
+  function handleApproveRows(records) {
+    let SERVER_URL = _generate.serverFunctions.getServerURL()
+    axios.post(`${SERVER_URL}${data.dataSource}/approve`, {
+      records: records,
+    })
+  }
 
   switch (type) {
     case CONTENT_TYPES.POST:
       return (
         <Suspense key={`loading-${data._id}`} fallback={<LoadingSpinner />}>
-          <BlogSection
-            title={data.title}
-            content={data.content}
-            key={data._id}
-            id={data._id}
-            row={row}
-            col={col}
-          />
+          <div className="page-post">
+            {inEditMode ? (
+              <>
+                <NewPost direction="up" id={data._id} onClick={createNewPost} />
+                <NewPost
+                  direction="down"
+                  id={data._id}
+                  onClick={createNewPost}
+                />
+                <NewPost
+                  direction="left"
+                  id={data._id}
+                  onClick={createNewPost}
+                />
+                <NewPost
+                  direction="right"
+                  id={data._id}
+                  onClick={createNewPost}
+                />
+              </>
+            ) : null}
+            <BlogSection
+              title={data.title}
+              content={data.content}
+              key={data._id}
+              id={data._id}
+              row={row}
+              col={col}
+              editPermission={
+                permissionList.post.indexOf(role) >= 0 &&
+                isLoggedIn &&
+                inEditMode
+              }
+            />
+          </div>
         </Suspense>
       )
     case CONTENT_TYPES.TABLE:
-      if (tableHeaders) {
+      if (data.headers) {
         return (
-          <Table
-            key={`${data.tablename}-datatable`}
-            defaultSortKey="Time"
-            defaultSortDir={1}
-            headers={tableHeaders}
-            searchable={data.searchable}
-            dataSource={records}
-            rowSelectOptions={rowSelectOptions}
-            editTablePermission={true}
-
-            // SAMPLE DATA CONFIG
-            // headers={SampleDataGenerator.sampleTableHeader()}
-            // dataSource={SampleDataGenerator.sampleTableData()}
-            // approveButtonClass={buttonClasses.approveButtonClass}
-            // approveRows={this.handleApproveRows}
-            // deleteButtonClass={buttonClasses.deleteButtonClass}
-            // deleteRows={this.handleDeleteRows}
-            // rowClass='test-row-class'
-            // filterContainerClass='test-filter-container-class'
-            // filterClass='test-filter'
-            // headerClass='test-header'
-            // lazyLoadFn={this.lazyLoadTable.bind(this)}
-            // containerClass="table-container"
-            // tableClass="web-table"
-            // filterContainerClass="filter-container"
-            // searchContainerClass="search-container"
-            // headerClass="leaderboard-row"
-            // footerClass="table-footer"
-          />
+          <div className="page-post">
+            {inEditMode ? (
+              <>
+                <NewPost direction="up" id={data._id} onClick={createNewPost} />
+                <NewPost
+                  direction="down"
+                  id={data._id}
+                  onClick={createNewPost}
+                />
+                <NewPost
+                  direction="left"
+                  id={data._id}
+                  onClick={createNewPost}
+                />
+                <NewPost
+                  direction="right"
+                  id={data._id}
+                  onClick={createNewPost}
+                />
+              </>
+            ) : null}
+            <Table
+              key={`${data.tablename}-datatable`}
+              defaultSortKey="Time"
+              defaultSortDir={1}
+              headers={JSON.parse(data.headers)}
+              searchable={data.searchable}
+              dataSource={records || []}
+              rowSelectOptions={JSON.parse(data.rowSelectOptions)}
+              // SAMPLE DATA CONFIG
+              // headers={SampleDataGenerator.sampleTableHeader()}
+              // dataSource={SampleDataGenerator.sampleTableData()}
+              approveButtonClass={buttonClasses.approveButtonClass}
+              approveRows={handleApproveRows}
+              // deleteButtonClass={buttonClasses.deleteButtonClass}
+              // deleteRows={handleDeleteRows}
+              editPermission={permissionList.table.indexOf(role) >= 0 && isLoggedIn && inEditMode}
+              adminPermission={permissionList.table.indexOf(role) >= 0 && isLoggedIn && inEditMode}
+              // rowClass='test-row-class'
+              // filterContainerClass='test-filter-container-class'
+              // filterClass='test-filter'
+              // headerClass='test-header'
+              // lazyLoadFn={this.lazyLoadTable.bind(this)}
+              // containerClass="table-container"
+              // tableClass="web-table"
+              // filterContainerClass="filter-container"
+              // searchContainerClass="search-container"
+              // headerClass="leaderboard-row"
+              // footerClass="table-footer"
+            />
+          </div>
         )
       } else {
         return null
@@ -89,3 +249,11 @@ export default function PageSection({ type, data, role, row, col }) {
       return null
   }
 }
+
+const mapState = (state) => ({
+  isLoggedIn: state.auth.loggedIn,
+  inEditMode: state.edit.inEditMode,
+  tab: state.post.tab,
+})
+
+export default connect(mapState)(PageSection)
