@@ -3,6 +3,8 @@
 import axios from 'axios'
 import React, { Component, Suspense } from 'react'
 import _generate from '../functions/index'
+import Backdrop from '../components/backdrop'
+import PageSection from './pagesection'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
 import LoadingSpinner from '../components/loadingspinner'
 import SampleDataGenerator from '../config/sampleData'
@@ -10,7 +12,7 @@ import { connect } from 'react-redux'
 import { loadPosts, savePosts } from '../store/reducers/postSlice'
 import store from '../store/store'
 
-const Table = React.lazy(() => import('../components/table'))
+const Table = React.lazy(() => import('../components/table/table'))
 const BlogSection = React.lazy(() => import('../components/blogsection'))
 const POST_CONSTANTS = require('../constants/postConstants')
 
@@ -110,22 +112,6 @@ class Page extends Component {
     }
   }
 
-  updatePosts = () => {
-    console.log('updating posts')
-    let SERVER_URL = _generate.serverFunctions.getServerURL()
-    axios
-      .get(`${SERVER_URL}/post/${this.props.tab}`)
-      .then((response) => {
-        console.log(response)
-        this.setState({
-          posts: response.data,
-        })
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-  }
-
   generatePage = (tabName, objFunc) => {
     let content = objFunc.generatePage(tabName)
     return <div className="pageContainer">{content}</div>
@@ -155,17 +141,7 @@ class Page extends Component {
                   key={`loading-${post._id}`}
                   fallback={<LoadingSpinner />}
                 >
-                  <BlogSection
-                    title={post.title}
-                    content={post.content}
-                    index={post.index}
-                    key={post._id}
-                    id={post._id}
-                    row={idxRow}
-                    col={idxCol}
-                    updatePosts={this.updatePosts}
-                    tabName={this.props.tab}
-                  />
+                  <PageSection type={post.type} data={post} role={this.props.role} row={idxRow} col={idxCol} />
                 </Suspense>
               )
             })}
@@ -183,8 +159,6 @@ class Page extends Component {
             key=""
             row={-1}
             col={-1}
-            updatePosts={this.updatePosts}
-            tabName={this.props.tab}
             isDummy={true}
           />
         </Suspense>
@@ -251,9 +225,7 @@ class Page extends Component {
             <div className="leftContainer"></div>
             <div className="midContainer">
               <div className="blog-section">
-                {_generate.createFunctions.createBackdrop(
-                  this.props.backgroundImage,
-                )}
+                <Backdrop image={this.props.backgroundImage} />
                 <div className="banner">
                   {this.props.inEditMode ? (
                     <input

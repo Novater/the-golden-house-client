@@ -1,11 +1,13 @@
 /* eslint-disable */
 
 import React, { Component } from 'react'
-import _generate from '../functions/index'
+import _generate from '../../functions/index'
+import TableFilters from './tablefilters'
+import PageModal from '../modal'
 import _ from 'lodash'
 import 'bootstrap/dist/css/bootstrap.css'
 import PropTypes from 'prop-types'
-import LoadingSpinner from './loadingspinner'
+import LoadingSpinner from '../loadingspinner'
 
 export default class Table extends Component {
   constructor(props) {
@@ -248,7 +250,7 @@ export default class Table extends Component {
     })
   }
 
-  async saveTableUpdates() {
+  saveTableUpdates = async () => {
     this.setState({ tableSaving: true })
     if (this.props.approveRows) {
       await this.props.approveRows(
@@ -508,14 +510,14 @@ export default class Table extends Component {
 
       if (filterObj.rows && filterObj.rows.length > 0) {
         generatedFilters.push(
-          _generate.tableFunctions.initializeTableFilters({
-            title: key,
-            filterClass: filterClass || 'table-filters',
-            filters: filterObj.rows,
-            onChange: this.filterTable,
-            defaultValues: filterForDefault,
-            filterStyle: filterObj.filterStyle,
-          }),
+          <TableFilters
+            title={key}
+            filterClass={filterClass || 'table-filters'}
+            filters={filterObj.rows}
+            onChange={this.filterTable}
+            defaultValues={filterForDefault}
+            filterStyle={filterObj.filterStyle}
+          />,
         )
       }
     })
@@ -584,24 +586,24 @@ export default class Table extends Component {
           </div>
         )}
 
-        {approveRows
-          ? _generate.createFunctions.createModal(
-              'Save Updates',
-              'Are you sure you want to save these updates?',
-              showTableSaveModal,
-              this.saveTableUpdates.bind(this),
-              this.handleCloseSave,
-            )
-          : null}
-        {deleteRows
-          ? _generate.createFunctions.createModal(
-              'Cancel Updates',
-              'Cancel your updates?',
-              showTableCancelModal,
-              this.cancelTableUpdates,
-              this.handleCloseCancel,
-            )
-          : null}
+        {approveRows ? (
+          <PageModal
+            title={'Save Updates'}
+            content={'Are you sure you want to save these updates?'}
+            showState={showTableSaveModal}
+            saveFunc={this.saveTableUpdates}
+            closeFunc={this.handleCloseSave}
+          />
+        ) : null}
+        {deleteRows ? (
+          <PageModal
+            title={'Cancel Updates'}
+            content={'Cancel your updates?'}
+            showState={showTableCancelModal}
+            saveFunc={this.cancelTableUpdates}
+            closeFunc={this.handleCloseCancel}
+          />
+        ) : null}
       </div>
     )
   }

@@ -9,6 +9,7 @@ import axios from 'axios'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import ContentEditor from './contenteditor'
+import PageModal from './modal'
 import _generate from '../functions/index'
 import store from '../store/store'
 
@@ -50,6 +51,7 @@ class BlogSection extends Component {
       row: 0,
       col: 0,
       tabname: this.props.tab,
+      type: 'post'
     }
     switch (direction) {
       case 'up': {
@@ -241,20 +243,6 @@ class BlogSection extends Component {
         ) : (
           ''
         )}
-        {_generate.createFunctions.createModal(
-          'Confirm',
-          'Create a new post?',
-          this.state.showCreateModal,
-          this.confirmCreate,
-          this.handleCloseCreate,
-        )}
-        {_generate.createFunctions.createModal(
-          'Confirm',
-          'Are you sure you want to delete this post?',
-          this.state.showDeleteModal,
-          this.confirmDelete,
-          this.handleCloseDelete,
-        )}
       </div>
     )
   }
@@ -318,8 +306,6 @@ BlogSection.propTypes = {
   title: PropTypes.string,
   content: PropTypes.string,
   index: PropTypes.string,
-  tabName: PropTypes.string.isRequired,
-  updatePosts: PropTypes.func,
   row: PropTypes.number.isRequired,
   col: PropTypes.number.isRequired,
 }

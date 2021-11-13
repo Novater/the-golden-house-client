@@ -914,4 +914,10 @@ export default class SampleDataGenerator {
       }
     ]
   }
+  static sampleContentTypes() {
+    return {
+      POST: 'post',
+      TABLE: 'table'
+    }
+  }
 }
