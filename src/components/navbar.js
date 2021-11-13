@@ -9,18 +9,21 @@ import _generate from '../functions/index'
 import store from '../store/store'
 import { connect } from 'react-redux'
 import { logoutUser } from '../store/reducers/authSlice'
-import NavSimpleElement from './navsimpleelement'
+import { loadNav, saveNav } from '../store/reducers/navSlice'
 import NavDropdownElement from './navdropdownelement'
 const EDIT_CONSTANTS = require('../constants/editConstants')
 const AUTH_CONSTANTS = require('../constants/authConstants')
 const POST_CONSTANTS = require('../constants/postConstants')
+const NAV_CONSTANTS = require('../constants/navConstants')
 
 class Navbar extends Component {
   constructor(props) {
     super(props)
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    store.dispatch(loadNav)
+  }
 
   setEditMode() {
     store.dispatch({ type: EDIT_CONSTANTS.SHOW_EDIT_MODAL })
@@ -34,8 +37,12 @@ class Navbar extends Component {
     store.dispatch({ type: AUTH_CONSTANTS.AUTH_LOGOUT_REQUEST })
     store.dispatch(logoutUser)
   }
+
+  addNewNav() {
+    store.dispatch({ type: NAV_CONSTANTS.ADD_NAV_ELEMENT })
+  }
   render() {
-    const { loggedIn, inEditMode, id, className, edit, showProfile } =
+    const { loggedIn, inEditMode, id, className, edit, showProfile, navData } =
       this.props
 
     return (
@@ -68,25 +75,35 @@ class Navbar extends Component {
               id="navbarSupportedContent"
             >
               <ul className="navbar-nav ml-auto">
-                <NavSimpleElement title="About" path="/about" />
-                <NavDropdownElement
-                  title="Speedrunning"
-                  names={['Leaderboards']}
-                  paths={['/speedrun/leaderboard']}
-                />
-                <NavDropdownElement
-                  title="DPS"
-                  names={['Abyss', 'Events', 'Open World', 'Primo Geovishap']}
-                  paths={[
-                    '/dps/abyss',
-                    '/dps/events',
-                    '/dps/openworld',
-                    '/dps/primo-geovishap',
-                  ]}
-                />
-                <NavSimpleElement title="Contests" path="/contests" />
-                <NavSimpleElement title="Partners" path="/partners" />
-                <NavSimpleElement title="Contact Us" path="/contact-us" />
+                {navData.map((navEl, idx) => {
+                  const { title, titleTarget, paths } = navEl
+                  let namesArr = []
+                  let pathsArr = []
+                  if (paths && paths.length > 0) {
+                    navEl.paths.map((path) => {
+                      namesArr.push(path.name)
+                      pathsArr.push(path.path)
+                    })
+                  }
+                  return (
+                    <NavDropdownElement
+                      key={`${title}-${idx}`}
+                      title={title}
+                      titleTarget={titleTarget}
+                      names={namesArr}
+                      paths={pathsArr}
+                    />
+                  )
+                })}
+                {inEditMode ? (
+                  <button
+                    className="nav-title-add"
+                    title="Add New Navigation"
+                    onClick={this.addNewNav}
+                  >
+                    {'Add New +'}
+                  </button>
+                ) : null}
                 {loggedIn && showProfile ? (
                   <li className="nav-item dropdown user-display">
                     <a
@@ -162,6 +179,7 @@ const mapState = (state) => ({
   showEditModal: state.edit.showEditModal,
   loggedIn: state.auth.loggedIn,
   id: state.auth.id,
+  navData: state.nav.data,
 })
 
 Navbar.propTypes = {

@@ -183,17 +183,27 @@ body, html {
   width: fit-content;
 
   .dropdown-item-name {
-    background-color: $color-nav;
+    background-color: $color-faded-white;
     color: white;
   }
 
   .dropdown-item-path {
-    background-color: $color-neutral;
+    background-color: $color-faded-white;
   }
 
   .dropdown-item-remove {
     background-color: $color-nav;
     color: white;
+  }
+}
+
+.nav-title-add {
+  background-color: black;
+  color: white;
+  border-radius: 5px;
+  
+  &:hover {
+    color: $color-gold;
   }
 }
 

@@ -12,13 +12,13 @@ export default class SampleDataGenerator {
       {
         title: 'Email Address',
         format: '{email}',
-        keys: ['email']
+        keys: ['email'],
       },
       {
         title: 'IP Address',
         format: '{ip_address}',
-        keys: ['ip_address']
-      }
+        keys: ['ip_address'],
+      },
     ]
   }
   static sampleTableData(empty = false) {
@@ -871,6 +871,47 @@ export default class SampleDataGenerator {
           content: 'Soup',
         },
       ],
+    ]
+  }
+  static sampleNavData(empty = false) {
+    if (empty) return []
+
+    return [
+      {
+        title: 'About',
+        titleTarget: '/about',
+        paths: [],
+      },
+      {
+        title: 'Speedrunning',
+        titleTarget: '',
+        paths: [{ name: 'Leaderboards', path: '/speedrun/leaderboard' }],
+      },
+      {
+        title: 'DPS',
+        titleTarget: '',
+        paths: [
+          { name: 'Abyss', path: '/dps/abyss' },
+          { name: 'Events', path: '/dps/events' },
+          { name: 'Open World', path: '/dps/openworld' },
+          { name: 'Primo Geovishap', path: '/dps/primo-geovishap' },
+        ],
+      },
+      {
+        title: 'Contests',
+        titleTarget: '/contests',
+        paths: []
+      },
+      {
+        title: 'Partners',
+        titleTarget: '/partners',
+        paths: []
+      },
+      {
+        title: 'Contact Us',
+        titleTarget: '/contact-us',
+        paths: []
+      }
     ]
   }
 }
