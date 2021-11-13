@@ -15,7 +15,6 @@ function NavDropdownElement({ title, names, paths, inEditMode, titleTarget }) {
   }
 
   function setNavTitle(event) {
-    event.preventDefault()
     setTitle(event.target.value)
   }
 
@@ -50,7 +49,6 @@ function NavDropdownElement({ title, names, paths, inEditMode, titleTarget }) {
   }
 
   function handleClick(event) {
-    event.preventDefault()
   }
 
   return (
