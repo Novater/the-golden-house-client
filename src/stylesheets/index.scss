@@ -932,6 +932,10 @@ thead {
 
   .blog-section {
     flex-direction: column;
+    margin-bottom: 0;
+    .page-post {
+      width: 80%;
+    }
   }
   .search-container {
     width: 90%;
