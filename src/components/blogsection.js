@@ -26,7 +26,7 @@ class BlogSection extends Component {
       content: this.props.content,
       loadedTitle: this.props.title,
       loadedContent: this.props.content,
-      isEditing: this.props.isEditing,
+      isEditing: false,
       createFromId: null,
       showCreateModal: false,
       showDeleteModal: false,
@@ -43,7 +43,7 @@ class BlogSection extends Component {
     }))
   }
 
-  deleteBlogPost = () => {
+  deletePost = () => {
     console.log(this.props.col)
     store.dispatch({
       type: POST_CONSTANTS.DELETE_POST,
@@ -54,7 +54,7 @@ class BlogSection extends Component {
     })
   }
 
-  editBlogPost = () => {
+  editPost = () => {
     this.setState({ isEditing: true })
   }
 
@@ -121,8 +121,8 @@ class BlogSection extends Component {
           ></h4>
           {this.props.editPermission ? (
             <div className="edit">
-              <FontAwesomeIcon icon={faPen} onClick={this.editBlogPost} />
-              <FontAwesomeIcon icon={faTrash} onClick={this.deleteBlogPost} />
+              <FontAwesomeIcon icon={faPen} onClick={this.editPost} />
+              <FontAwesomeIcon icon={faTrash} onClick={this.deletePost} />
             </div>
           ) : (
             ''
@@ -193,7 +193,7 @@ class BlogSection extends Component {
   }
 
   render() {
-    return this.state.isEditing
+    return this.state.isEditing && this.props.inEditMode
       ? this.getBlogEditMode()
       : this.getBlogViewMode()
   }
