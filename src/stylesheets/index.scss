@@ -362,7 +362,7 @@ body, html {
 
 .page-post {
   flex-grow: 1;
-  width: fit-content;
+  width: 80%;
   padding-left: 30px;
   padding-right: 30px;
   padding-top: 20px;
@@ -995,9 +995,7 @@ thead {
   .blog-section {
     flex-direction: column;
     margin-bottom: 0;
-    .page-post {
-      width: 80%;
-    }
+
   }
   .search-container {
     width: 90%;
