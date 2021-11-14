@@ -38,7 +38,6 @@ class App extends Component {
     } catch (error) {
       console.log(error)
     }
-
   }
 
   updateEditMode = () => {
@@ -90,7 +89,7 @@ class App extends Component {
 
   render() {
     const { tab, loggedIn } = this.props
-    console.log(this.props)
+
     return (
       <div className="app-container">
         {tab !== 'fullpage-table' ? (

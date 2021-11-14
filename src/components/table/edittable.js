@@ -20,14 +20,16 @@ export default function TableEditor({
   row,
   col,
 }) {
-  useEffect(() => {
-    console.log('headers changed')
-  }, [headers])
+  useEffect(() => {}, [headers])
 
   function deleteTableHeader(index) {
     return function () {
-      const copiedHeaders = [...headers]
-      copiedHeaders.splice(index, 1)
+      const thisIndex = index
+      const copiedHeaders = headers.map((header) => {
+        return { ...header }
+      })
+      copiedHeaders.splice(thisIndex, 1)
+      console.log(copiedHeaders)
       store.dispatch({
         type: POST_CONSTANTS.EDIT_POST,
         payload: {
@@ -62,18 +64,53 @@ export default function TableEditor({
       },
     })
   }
+
+  function updateTableHeader(key, index) {
+    return function (event) {
+      const thisIndex = index
+      const copiedHeaders = headers.map((header) => {
+        return { ...header }
+      })
+      let updateVal =
+        key === 'keys'
+          ? event.target.value.toString().split(',')
+          : event.target.value
+      // if (key === 'keys') event.target.value.join(',')
+      copiedHeaders[thisIndex][key] = JSON.parse(updateVal)
+      store.dispatch({
+        type: POST_CONSTANTS.EDIT_POST,
+        payload: {
+          post: {
+            headers: copiedHeaders,
+          },
+          row: row,
+          col: col,
+        },
+      })
+
+      // clearTimeout(timeOutId)
+    }
+  }
+
   return (
     <div className="table-editor-container">
       <div className="table-editor-component">
         <h4>Headers:</h4>
         {headers.map((header, idx) => {
           return (
-            <div className="table-edit-row">
+            <div
+              className="table-edit-row"
+              key={`table-edit-row-${header.title}-${idx}`}
+              id={`table-edit-row-${header.title}-${idx}`}
+            >
               {_.keys(header).map((key) => {
                 return (
                   <div key={`table-edit-col-${key}`} className="table-edit-col">
                     <p>{`${key.toUpperCase()}:`}</p>
-                    <input value={JSON.stringify(header[key])}></input>
+                    <input
+                      defaultValue={JSON.stringify(header[key])}
+                      onBlur={updateTableHeader(key, idx)}
+                    ></input>
                   </div>
                 )
               })}

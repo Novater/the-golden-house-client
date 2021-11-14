@@ -114,18 +114,6 @@ class Page extends Component {
     return <div className="pageContainer">{content}</div>
   }
 
-  renderBackdrop = (image) => {
-    if (!image) return null
-    return (
-      <LazyLoadImage
-        src={image.default}
-        className="banner-img"
-        effect="opacity"
-        alt="banner"
-      />
-    )
-  }
-
   renderPosts() {
     return this.props.posts.length > 0 ? (
       this.props.posts.map((row, idxRow) => {
@@ -171,33 +159,6 @@ class Page extends Component {
     )
   }
 
-  async lazyLoadTable() {
-    let SERVER_URL = _generate.serverFunctions.getServerURL()
-    let data = []
-    if (this.props.dataSource) {
-      const dataSource = await axios.get(
-        `${SERVER_URL}${this.props.dataSource}`,
-      )
-      data = dataSource.data
-    }
-
-    return data
-  }
-
-  handleDeleteRows = (records) => {
-    let SERVER_URL = _generate.serverFunctions.getServerURL()
-    axios.post(`${SERVER_URL}${this.props.dataSource}/delete`, {
-      records: records,
-    })
-  }
-
-  handleApproveRows = (records) => {
-    let SERVER_URL = _generate.serverFunctions.getServerURL()
-    axios.post(`${SERVER_URL}${this.props.dataSource}/approve`, {
-      records: records,
-    })
-  }
-
   updateTitle = (event) => {
     this.setState({
       title: event.target.value,
@@ -206,8 +167,6 @@ class Page extends Component {
   // This will display the table with all records
   render() {
     const isTableTab = this.props.tableName ? true : false
-    console.log('props', this.props)
-
     return (
       <div className="pageContainer">
         {this.props.loggingOut ? (
