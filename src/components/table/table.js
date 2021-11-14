@@ -89,6 +89,12 @@ export default class Table extends Component {
     })
   }
 
+  finishEdit = () => {
+    this.setState({
+      editingTable: false,
+    })
+  }
+
   deletePost = () => {
     console.log(this.props.col)
     store.dispatch({
@@ -152,7 +158,11 @@ export default class Table extends Component {
     let add = true
 
     for (const header of headers) {
-      if (filters[header.title] && filters[header.title].rows && filters[header.title].rows.length > 0) {
+      if (
+        filters[header.title] &&
+        filters[header.title].rows &&
+        filters[header.title].rows.length > 0
+      ) {
         const { format } = header
         const { keys } = header
 
@@ -609,6 +619,7 @@ export default class Table extends Component {
             headers={this.props.headers}
             dataUrl={dataUrl}
             dataSource={dataSource}
+            finishEdit={this.finishEdit}
           />
         ) : null}
         <div className={containerClass || 'table-container'}>

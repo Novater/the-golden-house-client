@@ -19,6 +19,7 @@ export default function TableEditor({
   dataUrl,
   row,
   col,
+  finishEdit
 }) {
   useEffect(() => {}, [headers])
 
@@ -94,8 +95,11 @@ export default function TableEditor({
 
   return (
     <div className="table-editor-container">
+      <div className="table-edit-close">
+        <button onClick={finishEdit}>{'Finish Editing'}</button>
+      </div>
       <div className="table-editor-component">
-        <h4>Headers:</h4>
+        <h4>{'Columns:'}</h4>
         {headers.map((header, idx) => {
           return (
             <div

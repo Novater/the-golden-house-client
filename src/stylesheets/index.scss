@@ -29,6 +29,16 @@ $height-nav: 60px;
   }
 }
 
+@keyframes hovering {
+  from {
+    box-shadow: 0px 0px 0px 0px rgb(0 0 0 / 0)
+  }
+
+  to {
+    box-shadow: 10px 10px 10px 10px rgb(0 0 0 / 0.5)
+  }
+}
+
 body, html {
   height: 100vh;
   width: 100%;
@@ -803,19 +813,43 @@ thead {
 }
 
 .table-editor-container {
-  width: 100%;
-  color: $color-gold;
-  background-color: $color-faded-white;
+  width: 80%;
+  color: $color-opaque-black;
+  background-color: $color-neutral;
   display: flex;
   flex-direction: column;
-  flex-wrap: wrap;
   align-items: center;
   margin-top: 20px;
   border-radius: 5px;
   overflow: auto;
-  max-height: 700px;
+  max-height: 500px;
+  padding: 20px;
+  position: relative;
 }
 
+.table-edit-close {
+  position: sticky;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  height: fit-content;
+  z-index: 1;
+  width: fit-content;
+  padding: 10px;
+  background-color: $color-opaque-black;
+  border-radius: 5px;
+  box-shadow: 0px 0px 2px 2px rgb(0 0 0 / 0.2);
+
+  button {
+    background-color: black;
+    color: $color-neutral;
+
+    &:hover {
+      color:$color-gold;
+    }
+  }
+
+}
 .table-editor-component {
   display: flex;
   flex-direction: column;
@@ -829,15 +863,23 @@ thead {
   flex-wrap: wrap;
   justify-content: center;
   flex-grow: 1;
-  background-color: $color-opaque-black;
+  background-color: $color-carbon;
   border-radius: 5px;
   margin: 10px;
   position: relative;
+
+  button {
+    background-color: $color-opaque-black;
+    color: $color-neutral;
+    border-radius: 5px;
+    box-shadow: 1px 1px 1px 1px rgb(0 0 0 / 0.2)
+  }
 
   input {
     background-color: $color-opaque-black;
     color: $color-neutral;
     border-radius: 5px;
+    height: 50px;
   }
 }
 
@@ -857,8 +899,11 @@ thead {
   display: flex;
   flex-direction: column;
   margin: 5px;
+  max-width: 100%;
+  overflow: hidden;
   flex-grow: 1;
 }
+
 .save-icon {
   display: grid;
   place-items: center;
@@ -904,7 +949,7 @@ thead {
     text-align: center;
     height: 50px;
     font-size: 18px;
-    background-color: $color-faded-white;
+    background-color: $color-neutral;
   }
 }
 

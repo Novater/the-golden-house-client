@@ -13,6 +13,10 @@ const Table = React.lazy(() => import('../components/table/table'))
 const BlogSection = React.lazy(() => import('../components/blogsection'))
 const POST_CONSTANTS = require('../constants/postConstants')
 
+// TODO: PERMISSIONS
+// ADDING TABLE/OTHER CONTENT TYPES
+// TABLE FUNCTIONS
+
 function PageSection({
   type,
   data,
