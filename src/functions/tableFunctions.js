@@ -44,62 +44,73 @@ export default class tableFunctions {
   }
 
   /**
+   * DEPRECATED
+   * @param {*} param0 
+   * @returns 
+   */
+  /**
    * @param {*} filterClass
    * @param {*} filters
    * @param {*} onClick
    * @returns Filters JSX
    */
-  static initializeTableFilters({
-    title,
-    filterClass,
-    filters,
-    onChange,
-    defaultValues,
-    filterStyle,
-  }) {
-    if (filterStyle === 'checkbox') {
-      return (
-        <div className={filterClass}>
-          <p style={{ width: '100%' }}>{`${title}: `}</p>
-          {filters.map((el, idx) => (
-            <div className="checkbox-filter">
-              <input
-                className="form-check-input filter-checkbox"
-                type="checkbox"
-                name={title}
-                value={el.title}
-                id={`filter-${el.title}`}
-                onChange={onChange}
-                checked={!!el.selected}
-              />
-              <label
-                className="form-check-label filter-label"
-                for={`filter-${el.title}`}
-              >
-                {el.title}
-              </label>
-            </div>
-          ))}
-        </div>
-      )
-    }
+  // static initializeTableFilters({
+  //   title,
+  //   filterClass,
+  //   filters,
+  //   onChange,
+  //   defaultValues,
+  //   filterStyle,
+  // }) {
+  //   if (filterStyle === 'checkbox') {
+  //     return (
+  //       <div className={filterClass}>
+  //         <p style={{ width: '100%' }}>{`${title}: `}</p>
+  //         {filters.map((el, idx) => (
+  //           <div
+  //             className="checkbox-filter"
+  //             key={`${el.title}-${idx}`}
+  //             id={`${el.title}-${idx}`}
+  //           >
+  //             <input
+  //               className="form-check-input filter-checkbox"
+  //               type="checkbox"
+  //               name={title}
+  //               value={el.title}
+  //               id={`filter-${el.title}`}
+  //               onChange={onChange}
+  //               checked={!!el.selected}
+  //             />
+  //             <label
+  //               className="form-check-label filter-label"
+  //               for={`filter-${el.title}`}
+  //             >
+  //               {el.title}
+  //             </label>
+  //           </div>
+  //         ))}
+  //       </div>
+  //     )
+  //   }
 
-    return (
-      <div className={filterClass}>
-        <p style={{ width: '100%' }}>{`${title}: `}</p>
-        <select
-          className="form-select"
-          name={title}
-          onChange={onChange}
-          defaultValue={defaultValues[0].title}
-        >
-          {filters.map((el) => (
-            <option>{el.title}</option>
-          ))}
-        </select>
-      </div>
-    )
-  }
+  //   return (
+  //     <div className={filterClass}>
+  //       <p style={{ width: '100%' }}>{`${title}: `}</p>
+  //       <select
+  //         className="form-select"
+  //         name={title}
+  //         onChange={onChange}
+  //         defaultValue={defaultValues[0].title}
+  //         id={`${el.title}-${idx}`}
+  //         key={`${el.title}-${idx}`}
+  //       >
+  //         {filters.map((el, idx) => (
+  //           <option>{el.title}</option>
+  //         ))}
+  //       </select>
+  //     </div>
+  //   )
+  // }
 
   /**
    * @param {*} headerClass
@@ -159,7 +170,7 @@ export default class tableFunctions {
 
       if (rowOptions) {
         for (const rowOption of rowOptions.rows) {
-          rowOptionEls.push(<option>{rowOption}</option>)
+          rowOptionEls.push(<option key={`${rowOption}-pagesize`} id={`${rowOption}-pagesize`}>{rowOption}</option>)
         }
         const numPages = rowOptions.selected
           ? Math.ceil(numRows / rowOptions.selected)
@@ -167,14 +178,14 @@ export default class tableFunctions {
         if (numPages > 1) {
           if (currPage > 1) {
             paginationEls.push(
-              <li className="page-item" key='page-1'>
+              <li className="page-item" key="page-1">
                 <a className="page-link" name={1} onClick={paginationFunc}>
                   &lt;&lt;
                 </a>
               </li>,
             )
             paginationEls.push(
-              <li className="page-item" key='page-prev'>
+              <li className="page-item" key="page-prev">
                 <a
                   className="page-link"
                   name="Previous"
@@ -201,7 +212,7 @@ export default class tableFunctions {
               )
             } else {
               paginationEls.push(
-                <li className="page-item"  key={`page-${i + 1}`}>
+                <li className="page-item" key={`page-${i + 1}`}>
                   <a
                     className="page-link"
                     name={i + 1}
@@ -222,7 +233,7 @@ export default class tableFunctions {
               </li>,
             )
             paginationEls.push(
-              <li className="page-item"  key={`page-last`}>
+              <li className="page-item" key={`page-last`}>
                 <a
                   className="page-link"
                   name={numPages}
@@ -271,35 +282,35 @@ export default class tableFunctions {
         ' ',
       )
       return (
-        <tr key={record._id} className={rowClasses}>
+        <tr key={record._id} id={record._id} className={rowClasses}>
           {hasEditPermission && approveOnClick ? (
-            <td>
+            <td key={`a_${record._id}`}>
               <button
                 className={approveButtonClass || 'approve-button'}
                 type="button"
                 id={`a_${record._id}`}
                 onClick={approveOnClick}
               >
-                {approvedClass ? "\u2015" : '✓' }
+                {approvedClass ? '\u2015' : '✓'}
               </button>
             </td>
           ) : null}
           {hasEditPermission && deleteOnClick ? (
-            <td>
+            <td key={`d_${record._id}`}>
               <button
                 className={deleteButtonClass || 'delete-button'}
                 type="button"
                 id={`d_${record._id}`}
                 onClick={deleteOnClick}
               >
-                {deletedClass ? "\u2015" : 'X' }
+                {deletedClass ? '\u2015' : 'X'}
               </button>
             </td>
           ) : null}
           {headerKeyFormats.map((header) => {
             if (header.title === 'Rank') {
               return (
-                <td>
+                <td key={`rank-${record.rank}`}>
                   <div
                     key={`${header.title}-${record._id}`}
                     className="rank-col"
@@ -347,12 +358,12 @@ export default class tableFunctions {
       const row = rows[numRows]
       numRows += 1
       currRow += 1
-
       tableBuildRows.push(
         <TableEntry
           className={row.trClass}
           record={row.thisRec}
           key={row.thisRec._id}
+          id={row.thisRec._id}
         />,
       )
     }
@@ -381,8 +392,12 @@ export default class tableFunctions {
                   {hasEditPermission && deleteOnClick ? (
                     <th name="Delete">Delete</th>
                   ) : null}
-                  {headers.headers.map((header) => (
-                    <th name={header.title}>
+                  {headers.headers.map((header, idx) => (
+                    <th
+                      name={header.title}
+                      key={`${header.title}-${idx}`}
+                      id={`${header.title}-${idx}`}
+                    >
                       {header.title}
                       {/* <div>
                         <FontAwesomeIcon

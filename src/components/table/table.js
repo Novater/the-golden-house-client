@@ -17,7 +17,7 @@ import { connect } from 'react-redux'
 const POST_CONSTANTS = require('../../constants/postConstants')
 const EDIT_CONSTANTS = require('../../constants/editConstants')
 
-export default class Table extends Component {
+class Table extends Component {
   constructor(props) {
     super(props)
     const {
@@ -116,12 +116,10 @@ export default class Table extends Component {
   componentDidUpdate(prevProps) {
     if (
       this.props.dataSource !== prevProps.dataSource ||
-      this.props.headers !== prevProps.headers ||
-      this.props.showSideBar !== prevProps.showSideBar
+      this.props.headers !== prevProps.headers
     ) {
       const DATASOURCE_CHANGE = this.props.dataSource !== prevProps.dataSource
       const HEADER_CHANGE = this.props.headers !== prevProps.headers
-      const SIDEBAR_CHANGE = this.props.showSideBar !== prevProps.showSideBar
 
       if (DATASOURCE_CHANGE || HEADER_CHANGE) {
         const filterObj = {}
@@ -161,13 +159,6 @@ export default class Table extends Component {
             records: this.props.dataSource,
           })
         }
-      }
-
-      // IF ANOTHER SIDEBAR OPENS THIS WILL CLOSE
-      if (SIDEBAR_CHANGE) {
-        this.setState({
-          editingTable: false,
-        })
       }
     }
   }
@@ -727,3 +718,5 @@ Table.propTypes = {
 const mapState = (state) => ({
   showSideBar: state.edit.showSideBar,
 })
+
+export default connect(mapState)(Table)

@@ -18,15 +18,17 @@ export default function TableFilters({
   defaultValues,
   filterStyle,
 }) {
-  useEffect(() => {
-    console.log('filters changed')
-  }, [filters])
+
   if (filterStyle === 'checkbox') {
     return (
       <div className={filterClass}>
         <p style={{ width: '100%' }}>{`${title}: `}</p>
         {filters.map((el, idx) => (
-          <div className="checkbox-filter" key={`filter-${el.title}-${idx}`}>
+          <div
+            className="checkbox-filter"
+            key={`${el.title}-${idx}-checkbox`}
+            id={`${el.title}-${idx}-checkbox`}
+          >
             <input
               className="form-check-input filter-checkbox"
               type="checkbox"
@@ -56,9 +58,11 @@ export default function TableFilters({
         name={title}
         onChange={onChange}
         defaultValue={defaultValues[0].title}
+        key={`${title}-dropdown`}
+        id={`${title}-dropdown`}
       >
         {filters.map((el, idx) => (
-          <option key={`filter-option-${el.title}-${idx}`}>{el.title}</option>
+          <option id={`${el.title}-dropdown-${title}`} key={`${el.title}-dropdown-${title}`}>{el.title}</option>
         ))}
       </select>
     </div>
