@@ -164,12 +164,17 @@ class Page extends Component {
       title: event.target.value,
     })
   }
-  // This will display the table with all records
+
   render() {
-    const isTableTab = this.props.tableName ? true : false
+    const { loggingOut, inEditMode, showSideBar, backgroundImage } = this.props
+    console.log(inEditMode)
     return (
-      <div className={`pageContainer ${this.props.showSideBar ? `sidebar-open` : ``}`}>
-        {this.props.loggingOut ? (
+      <div
+        className={`pageContainer ${
+          showSideBar && inEditMode ? `sidebar-open` : ``
+        }`}
+      >
+        {loggingOut ? (
           <>
             {
               // NEED MORE DESCRIPTIVE MESSAGE & IMPLEMENT AUTO LOGOUT SESSION
@@ -182,9 +187,9 @@ class Page extends Component {
             <div className="leftContainer"></div>
             <div className="midContainer">
               <div className="blog-section">
-                <Backdrop image={this.props.backgroundImage} />
+                <Backdrop image={backgroundImage} />
                 <div className="banner">
-                  {this.props.inEditMode ? (
+                  {inEditMode ? (
                     <input
                       type="text"
                       value={this.state.title}

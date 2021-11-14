@@ -40,6 +40,9 @@ export default function editReducer(state = initialState, action) {
     case EDIT_CONSTANTS.TOGGLE_EDIT_SIDEBAR: {
       return { ...state, showSideBar: !state.showSideBar }
     }
+    case EDIT_CONSTANTS.CLOSE_SIDEBAR: {
+      return { ...state, showSideBar: false }
+    }
     default:
       return { ...state }
   }

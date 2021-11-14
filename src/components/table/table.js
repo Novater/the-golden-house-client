@@ -11,9 +11,11 @@ import PropTypes from 'prop-types'
 import LoadingSpinner from '../loadingspinner'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash, faPen } from '@fortawesome/free-solid-svg-icons'
+import store from '../../store/store'
+import { connect } from 'react-redux'
+
 const POST_CONSTANTS = require('../../constants/postConstants')
 const EDIT_CONSTANTS = require('../../constants/editConstants')
-import store from '../../store/store'
 
 export default class Table extends Component {
   constructor(props) {
@@ -85,6 +87,7 @@ export default class Table extends Component {
   }
 
   editPost = () => {
+    store.dispatch({ type: EDIT_CONSTANTS.CLOSE_SIDEBAR })
     store.dispatch({ type: EDIT_CONSTANTS.TOGGLE_EDIT_SIDEBAR })
     this.setState({
       editingTable: true,
@@ -113,43 +116,57 @@ export default class Table extends Component {
   componentDidUpdate(prevProps) {
     if (
       this.props.dataSource !== prevProps.dataSource ||
-      this.props.headers !== prevProps.headers
+      this.props.headers !== prevProps.headers ||
+      this.props.showSideBar !== prevProps.showSideBar
     ) {
-      const filterObj = {}
-      this.props.headers.map((header) => {
-        const { filterValues, filterStyle } = header
+      const DATASOURCE_CHANGE = this.props.dataSource !== prevProps.dataSource
+      const HEADER_CHANGE = this.props.headers !== prevProps.headers
+      const SIDEBAR_CHANGE = this.props.showSideBar !== prevProps.showSideBar
 
-        if (filterValues && filterValues.length > 0) {
-          if (
-            !filterValues.reduce(
-              (currVal, filter) => currVal || filter.selected,
-              false,
-            )
-          ) {
-            if (filterStyle !== 'checkbox') filterValues[0].selected = true
-          }
+      if (DATASOURCE_CHANGE || HEADER_CHANGE) {
+        const filterObj = {}
+        this.props.headers.map((header) => {
+          const { filterValues, filterStyle } = header
 
-          filterObj[header.title] = {
-            rows: filterValues,
-            filterStyle,
+          if (filterValues && filterValues.length > 0) {
+            if (
+              !filterValues.reduce(
+                (currVal, filter) => currVal || filter.selected,
+                false,
+              )
+            ) {
+              if (filterStyle !== 'checkbox') filterValues[0].selected = true
+            }
+
+            filterObj[header.title] = {
+              rows: filterValues,
+              filterStyle,
+            }
+          } else {
+            filterObj[header.title] = {
+              rows: [],
+            }
           }
+        })
+        this.setState({ filters: filterObj })
+        if (this.state.sortKey) {
+          this.sortTable(
+            this.state.sortKey,
+            this.state.sortDir || 1,
+            this.props.dataSource,
+            true,
+          )
         } else {
-          filterObj[header.title] = {
-            rows: [],
-          }
+          this.setState({
+            records: this.props.dataSource,
+          })
         }
-      })
-      this.setState({ filters: filterObj })
-      if (this.state.sortKey) {
-        this.sortTable(
-          this.state.sortKey,
-          this.state.sortDir || 1,
-          this.props.dataSource,
-          true,
-        )
-      } else {
+      }
+
+      // IF ANOTHER SIDEBAR OPENS THIS WILL CLOSE
+      if (SIDEBAR_CHANGE) {
         this.setState({
-          records: this.props.dataSource,
+          editingTable: false,
         })
       }
     }
@@ -706,3 +723,7 @@ Table.propTypes = {
   defaultSortDir: PropTypes.number,
   rowSelectOptions: PropTypes.object.isRequired,
 }
+
+const mapState = (state) => ({
+  showSideBar: state.edit.showSideBar,
+})
