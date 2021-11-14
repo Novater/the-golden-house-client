@@ -1,14 +1,14 @@
 /* eslint-disable */
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import _ from 'lodash'
 
 /**
-   * @param {*} filterClass
-   * @param {*} filters
-   * @param {*} onClick
-   * @returns Filters JSX
-   */
+ * @param {*} filterClass
+ * @param {*} filters
+ * @param {*} onClick
+ * @returns Filters JSX
+ */
 
 export default function TableFilters({
   title,
@@ -18,12 +18,15 @@ export default function TableFilters({
   defaultValues,
   filterStyle,
 }) {
+  useEffect(() => {
+    console.log('filters changed')
+  }, [filters])
   if (filterStyle === 'checkbox') {
     return (
       <div className={filterClass}>
         <p style={{ width: '100%' }}>{`${title}: `}</p>
         {filters.map((el, idx) => (
-          <div className="checkbox-filter">
+          <div className="checkbox-filter" key={`filter-${el.title}-${idx}`}>
             <input
               className="form-check-input filter-checkbox"
               type="checkbox"
@@ -35,7 +38,7 @@ export default function TableFilters({
             />
             <label
               className="form-check-label filter-label"
-              for={`filter-${el.title}`}
+              htmlFor={`filter-${el.title}`}
             >
               {el.title}
             </label>
@@ -54,8 +57,8 @@ export default function TableFilters({
         onChange={onChange}
         defaultValue={defaultValues[0].title}
       >
-        {filters.map((el) => (
-          <option>{el.title}</option>
+        {filters.map((el, idx) => (
+          <option key={`filter-option-${el.title}-${idx}`}>{el.title}</option>
         ))}
       </select>
     </div>

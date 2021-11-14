@@ -53,7 +53,7 @@ function PageSection({
         }
       })()
     }
-  }, [inEditMode])
+  }, [data])
 
   function createNewPost(event) {
     const direction = event.target.id.split('-')[0]
@@ -211,12 +211,15 @@ function PageSection({
               </>
             ) : null}
             <Table
+              row={row}
+              col={col}
               key={`${data.tablename}-datatable`}
               defaultSortKey="Time"
               defaultSortDir={1}
-              headers={JSON.parse(data.headers)}
-              searchable={data.searchable}
+              headers={data.headers}
+              searchable={!!data.searchable}
               dataSource={records || []}
+              dataUrl={data.dataSource}
               rowSelectOptions={JSON.parse(data.rowSelectOptions)}
               // SAMPLE DATA CONFIG
               // headers={SampleDataGenerator.sampleTableHeader()}
@@ -225,11 +228,7 @@ function PageSection({
               approveRows={handleApproveRows}
               // deleteButtonClass={buttonClasses.deleteButtonClass}
               // deleteRows={handleDeleteRows}
-              editPermission={
-                permissionList.table.indexOf(role) >= 0 &&
-                isLoggedIn &&
-                inEditMode
-              }
+              editPermission={false}
               adminPermission={
                 permissionList.table.indexOf(role) >= 0 &&
                 isLoggedIn &&

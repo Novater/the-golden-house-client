@@ -802,6 +802,63 @@ thead {
   }
 }
 
+.table-editor-container {
+  width: 100%;
+  color: $color-gold;
+  background-color: $color-faded-white;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 20px;
+  border-radius: 5px;
+  overflow: auto;
+  max-height: 700px;
+}
+
+.table-editor-component {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+}
+
+.table-edit-row {
+  display: flex;
+  flex-direction: row;
+  padding: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+  flex-grow: 1;
+  background-color: $color-opaque-black;
+  border-radius: 5px;
+  margin: 10px;
+  position: relative;
+
+  input {
+    background-color: $color-opaque-black;
+    color: $color-neutral;
+    border-radius: 5px;
+  }
+}
+
+.delete-table-header {
+  position: absolute;
+  color: $color-faded-white;
+  top: 10px;
+  right: 10px;
+
+  &:hover {
+    color: $color-sky;
+    cursor: pointer;
+  }
+}
+
+.table-edit-col {
+  display: flex;
+  flex-direction: column;
+  margin: 5px;
+  flex-grow: 1;
+}
 .save-icon {
   display: grid;
   place-items: center;
