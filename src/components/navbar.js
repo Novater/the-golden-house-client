@@ -95,7 +95,7 @@ class Navbar extends Component {
                     />
                   )
                 })}
-                {inEditMode ? (
+                {inEditMode && loggedIn ? (
                   <button
                     className="nav-title-add"
                     title="Add New Navigation"

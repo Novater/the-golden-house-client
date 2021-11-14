@@ -1,11 +1,18 @@
 /* eslint-disable */
 
 import React, { Component } from 'react'
-import _generate from '../functions/index'
+import _generate from '../../functions/index'
+import TableFilters from './tablefilters'
+import TableEditor from './edittable'
+import PageModal from '../modal'
 import _ from 'lodash'
 import 'bootstrap/dist/css/bootstrap.css'
 import PropTypes from 'prop-types'
-import LoadingSpinner from './loadingspinner'
+import LoadingSpinner from '../loadingspinner'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTrash, faPen } from '@fortawesome/free-solid-svg-icons'
+const POST_CONSTANTS = require('../../constants/postConstants')
+import store from '../../store/store'
 
 export default class Table extends Component {
   constructor(props) {
@@ -17,14 +24,14 @@ export default class Table extends Component {
       defaultSortKey,
       defaultSortDir,
       rowSelectOptions,
-      editTablePermission,
+      editPermission,
     } = this.props
 
     const filterObj = {}
     headers.map((header) => {
       const { filterValues, filterStyle } = header
 
-      if (filterValues) {
+      if (filterValues && filterValues.length > 0) {
         if (
           !filterValues.reduce(
             (currVal, filter) => currVal || filter.selected,
@@ -61,6 +68,7 @@ export default class Table extends Component {
       deleteLineIds: [],
       currIdSelected: '',
       tableSaving: false,
+      editingTable: false,
     }
   }
 
@@ -75,9 +83,54 @@ export default class Table extends Component {
     }
   }
 
+  editPost = () => {
+    this.setState({
+      editingTable: true,
+    })
+  }
+
+  deletePost = () => {
+    console.log(this.props.col)
+    store.dispatch({
+      type: POST_CONSTANTS.DELETE_POST,
+      payload: {
+        row: this.props.row,
+        col: this.props.col,
+      },
+    })
+  }
+
   // This method will get the data from the database
   componentDidUpdate(prevProps) {
-    if (this.props.dataSource !== prevProps.dataSource) {
+    if (
+      this.props.dataSource !== prevProps.dataSource ||
+      this.props.headers !== prevProps.headers
+    ) {
+      const filterObj = {}
+      this.props.headers.map((header) => {
+        const { filterValues, filterStyle } = header
+
+        if (filterValues && filterValues.length > 0) {
+          if (
+            !filterValues.reduce(
+              (currVal, filter) => currVal || filter.selected,
+              false,
+            )
+          ) {
+            if (filterStyle !== 'checkbox') filterValues[0].selected = true
+          }
+
+          filterObj[header.title] = {
+            rows: filterValues,
+            filterStyle,
+          }
+        } else {
+          filterObj[header.title] = {
+            rows: [],
+          }
+        }
+      })
+      this.setState({ filters: filterObj })
       if (this.state.sortKey) {
         this.sortTable(
           this.state.sortKey,
@@ -99,7 +152,7 @@ export default class Table extends Component {
     let add = true
 
     for (const header of headers) {
-      if (filters[header.title].rows && filters[header.title].rows.length > 0) {
+      if (filters[header.title] && filters[header.title].rows && filters[header.title].rows.length > 0) {
         const { format } = header
         const { keys } = header
 
@@ -248,7 +301,7 @@ export default class Table extends Component {
     })
   }
 
-  async saveTableUpdates() {
+  saveTableUpdates = async () => {
     this.setState({ tableSaving: true })
     if (this.props.approveRows) {
       await this.props.approveRows(
@@ -473,7 +526,8 @@ export default class Table extends Component {
       lazyLoadFn,
       approveRows,
       deleteRows,
-      editTablePermission,
+      editPermission,
+      adminPermission,
       footerClass,
       containerClass,
       tableClass,
@@ -483,6 +537,10 @@ export default class Table extends Component {
       searchContainerClass,
       searchClass,
       headers,
+      row,
+      col,
+      dataUrl,
+      dataSource,
     } = this.props
     let {
       filters,
@@ -496,6 +554,7 @@ export default class Table extends Component {
       approveLineIds,
       deleteLineIds,
       tableSaving,
+      editingTable,
     } = this.state
 
     const generatedFilters = []
@@ -508,14 +567,16 @@ export default class Table extends Component {
 
       if (filterObj.rows && filterObj.rows.length > 0) {
         generatedFilters.push(
-          _generate.tableFunctions.initializeTableFilters({
-            title: key,
-            filterClass: filterClass || 'table-filters',
-            filters: filterObj.rows,
-            onChange: this.filterTable,
-            defaultValues: filterForDefault,
-            filterStyle: filterObj.filterStyle,
-          }),
+          <TableFilters
+            title={key}
+            key={`filter-${key}`}
+            id={`filter-${key}`}
+            filterClass={filterClass || 'table-filters'}
+            filters={filterObj.rows}
+            onChange={this.filterTable}
+            defaultValues={filterForDefault}
+            filterStyle={filterObj.filterStyle}
+          />,
         )
       }
     })
@@ -539,70 +600,86 @@ export default class Table extends Component {
       : {}
 
     return (
-      <div className={containerClass || 'table-container'}>
-        <div className={filterContainerClass || 'filter-container'}>
-          {generatedFilters}
-        </div>
-        {searchable ? (
-          <div className={searchContainerClass || 'search-container'}>
-            <input
-              type="text"
-              id="table-search"
-              onKeyUp={this.updateSearch}
-              placeholder="Search Table..."
-              className={searchClass}
-            />
+      <>
+        {editingTable && adminPermission ? (
+          <TableEditor
+            row={row}
+            col={col}
+            searchable={searchable}
+            headers={this.props.headers}
+            dataUrl={dataUrl}
+            dataSource={dataSource}
+          />
+        ) : null}
+        <div className={containerClass || 'table-container'}>
+          {adminPermission && !editingTable ? (
+            <div className="edit">
+              <FontAwesomeIcon icon={faPen} onClick={this.editPost} />
+              <FontAwesomeIcon icon={faTrash} onClick={this.deletePost} />
+            </div>
+          ) : null}
+          <div className={filterContainerClass || 'filter-container'}>
+            {generatedFilters}
           </div>
-        ) : (
-          ''
-        )}
-        {tableSaving ? (
-          <LoadingSpinner />
-        ) : (
-          <div className={tableClass || 'web-table'}>
-            {_generate.tableFunctions.createTable(
-              'table-wrapper',
-              'table table-hover',
-              headers,
-              this.tableList(),
-              editTablePermission,
-              search,
-              currPage,
-              !lazyLoadFn ? pageRows : null,
-              footerObj,
-              this.handleScroll.bind(this),
-              loadingContent,
-              deleteButtonClass,
-              approveButtonClass,
-              deleteRows ? this.deleteLine : null,
-              approveRows ? this.approveLine : null,
-              deleteRows ? deleteLineIds : [],
-              approveRows ? approveLineIds : [],
-              this.onClickSave,
-              this.onClickCancel,
-            )}
-          </div>
-        )}
+          {searchable ? (
+            <div className={searchContainerClass || 'search-container'}>
+              <input
+                type="text"
+                id="table-search"
+                onKeyUp={this.updateSearch}
+                placeholder="Search Table..."
+                className={searchClass}
+              />
+            </div>
+          ) : (
+            ''
+          )}
+          {tableSaving ? (
+            <LoadingSpinner />
+          ) : (
+            <div className={tableClass || 'web-table'}>
+              {_generate.tableFunctions.createTable(
+                'table-wrapper',
+                'table table-hover',
+                headers,
+                this.tableList(),
+                editPermission,
+                search,
+                currPage,
+                !lazyLoadFn ? pageRows : null,
+                footerObj,
+                this.handleScroll.bind(this),
+                loadingContent,
+                deleteButtonClass,
+                approveButtonClass,
+                deleteRows ? this.deleteLine : null,
+                approveRows ? this.approveLine : null,
+                deleteRows ? deleteLineIds : [],
+                approveRows ? approveLineIds : [],
+                this.onClickSave,
+                this.onClickCancel,
+              )}
+            </div>
+          )}
 
-        {approveRows
-          ? _generate.createFunctions.createModal(
-              'Save Updates',
-              'Are you sure you want to save these updates?',
-              showTableSaveModal,
-              this.saveTableUpdates.bind(this),
-              this.handleCloseSave,
-            )
-          : null}
-        {deleteRows
-          ? _generate.createFunctions.createModal(
-              'Cancel Updates',
-              'Cancel your updates?',
-              showTableCancelModal,
-              this.cancelTableUpdates,
-              this.handleCloseCancel,
-            )
-          : null}
-      </div>
+          {approveRows ? (
+            <PageModal
+              title={'Save Updates'}
+              content={'Are you sure you want to save these updates?'}
+              showState={showTableSaveModal}
+              saveFunc={this.saveTableUpdates}
+              closeFunc={this.handleCloseSave}
+            />
+          ) : null}
+          <PageModal
+            title={'Cancel Updates'}
+            content={'Cancel your updates?'}
+            showState={showTableCancelModal}
+            saveFunc={this.cancelTableUpdates}
+            closeFunc={this.handleCloseCancel}
+          />
+        </div>
+      </>
     )
   }
 }

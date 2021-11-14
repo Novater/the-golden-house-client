@@ -9,6 +9,7 @@ import axios from 'axios'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import ContentEditor from './contenteditor'
+import PageModal from './modal'
 import _generate from '../functions/index'
 import store from '../store/store'
 
@@ -40,69 +41,6 @@ class BlogSection extends Component {
       content: prevState.loadedContent,
       isEditing: false,
     }))
-  }
-
-  createNewPost = (event) => {
-    const direction = event.target.id.split('-')[0]
-    const newPost = {
-      tite: 'Enter title here.',
-      content: 'Enter content here.',
-      row: 0,
-      col: 0,
-      tabname: this.props.tab,
-    }
-    switch (direction) {
-      case 'up': {
-        newPost.row = this.props.row
-        newPost.col = 0
-        return store.dispatch({
-          type: POST_CONSTANTS.INSERT_POST,
-          payload: {
-            row: this.props.row,
-            newRow: true,
-            post: newPost,
-          },
-        })
-      }
-      case 'down': {
-        newPost.row = this.props.row + 1
-        newPost.col = 0
-        return store.dispatch({
-          type: POST_CONSTANTS.INSERT_POST,
-          payload: {
-            row: this.props.row + 1,
-            newRow: true,
-            post: newPost,
-          },
-        })
-      }
-      case 'left': {
-        newPost.row = this.props.row
-        newPost.col = this.props.col
-        return store.dispatch({
-          type: POST_CONSTANTS.INSERT_POST,
-          payload: {
-            row: this.props.row,
-            col: this.props.col,
-            post: newPost,
-          },
-        })
-      }
-      case 'right': {
-        newPost.row = this.props.row
-        newPost.col = this.props.col + 1
-        return store.dispatch({
-          type: POST_CONSTANTS.INSERT_POST,
-          payload: {
-            row: this.props.row,
-            col: this.props.col + 1,
-            post: newPost,
-          },
-        })
-      }
-      default:
-        break
-    }
   }
 
   deleteBlogPost = () => {
@@ -171,17 +109,6 @@ class BlogSection extends Component {
   getBlogViewMode = () => {
     return (
       <div className="blog-post" id={this.state.id}>
-        {this.props.inEditMode && !this.props.isDummy ? (
-          <div
-            className="new-post-above"
-            id={`up-${this.state.id}`}
-            onClick={this.createNewPost}
-          >
-            <FontAwesomeIcon icon={faPlus} />
-          </div>
-        ) : (
-          ''
-        )}
         <div className="header">
           <h4
             dangerouslySetInnerHTML={{
@@ -192,7 +119,7 @@ class BlogSection extends Component {
               ),
             }}
           ></h4>
-          {this.props.inEditMode && !this.props.isDummy ? (
+          {this.props.editPermission ? (
             <div className="edit">
               <FontAwesomeIcon icon={faPen} onClick={this.editBlogPost} />
               <FontAwesomeIcon icon={faTrash} onClick={this.deleteBlogPost} />
@@ -202,15 +129,6 @@ class BlogSection extends Component {
           )}
         </div>
         <div className="content-area">
-          {this.props.inEditMode && !this.props.isDummy ? (
-            <div
-              className="new-post-left"
-              id={`left-${this.state.id}`}
-              onClick={this.createNewPost}
-            >
-              <FontAwesomeIcon icon={faPlus} />
-            </div>
-          ) : null}
           <p
             dangerouslySetInnerHTML={{
               __html: _generate.cleanHTML.clean(
@@ -220,41 +138,7 @@ class BlogSection extends Component {
               ),
             }}
           ></p>
-          {this.props.inEditMode && !this.props.isDummy ? (
-            <div
-              className="new-post-right"
-              id={`right-${this.state.id}`}
-              onClick={this.createNewPost}
-            >
-              <FontAwesomeIcon icon={faPlus} />
-            </div>
-          ) : null}
         </div>
-        {this.props.inEditMode ? (
-          <div
-            className="new-post-below"
-            id={`down-${this.state.id}`}
-            onClick={this.createNewPost}
-          >
-            <FontAwesomeIcon icon={faPlus} />
-          </div>
-        ) : (
-          ''
-        )}
-        {_generate.createFunctions.createModal(
-          'Confirm',
-          'Create a new post?',
-          this.state.showCreateModal,
-          this.confirmCreate,
-          this.handleCloseCreate,
-        )}
-        {_generate.createFunctions.createModal(
-          'Confirm',
-          'Are you sure you want to delete this post?',
-          this.state.showDeleteModal,
-          this.confirmDelete,
-          this.handleCloseDelete,
-        )}
       </div>
     )
   }
@@ -290,6 +174,7 @@ class BlogSection extends Component {
   }
 
   saveBlogPost = () => {
+    console.log('saving', this.props)
     store.dispatch({
       type: POST_CONSTANTS.EDIT_POST,
       payload: {
@@ -318,8 +203,6 @@ BlogSection.propTypes = {
   title: PropTypes.string,
   content: PropTypes.string,
   index: PropTypes.string,
-  tabName: PropTypes.string.isRequired,
-  updatePosts: PropTypes.func,
   row: PropTypes.number.isRequired,
   col: PropTypes.number.isRequired,
 }

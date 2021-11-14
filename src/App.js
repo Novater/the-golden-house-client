@@ -3,6 +3,7 @@
 import { React, Component } from 'react'
 import { Route, Redirect } from 'react-router-dom'
 import Navbar from './components/navbar'
+import PageModal from './components/modal'
 import Page from './views/page'
 import './stylesheets/index.scss'
 import _generate from './functions/index'
@@ -30,9 +31,13 @@ class App extends Component {
 
   async componentDidMount() {
     store.dispatch(checkLoggedIn)
-    const SERVER_URL = _generate.serverFunctions.getServerURL()
-    const loadedPages = await axios.get(`${SERVER_URL}/page`)
-    this.setState({ pages: loadedPages.data })
+    try {
+      const SERVER_URL = _generate.serverFunctions.getServerURL()
+      const loadedPages = await axios.get(`${SERVER_URL}/page`)
+      this.setState({ pages: loadedPages.data })
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   updateEditMode = () => {
@@ -43,7 +48,7 @@ class App extends Component {
     store.dispatch(savePosts)
   }
 
-  closeSaveModal =() => {
+  closeSaveModal = () => {
     store.dispatch({ type: POST_CONSTANTS.CLOSE_SAVE_MODAL })
   }
 
@@ -84,15 +89,14 @@ class App extends Component {
 
   render() {
     const { tab, loggedIn } = this.props
-    console.log(this.props)
+
     return (
       <div className="app-container">
-        {this.props.tab !== 'fullpage-table' ? (
+        {tab !== 'fullpage-table' ? (
           <Navbar
             className="main-nav"
             showProfile={true}
             edit={false}
-            showProfile={true}
             title="The Golden House"
           />
         ) : null}
@@ -125,28 +129,35 @@ class App extends Component {
             })
           },
         )}
-        {_generate.createFunctions.createModal(
-          this.props.inEditMode ? 'Leave Edit Mode?' : 'Enter Edit Mode?',
-          this.props.inEditMode
-            ? 'Are you sure you want to leave edit mode?'
-            : 'Are you sure you want to enter edit mode?',
-          this.props.showEditModal,
-          this.changeEditMode,
-          this.closeEditModal,
-        )}
-        {_generate.createFunctions.createModal(
-          'Save Edits?',
-          'Are you sure you want to push your current page edits to the live site?',
-          this.props.showSaveModal,
-          this.saveContent,
-          this.closeSaveModal,
-        )}
+        <PageModal
+          title={
+            this.props.inEditMode ? 'Leave Edit Mode?' : 'Enter Edit Mode?'
+          }
+          content={
+            this.props.inEditMode
+              ? 'Are you sure you want to leave edit mode?'
+              : 'Are you sure you want to enter edit mode?'
+          }
+          showState={this.props.showEditModal}
+          saveFunc={this.changeEditMode}
+          closeFunc={this.closeEditModal}
+        />
+        <PageModal
+          title={'Save Edits?'}
+          content={
+            'Are you sure you want to push your current page edits to the live site?'
+          }
+          showState={this.props.showSaveModal}
+          saveFunc={this.saveContent}
+          closeFunc={this.closeSaveModal}
+        />
         {loggedIn ? (
           <Navbar
             className="edit-bar"
             edit={true}
             showProfile={false}
             standAlone={true}
+            config={this.props.navConfig}
           />
         ) : null}
       </div>

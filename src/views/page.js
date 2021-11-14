@@ -3,6 +3,8 @@
 import axios from 'axios'
 import React, { Component, Suspense } from 'react'
 import _generate from '../functions/index'
+import Backdrop from '../components/backdrop'
+import PageSection from './pagesection'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
 import LoadingSpinner from '../components/loadingspinner'
 import SampleDataGenerator from '../config/sampleData'
@@ -10,7 +12,7 @@ import { connect } from 'react-redux'
 import { loadPosts, savePosts } from '../store/reducers/postSlice'
 import store from '../store/store'
 
-const Table = React.lazy(() => import('../components/table'))
+const Table = React.lazy(() => import('../components/table/table'))
 const BlogSection = React.lazy(() => import('../components/blogsection'))
 const POST_CONSTANTS = require('../constants/postConstants')
 
@@ -41,106 +43,75 @@ class Page extends Component {
 
     store.dispatch(loadPosts)
 
-    let SERVER_URL = _generate.serverFunctions.getServerURL()
-    let data = []
-    let adminData = []
-    if (this.props.dataSource) {
-      const role = this.props.role
-      const hasPermission = this.props.editTablePermissions.indexOf(role) >= 0
-      this.setState({ tableEditPermission: hasPermission })
-      if (hasPermission) {
-        const dataSource = await axios.get(
-          `${SERVER_URL}${this.props.dataSource}/admin`,
-        )
-        adminData = dataSource.data
-      }
+    // let SERVER_URL = _generate.serverFunctions.getServerURL()
+    // let data = []
+    // let adminData = []
+    // if (this.props.dataSource) {
+    //   const role = this.props.role
+    //   const hasPermission = this.props.editTablePermissions.indexOf(role) >= 0
+    //   this.setState({ tableEditPermission: hasPermission })
+    //   if (hasPermission) {
+    //     const dataSource = await axios.get(
+    //       `${SERVER_URL}${this.props.dataSource}/admin`,
+    //     )
+    //     adminData = dataSource.data
+    //   }
 
-      const dataSource = await axios.get(
-        `${SERVER_URL}${this.props.dataSource}`,
-      )
-      data = dataSource.data
-    }
+    //   const dataSource = await axios.get(
+    //     `${SERVER_URL}${this.props.dataSource}`,
+    //   )
+    //   data = dataSource.data
+    // }
 
-    this.setState({
-      // posts: SampleDataGenerator.samplePostData(), // postData,
-      records: data,
-      adminRecords: adminData,
-    })
+    // this.setState({
+    //   // posts: SampleDataGenerator.samplePostData(), // postData,
+    //   records: data,
+    //   adminRecords: adminData,
+    // })
 
-    if (this.props.tableName) {
-      const { rowSelectOptions, headers } =
-        await _generate.tableFunctions.getTableConfigs(this.props.tableName)
-      this.setState({
-        rowSelectOptions,
-        tableHeaders: headers,
-      })
-    }
+    // if (this.props.tableName) {
+    //   const { rowSelectOptions, headers } =
+    //     await _generate.tableFunctions.getTableConfigs(this.props.tableName)
+    //   this.setState({
+    //     rowSelectOptions,
+    //     tableHeaders: headers,
+    //   })
+    // }
   }
 
   async componentDidUpdate(prevProps) {
-    if (
-      prevProps.loggedIn !== this.props.loggedIn ||
-      prevProps.inEditMode !== this.props.inEditMode
-    ) {
-      let data = []
-      let adminData = []
-      let SERVER_URL = _generate.serverFunctions.getServerURL()
-      if (this.props.dataSource) {
-        const role = this.props.role
-        const hasPermission = this.props.editTablePermissions.indexOf(role) >= 0
-        this.setState({ tableEditPermission: hasPermission })
-
-        if (hasPermission) {
-          const dataSource = await axios.get(
-            `${SERVER_URL}${this.props.dataSource}/admin`,
-          )
-          adminData = dataSource.data
-        }
-
-        const dataSource = await axios.get(
-          `${SERVER_URL}${this.props.dataSource}`,
-        )
-        data = dataSource.data
-      }
-
-      this.setState({
-        records: data,
-        adminRecords: adminData,
-      })
-    }
-  }
-
-  updatePosts = () => {
-    console.log('updating posts')
-    let SERVER_URL = _generate.serverFunctions.getServerURL()
-    axios
-      .get(`${SERVER_URL}/post/${this.props.tab}`)
-      .then((response) => {
-        console.log(response)
-        this.setState({
-          posts: response.data,
-        })
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+    // if (
+    //   prevProps.loggedIn !== this.props.loggedIn ||
+    //   prevProps.inEditMode !== this.props.inEditMode
+    // ) {
+    //   let data = []
+    //   let adminData = []
+    //   let SERVER_URL = _generate.serverFunctions.getServerURL()
+    //   if (this.props.dataSource) {
+    //     const role = this.props.role
+    //     const hasPermission = this.props.editTablePermissions.indexOf(role) >= 0
+    //     this.setState({ tableEditPermission: hasPermission })
+    //     if (hasPermission) {
+    //       const dataSource = await axios.get(
+    //         `${SERVER_URL}${this.props.dataSource}/admin`,
+    //       )
+    //       adminData = dataSource.data
+    //     }
+    //     const dataSource = await axios.get(
+    //       `${SERVER_URL}${this.props.dataSource}`,
+    //     )
+    //     data = dataSource.data
+    //   }
+    //   this.setState({
+    //     records: data,
+    //     adminRecords: adminData,
+    //   })
+    // }
   }
 
   generatePage = (tabName, objFunc) => {
     let content = objFunc.generatePage(tabName)
     return <div className="pageContainer">{content}</div>
-  }
-
-  renderBackdrop = (image) => {
-    if (!image) return null
-    return (
-      <LazyLoadImage
-        src={image.default}
-        className="banner-img"
-        effect="opacity"
-        alt="banner"
-      />
-    )
   }
 
   renderPosts() {
@@ -155,16 +126,12 @@ class Page extends Component {
                   key={`loading-${post._id}`}
                   fallback={<LoadingSpinner />}
                 >
-                  <BlogSection
-                    title={post.title}
-                    content={post.content}
-                    index={post.index}
-                    key={post._id}
-                    id={post._id}
+                  <PageSection
+                    type={post.type}
+                    data={post}
+                    role={this.props.role}
                     row={idxRow}
                     col={idxCol}
-                    updatePosts={this.updatePosts}
-                    tabName={this.props.tab}
                   />
                 </Suspense>
               )
@@ -183,8 +150,6 @@ class Page extends Component {
             key=""
             row={-1}
             col={-1}
-            updatePosts={this.updatePosts}
-            tabName={this.props.tab}
             isDummy={true}
           />
         </Suspense>
@@ -192,33 +157,6 @@ class Page extends Component {
     ) : (
       ''
     )
-  }
-
-  async lazyLoadTable() {
-    let SERVER_URL = _generate.serverFunctions.getServerURL()
-    let data = []
-    if (this.props.dataSource) {
-      const dataSource = await axios.get(
-        `${SERVER_URL}${this.props.dataSource}`,
-      )
-      data = dataSource.data
-    }
-
-    return data
-  }
-
-  handleDeleteRows = (records) => {
-    let SERVER_URL = _generate.serverFunctions.getServerURL()
-    axios.post(`${SERVER_URL}${this.props.dataSource}/delete`, {
-      records: records,
-    })
-  }
-
-  handleApproveRows = (records) => {
-    let SERVER_URL = _generate.serverFunctions.getServerURL()
-    axios.post(`${SERVER_URL}${this.props.dataSource}/approve`, {
-      records: records,
-    })
   }
 
   updateTitle = (event) => {
@@ -229,13 +167,6 @@ class Page extends Component {
   // This will display the table with all records
   render() {
     const isTableTab = this.props.tableName ? true : false
-    console.log('props', this.props)
-    const buttonClasses = {
-      deleteButtonClass: 'table-delete',
-      approveButtonClass: 'table-approve',
-      editButtonClass: 'table-edit',
-    }
-
     return (
       <div className="pageContainer">
         {this.props.loggingOut ? (
@@ -251,9 +182,7 @@ class Page extends Component {
             <div className="leftContainer"></div>
             <div className="midContainer">
               <div className="blog-section">
-                {_generate.createFunctions.createBackdrop(
-                  this.props.backgroundImage,
-                )}
+                <Backdrop image={this.props.backgroundImage} />
                 <div className="banner">
                   {this.props.inEditMode ? (
                     <input
@@ -267,49 +196,6 @@ class Page extends Component {
                 </div>
               </div>
               {this.renderPosts()}
-              {isTableTab ? (
-                <Suspense fallback={<LoadingSpinner />}>
-                  {this.state.tableHeaders ? (
-                    <Table
-                      key={`${this.state.title}-datatable`}
-                      defaultSortKey="Time"
-                      defaultSortDir={1}
-                      headers={this.state.tableHeaders}
-                      searchable={true}
-                      dataSource={
-                        this.props.inEditMode && this.state.tableEditPermission
-                          ? this.state.adminRecords
-                          : this.state.records
-                      }
-                      rowSelectOptions={this.state.rowSelectOptions}
-                      editTablePermission={
-                        this.props.inEditMode && this.state.tableEditPermission
-                      }
-
-                      // SAMPLE DATA CONFIG
-                      // headers={SampleDataGenerator.sampleTableHeader()}
-                      // dataSource={SampleDataGenerator.sampleTableData()}
-                      // approveButtonClass={buttonClasses.approveButtonClass}
-                      // approveRows={this.handleApproveRows}
-                      // deleteButtonClass={buttonClasses.deleteButtonClass}
-                      // deleteRows={this.handleDeleteRows}
-                      // rowClass='test-row-class'
-                      // filterContainerClass='test-filter-container-class'
-                      // filterClass='test-filter'
-                      // headerClass='test-header'
-                      // lazyLoadFn={this.lazyLoadTable.bind(this)}
-                      // containerClass="table-container"
-                      // tableClass="web-table"
-                      // filterContainerClass="filter-container"
-                      // searchContainerClass="search-container"
-                      // headerClass="leaderboard-row"
-                      // footerClass="table-footer"
-                    />
-                  ) : null}
-                </Suspense>
-              ) : (
-                ''
-              )}
             </div>
             <div className="rightContainer"></div>
           </>

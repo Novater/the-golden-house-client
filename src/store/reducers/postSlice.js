@@ -1,6 +1,7 @@
 const POST_CONSTANTS = require('../../constants/postConstants')
 import _generate from '../../functions/index'
 import SampleDataGenerator from '../../config/sampleData'
+import _ from 'lodash'
 import axios from 'axios'
 
 const ObjectId = require('bson-objectid')
@@ -72,14 +73,19 @@ export default function postReducer(state = initialState, action) {
       }
     }
     case POST_CONSTANTS.EDIT_POST: {
-      const row = action.payload.row
-      const col = action.payload.col
+      const { row, col, post } = action.payload
       let copiedPosts = []
 
       for (let i = 0; i < state.posts.length; i += 1) {
         copiedPosts[i] = state.posts[i].slice()
       }
-      copiedPosts[row][col] = action.payload.post
+
+      let copiedPost = { ...copiedPosts[row][col] }
+      _.keys(post).map((editKey) => {
+        copiedPost[editKey] = post[editKey]
+      })
+      copiedPosts[row][col] = copiedPost
+
       return {
         ...state,
         posts: copiedPosts,

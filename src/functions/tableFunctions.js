@@ -167,14 +167,14 @@ export default class tableFunctions {
         if (numPages > 1) {
           if (currPage > 1) {
             paginationEls.push(
-              <li className="page-item">
+              <li className="page-item" key='page-1'>
                 <a className="page-link" name={1} onClick={paginationFunc}>
                   &lt;&lt;
                 </a>
               </li>,
             )
             paginationEls.push(
-              <li className="page-item">
+              <li className="page-item" key='page-prev'>
                 <a
                   className="page-link"
                   name="Previous"
@@ -189,7 +189,7 @@ export default class tableFunctions {
           for (let i = 0; i < numPages; i += 1) {
             if (i + 1 == currPage) {
               paginationEls.push(
-                <li className="page-item focused">
+                <li className="page-item focused" key={`page-focus-${i + 1}`}>
                   <a
                     className="page-link"
                     name={i + 1}
@@ -201,7 +201,7 @@ export default class tableFunctions {
               )
             } else {
               paginationEls.push(
-                <li className="page-item">
+                <li className="page-item"  key={`page-${i + 1}`}>
                   <a
                     className="page-link"
                     name={i + 1}
@@ -215,14 +215,14 @@ export default class tableFunctions {
           }
           if (currPage < numPages) {
             paginationEls.push(
-              <li className="page-item">
+              <li className="page-item" key={`page-next`}>
                 <a className="page-link" name="Next" onClick={paginationFunc}>
                   &gt;
                 </a>
               </li>,
             )
             paginationEls.push(
-              <li className="page-item">
+              <li className="page-item"  key={`page-last`}>
                 <a
                   className="page-link"
                   name={numPages}
