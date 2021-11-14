@@ -168,7 +168,7 @@ class Page extends Component {
   render() {
     const isTableTab = this.props.tableName ? true : false
     return (
-      <div className="pageContainer">
+      <div className={`pageContainer ${this.props.showSideBar ? `sidebar-open` : ``}`}>
         {this.props.loggingOut ? (
           <>
             {
@@ -210,6 +210,7 @@ const mapState = (state) => ({
   loggedIn: state.auth.loggedIn,
   loggingOut: state.auth.loggingOut,
   inEditMode: state.edit.inEditMode,
+  showSideBar: state.edit.showSideBar,
   posts: state.post.posts,
   savingPosts: state.post.savingPosts,
   loadingPosts: state.post.loadingPosts,

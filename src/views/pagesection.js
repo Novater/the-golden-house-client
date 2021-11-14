@@ -42,12 +42,11 @@ function PageSection({
   useEffect(() => {
     if (data.dataSource) {
       ;(async () => {
-        let SERVER_URL = _generate.serverFunctions.getServerURL()
+        // let SERVER_URL = _generate.serverFunctions.getServerURL()
         switch (type) {
           case CONTENT_TYPES.TABLE: {
-            const dataSource = await axios.get(
-              `${SERVER_URL}${data.dataSource}`,
-            )
+            console.log(data.dataSource)
+            const dataSource = await axios.get(`${data.dataSource}`)
             data = dataSource.data
             setTableRecords(data)
           }
@@ -128,7 +127,7 @@ function PageSection({
     let data = []
     if (this.props.dataSource) {
       const dataSource = await axios.get(
-        `${SERVER_URL}${this.props.dataSource}`,
+        `${this.props.dataSource}`,
       )
       data = dataSource.data
     }

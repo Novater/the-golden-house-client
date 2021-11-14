@@ -12,6 +12,7 @@ import LoadingSpinner from '../loadingspinner'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash, faPen } from '@fortawesome/free-solid-svg-icons'
 const POST_CONSTANTS = require('../../constants/postConstants')
+const EDIT_CONSTANTS = require('../../constants/editConstants')
 import store from '../../store/store'
 
 export default class Table extends Component {
@@ -84,12 +85,14 @@ export default class Table extends Component {
   }
 
   editPost = () => {
+    store.dispatch({ type: EDIT_CONSTANTS.TOGGLE_EDIT_SIDEBAR })
     this.setState({
       editingTable: true,
     })
   }
 
   finishEdit = () => {
+    store.dispatch({ type: EDIT_CONSTANTS.TOGGLE_EDIT_SIDEBAR })
     this.setState({
       editingTable: false,
     })
@@ -620,6 +623,7 @@ export default class Table extends Component {
             dataUrl={dataUrl}
             dataSource={dataSource}
             finishEdit={this.finishEdit}
+            pagination={rowSelectOptions}
           />
         ) : null}
         <div className={containerClass || 'table-container'}>

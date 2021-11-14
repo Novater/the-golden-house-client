@@ -1,5 +1,4 @@
 import { Modal } from 'react-bootstrap'
-import { LazyLoadImage } from 'react-lazy-load-image-component'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import React from 'react'
 

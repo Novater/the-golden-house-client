@@ -143,7 +143,7 @@ body, html {
   width: 100% !important;
   position: fixed;
   grid-row: 1 / 2;
-  z-index: 2;
+  z-index: 3;
 
   a {
     color: white !important;
@@ -380,7 +380,6 @@ body, html {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  z-index: 1;
 
   .new-post-up, .new-post-down {
     position: absolute;
@@ -802,7 +801,7 @@ thead {
   width: 100%;
   height: $height-nav;
   background-color: $color-nav;
-  z-index: 2;
+  z-index: 3;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -813,25 +812,25 @@ thead {
 }
 
 .table-editor-container {
-  width: 80%;
   color: $color-opaque-black;
   background-color: $color-neutral;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 20px;
-  border-radius: 5px;
   overflow: auto;
-  max-height: 500px;
   padding: 20px;
-  position: relative;
+  padding-bottom: 200px;
+  position: fixed;
+  right: 0;
+  top: $height-nav;
+  width: 500px;
+  height: 100vh;
+  z-index: 2;
 }
 
 .table-edit-close {
   position: sticky;
   top: 0;
-  left: 50%;
-  transform: translateX(-50%);
   height: fit-content;
   z-index: 1;
   width: fit-content;
@@ -953,6 +952,10 @@ thead {
   }
 }
 
+.sidebar-open {
+  width: calc(100% - 500px)
+}
+
 @media (max-width: 900px) {
   .abyss-table, .filter-container {
     width: 100%;
@@ -973,6 +976,20 @@ thead {
   .filter-container, .web-table {
     width: 90%;
     font-size: 11px;
+  }
+
+  .table-editor-container {
+    position: static;
+    height: 400px;
+    margin-bottom: 20px;
+  }
+
+  .sidebar-open {
+    width: 100%;
+  }
+
+  .page-container {
+    width: 100%;
   }
 
   .blog-section {

@@ -19,7 +19,8 @@ export default function TableEditor({
   dataUrl,
   row,
   col,
-  finishEdit
+  finishEdit,
+  pagination,
 }) {
   useEffect(() => {}, [headers])
 
@@ -131,6 +132,7 @@ export default function TableEditor({
         </div>
         <h4>{`Searchable: ${searchable}`}</h4>
         <h4>{`Data URL: ${dataUrl}`}</h4>
+        <h4>{`Pagination: ${JSON.stringify(pagination)}`}</h4>
       </div>
     </div>
   )
