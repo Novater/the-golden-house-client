@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import React, { useEffect } from 'react'
+import React from 'react'
 import _ from 'lodash'
 
 /**
@@ -18,8 +18,11 @@ export default function TableFilters({
   defaultValues,
   filterStyle,
 }) {
-
-  if (filterStyle === 'checkbox') {
+  const FILTER_STYLES = {
+    CHECKBOX: 'checkbox',
+  }
+  
+  if (filterStyle === FILTER_STYLES.CHECKBOX) {
     return (
       <div className={filterClass}>
         <p style={{ width: '100%' }}>{`${title}: `}</p>
@@ -62,7 +65,12 @@ export default function TableFilters({
         id={`${title}-dropdown`}
       >
         {filters.map((el, idx) => (
-          <option id={`${el.title}-dropdown-${title}`} key={`${el.title}-dropdown-${title}`}>{el.title}</option>
+          <option
+            id={`${el.title}-dropdown-${title}`}
+            key={`${el.title}-dropdown-${title}`}
+          >
+            {el.title}
+          </option>
         ))}
       </select>
     </div>

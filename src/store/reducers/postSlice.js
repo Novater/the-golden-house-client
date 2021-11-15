@@ -28,6 +28,7 @@ export default function postReducer(state = initialState, action) {
       return {
         ...state,
         loadingPosts: true,
+        posts: [],
       }
     }
     case POST_CONSTANTS.LOADING_POSTS_SUCCESS: {
@@ -139,6 +140,12 @@ export default function postReducer(state = initialState, action) {
       return {
         ...state,
         savingPosts: false,
+      }
+    }
+    case POST_CONSTANTS.WIPE_POSTS: {
+      return {
+        ...state,
+        posts: [],
       }
     }
     default: {

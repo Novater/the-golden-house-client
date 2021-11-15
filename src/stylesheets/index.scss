@@ -708,6 +708,7 @@ thead {
   padding: 40px;
   background-color: rgb(0 0 0 / 0.8);
   border-radius: 5px;
+  color: $color-neutral;
 
   label {
     color: $color-neutral;
@@ -853,32 +854,101 @@ thead {
   display: flex;
   flex-direction: column;
   width: 80%;
+
+  h4 {
+    font-weight: bold;
+  }
 }
 
 .table-edit-row {
-  display: flex;
-  flex-direction: row;
-  padding: 20px;
-  flex-wrap: wrap;
-  justify-content: center;
-  flex-grow: 1;
-  background-color: $color-carbon;
-  border-radius: 5px;
-  margin: 10px;
-  position: relative;
 
-  button {
-    background-color: $color-opaque-black;
-    color: $color-neutral;
+  &.columns {
+    display: flex;
+    flex-direction: row;
+    padding: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    flex-grow: 1;
+    background-color: $color-carbon;
     border-radius: 5px;
-    box-shadow: 1px 1px 1px 1px rgb(0 0 0 / 0.2)
+    margin: 10px;
+    position: relative;
+    cursor: pointer;
   }
 
-  input {
+  &.searchable {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    input {
+      background-color: $color-opaque-black;
+      border-radius: 5px;
+      color: $color-neutral;
+      flex-grow: 1;
+      max-width: 220px;
+    }
+  }
+
+  &.data-url {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    textarea {
+      flex-grow: 1;
+      max-width: 220px;
+    }
+  }
+
+  &.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    textarea {
+      flex-grow: 1;
+      max-width: 220px;
+      height: 150px;
+    }
+  }
+
+  &.data {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    height: 300px;
+
+    &>.edit-sample-data {
+      height: 300px !important;
+      word-wrap: wrap;
+      width: 100%;
+      max-width: none;
+    }
+  }
+
+  &.add-new {
+    background-color: $color-neutral;
+    display: flex;
+    justify-content: center;
+    padding: 5px;
+
+    button {
+      background-color: $color-opaque-black;
+      color: $color-neutral;
+      border-radius: 5px;
+      box-shadow: 0px 0px 2px 2px rgb(0 0 0 / 0.5);
+  
+      &:hover {
+        color: $color-gold;
+      }
+    }
+  }
+
+  textarea {
     background-color: $color-opaque-black;
     color: $color-neutral;
     border-radius: 5px;
     height: 50px;
+    flex-grow: 1;
+    max-width: 180px;
   }
 }
 
@@ -896,12 +966,59 @@ thead {
 
 .table-edit-col {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
   margin: 5px;
   max-width: 100%;
   overflow: hidden;
   flex-grow: 1;
+  padding: 0.3em;
+
+  p {
+    font-weight: bold;
+    font-size: 0.8em;
+  }
 }
+
+.filterValues {
+  textarea {
+    height: 150px;
+  }
+}
+
+.table-edit-row-collapsed {
+  display: flex;
+  justify-content: center;
+  background-color: $color-dark-grey;
+  color: $color-neutral;
+  border-radius: 5px;
+  margin: 5px;
+  padding: 5px;
+  position: relative;
+  cursor: pointer;
+
+  p {
+    font-size: 1em;
+
+    &:hover {
+      color: $color-gold;
+    }
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    border-bottom: 3px solid $color-opaque-black;
+    border-right: 3px solid $color-opaque-black;
+    width: 1em;
+    height: 1em;
+    transform: rotate(45deg) translateX(-50%);
+    bottom: 5px;
+    left: 50%;
+  }
+}
+
 
 .save-icon {
   display: grid;
@@ -928,7 +1045,7 @@ thead {
   margin: 10px;
 
   svg {
-    font-size: 25px;
+    font-size: 20px;
     color: $color-carbon;
 
     &:hover {
@@ -979,9 +1096,10 @@ thead {
   }
 
   .table-editor-container {
-    position: static;
-    height: 400px;
-    margin-bottom: 20px;
+    // position: static;
+    // height: 400px;
+    // margin-bottom: 20px;
+    font-size: 11px;
   }
 
   .sidebar-open {

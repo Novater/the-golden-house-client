@@ -12,7 +12,8 @@ import store from '../store/store'
 const Table = React.lazy(() => import('../components/table/table'))
 const BlogSection = React.lazy(() => import('../components/blogsection'))
 const POST_CONSTANTS = require('../constants/postConstants')
-
+const EDIT_CONSTANTS = require('../constants/editConstants')
+axios.defaults.withCredentials = false
 // TODO: PERMISSIONS
 // ADDING TABLE/OTHER CONTENT TYPES
 // TABLE FUNCTIONS
@@ -42,23 +43,42 @@ function PageSection({
   useEffect(() => {
     if (data.dataSource) {
       ;(async () => {
-        // let SERVER_URL = _generate.serverFunctions.getServerURL()
-        switch (type) {
-          case CONTENT_TYPES.TABLE: {
-            console.log(data.dataSource)
-            const dataSource = await axios.get(`${data.dataSource}`)
-            data = dataSource.data
-            setTableRecords(data)
+        try {
+          // let SERVER_URL = _generate.serverFunctions.getServerURL()
+          switch (type) {
+            case CONTENT_TYPES.TABLE: {
+              console.log(data.dataSource)
+              const dataSource = await axios(`${data.dataSource}`, {
+                method: 'GET',
+                mode: 'no-cors',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                withCredentials: false,
+                credentials: 'same-origin',
+              })
+
+              data = []
+              if (Array.isArray(dataSource)) data = dataSource
+              if (Array.isArray(dataSource.data)) data = dataSource.data
+              if (Array.isArray(dataSource.data.data)) data = dataSource.data.data
+              
+              setTableRecords(data)
+            }
+            case CONTENT_TYPES.POST:
+            default:
+              break
           }
-          case CONTENT_TYPES.POST:
-          default:
-            break
+        } catch (error) {
+          console.log(error)
         }
       })()
     }
   }, [data])
 
   function createNewPost(event) {
+    // CLOSE EDIT SIDEBAR
+    store.dispatch({ type: EDIT_CONSTANTS.CLOSE_SIDEBAR })
     const direction = event.target.id.split('-')[0]
     const newPost = {
       tite: 'Enter title here.',
@@ -126,9 +146,7 @@ function PageSection({
     let SERVER_URL = _generate.serverFunctions.getServerURL()
     let data = []
     if (this.props.dataSource) {
-      const dataSource = await axios.get(
-        `${this.props.dataSource}`,
-      )
+      const dataSource = await axios.get(`${this.props.dataSource}`)
       data = dataSource.data
     }
     return data

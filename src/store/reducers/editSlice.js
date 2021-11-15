@@ -5,6 +5,7 @@ const initialState = {
   isEditing: false,
   showEditModal: false,
   showSideBar: false,
+  editor: null,
 }
 
 export default function editReducer(state = initialState, action) {
@@ -38,10 +39,20 @@ export default function editReducer(state = initialState, action) {
       return { ...state, inEditMode: !state.inEditMode, showEditModal: false }
     }
     case EDIT_CONSTANTS.TOGGLE_EDIT_SIDEBAR: {
-      return { ...state, showSideBar: !state.showSideBar }
+      return {
+        ...state,
+        showSideBar: !state.showSideBar,
+        editor: action.payload.editor,
+      }
     }
     case EDIT_CONSTANTS.CLOSE_SIDEBAR: {
-      return { ...state, showSideBar: false }
+      return { ...state, showSideBar: false, editor: null }
+    }
+    case EDIT_CONSTANTS.UPDATE_SIDEBAR: {
+      if (state.showSideBar) {
+        return { ...state, editor: action.payload.editor }
+      }
+      return { ...state }
     }
     default:
       return { ...state }

@@ -4,12 +4,9 @@ import React, { Component } from 'react'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash, faPen, faPlus } from '@fortawesome/free-solid-svg-icons'
-import { userSelector } from 'react-redux'
-import axios from 'axios'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import ContentEditor from './contenteditor'
-import PageModal from './modal'
 import _generate from '../functions/index'
 import store from '../store/store'
 
@@ -90,7 +87,7 @@ class BlogSection extends Component {
               className="btn btn-dark"
               onClick={this.handleSubmit}
             >
-              Save
+              {`Save`}
             </button>
             <button
               type="button"
@@ -98,7 +95,7 @@ class BlogSection extends Component {
               className="btn btn-dark"
               onClick={this.handleSubmit}
             >
-              Cancel
+              {`Cancel`}
             </button>
           </div>
         </form>

@@ -15,6 +15,7 @@ import store from '../store/store'
 const Table = React.lazy(() => import('../components/table/table'))
 const BlogSection = React.lazy(() => import('../components/blogsection'))
 const POST_CONSTANTS = require('../constants/postConstants')
+const EDIT_CONSTANTS = require('../constants/editConstants')
 
 axios.defaults.withCredentials = true
 
@@ -39,6 +40,9 @@ class Page extends Component {
     store.dispatch({
       type: POST_CONSTANTS.SET_TAB,
       payload: { tab: this.props.tabName },
+    })
+    store.dispatch({
+      type: EDIT_CONSTANTS.CLOSE_SIDEBAR
     })
 
     store.dispatch(loadPosts)
@@ -122,18 +126,13 @@ class Page extends Component {
           <div className="blog-section" key={rowKey} id={rowKey}>
             {row.map((post, idxCol) => {
               return (
-                <Suspense
-                  key={`loading-${post._id}`}
-                  fallback={<LoadingSpinner />}
-                >
-                  <PageSection
-                    type={post.type}
-                    data={post}
-                    role={this.props.role}
-                    row={idxRow}
-                    col={idxCol}
-                  />
-                </Suspense>
+                <PageSection
+                  type={post.type}
+                  data={post}
+                  role={this.props.role}
+                  row={idxRow}
+                  col={idxCol}
+                />
               )
             })}
           </div>
@@ -200,7 +199,11 @@ class Page extends Component {
                   )}
                 </div>
               </div>
-              {this.renderPosts()}
+              <Suspense
+                fallback={<LoadingSpinner />}
+              >
+                {this.renderPosts()}
+              </Suspense>
             </div>
             <div className="rightContainer"></div>
           </>

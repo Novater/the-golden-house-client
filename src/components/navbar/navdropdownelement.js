@@ -1,9 +1,16 @@
 import { NavLink } from 'react-router-dom'
 import React, { useState } from 'react'
-import store from '../store/store'
+import store from '../../store/store'
 import { connect } from 'react-redux'
 
-function NavDropdownElement({ title, names, paths, inEditMode, isLoggedIn, titleTarget }) {
+function NavDropdownElement({
+  title,
+  names,
+  paths,
+  inEditMode,
+  isLoggedIn,
+  titleTarget,
+}) {
   const [navNames, setNames] = useState(names)
   const [navPaths, setPaths] = useState(paths)
   const [navTitle, setTitle] = useState(title)
@@ -48,12 +55,11 @@ function NavDropdownElement({ title, names, paths, inEditMode, isLoggedIn, title
     }
   }
 
-  function handleClick(event) {
-  }
+  function handleClick(event) {}
 
   return (
     <>
-      {(navPaths && navPaths.length > 0) || (inEditMode && isLoggedIn) ? (
+      {(navPaths && navPaths.length > 0) ? (
         <li className="nav-item dropdown">
           <a
             className="nav-link dropdown-toggle"
@@ -63,15 +69,17 @@ function NavDropdownElement({ title, names, paths, inEditMode, isLoggedIn, title
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            {inEditMode && isLoggedIn ? (
-              <input
-                value={navTitle}
-                onChange={setNavTitle}
-                onClick={handleClick}
-              ></input>
-            ) : (
+            {
+            // inEditMode && isLoggedIn ? (
+            //   <input
+            //     value={navTitle}
+            //     onChange={setNavTitle}
+            //     onClick={handleClick}
+            //   ></input>
+            // ) : (
               navTitle
-            )}
+            // )
+            }
           </a>
           <ul
             className="dropdown-menu"
@@ -79,7 +87,7 @@ function NavDropdownElement({ title, names, paths, inEditMode, isLoggedIn, title
           >
             {navNames.map((name, idx) => (
               <li key={`nav-${name}-${idx}`}>
-                {inEditMode && isLoggedIn ? (
+                {/* {inEditMode && isLoggedIn ? (
                   <div className="dropdown-edit-row">
                     <input
                       className="dropdown-item-name"
@@ -99,14 +107,13 @@ function NavDropdownElement({ title, names, paths, inEditMode, isLoggedIn, title
                       {'-'}
                     </button>
                   </div>
-                ) : (
-                  <NavLink className="dropdown-item" to={navPaths[idx]}>
-                    {name}
-                  </NavLink>
-                )}
+                ) : ( */}
+                <NavLink className="dropdown-item" to={navPaths[idx]}>
+                  {name}
+                </NavLink>
               </li>
             ))}
-            {inEditMode && isLoggedIn ? (
+            {/* {inEditMode && isLoggedIn ? (
               <button
                 key={`nav-${title}-new`}
                 className="dropdown-add-button"
@@ -114,7 +121,7 @@ function NavDropdownElement({ title, names, paths, inEditMode, isLoggedIn, title
               >
                 {'+'}
               </button>
-            ) : null}
+            ) : null} */}
           </ul>
         </li>
       ) : (

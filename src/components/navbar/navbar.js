@@ -5,16 +5,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faPenFancy, faSave } from '@fortawesome/free-solid-svg-icons'
 import { NavLink } from 'react-router-dom'
 import PropTypes from 'prop-types'
-import _generate from '../functions/index'
-import store from '../store/store'
+import _generate from '../../functions/index'
+import store from '../../store/store'
 import { connect } from 'react-redux'
-import { logoutUser } from '../store/reducers/authSlice'
-import { loadNav, saveNav } from '../store/reducers/navSlice'
+import { logoutUser } from '../../store/reducers/authSlice'
+import { loadNav, saveNav } from '../../store/reducers/navSlice'
 import NavDropdownElement from './navdropdownelement'
-const EDIT_CONSTANTS = require('../constants/editConstants')
-const AUTH_CONSTANTS = require('../constants/authConstants')
-const POST_CONSTANTS = require('../constants/postConstants')
-const NAV_CONSTANTS = require('../constants/navConstants')
+const EDIT_CONSTANTS = require('../../constants/editConstants')
+const AUTH_CONSTANTS = require('../../constants/authConstants')
+const POST_CONSTANTS = require('../../constants/postConstants')
+const NAV_CONSTANTS = require('../../constants/navConstants')
 
 class Navbar extends Component {
   constructor(props) {
@@ -95,7 +95,7 @@ class Navbar extends Component {
                     />
                   )
                 })}
-                {inEditMode && loggedIn ? (
+                {/* {inEditMode && loggedIn ? (
                   <button
                     className="nav-title-add"
                     title="Add New Navigation"
@@ -103,7 +103,7 @@ class Navbar extends Component {
                   >
                     {'Add New +'}
                   </button>
-                ) : null}
+                ) : null} */}
                 {loggedIn && showProfile ? (
                   <li className="nav-item dropdown user-display">
                     <a

@@ -2,13 +2,14 @@
 
 import { React, Component } from 'react'
 import { Route, Redirect } from 'react-router-dom'
-import Navbar from './components/navbar'
+import Navbar from './components/navbar/navbar'
 import PageModal from './components/modal'
 import Page from './views/page'
 import './stylesheets/index.scss'
 import _generate from './functions/index'
 import axios from 'axios'
 import LoginPage from './views/loginPage'
+import EditSideBar from './components/editsidebar'
 import store from './store/store'
 import { checkLoggedIn } from './store/reducers/authSlice'
 import { savePosts } from './store/reducers/postSlice'
@@ -88,7 +89,7 @@ class App extends Component {
   }
 
   render() {
-    const { tab, loggedIn } = this.props
+    const { tab, loggedIn, editor } = this.props
 
     return (
       <div className="app-container">
@@ -129,6 +130,7 @@ class App extends Component {
             })
           },
         )}
+        <EditSideBar content={editor} />
         <PageModal
           title={
             this.props.inEditMode ? 'Leave Edit Mode?' : 'Enter Edit Mode?'
@@ -170,6 +172,7 @@ const mapState = (state) => ({
   isEditing: state.edit.isEditing,
   showEditModal: state.edit.showEditModal,
   showSaveModal: state.post.showSaveModal,
+  editor: state.edit.editor,
   loggedIn: state.auth.loggedIn,
   tab: state.post.tab,
   posts: state.post.posts,
