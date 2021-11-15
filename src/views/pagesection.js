@@ -47,7 +47,6 @@ function PageSection({
           // let SERVER_URL = _generate.serverFunctions.getServerURL()
           switch (type) {
             case CONTENT_TYPES.TABLE: {
-              console.log(data.dataSource)
               const dataSource = await axios(`${data.dataSource}`, {
                 method: 'GET',
                 mode: 'no-cors',
@@ -62,7 +61,7 @@ function PageSection({
               if (Array.isArray(dataSource)) data = dataSource
               if (Array.isArray(dataSource.data)) data = dataSource.data
               if (Array.isArray(dataSource.data.data)) data = dataSource.data.data
-              
+
               setTableRecords(data)
             }
             case CONTENT_TYPES.POST:
@@ -74,7 +73,7 @@ function PageSection({
         }
       })()
     }
-  }, [data])
+  }, [data.dataSource])
 
   function createNewPost(event) {
     // CLOSE EDIT SIDEBAR

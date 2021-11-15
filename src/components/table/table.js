@@ -136,7 +136,7 @@ class Table extends Component {
             }
           }
         })
-        this.setState({ filters: filterObj })
+        this.setState({ filters: filterObj, records: [] })
         if (this.state.sortKey) {
           this.sortTable(
             this.state.sortKey,
@@ -224,7 +224,6 @@ class Table extends Component {
   }
 
   deletePost = () => {
-    console.log(this.props.col)
     store.dispatch({
       type: POST_CONSTANTS.DELETE_POST,
       payload: {
@@ -503,6 +502,7 @@ class Table extends Component {
     ranking = false,
     filters = null,
   ) => {
+    console.log('sorting table', records)
     let headerObj
     const { headers } = this.props
 
@@ -510,7 +510,12 @@ class Table extends Component {
       if (headers[i].title === sortKey) headerObj = headers[i]
     }
 
-    if (!headerObj) return
+    if (!headerObj) {
+      this.setState({
+        records,
+      })
+      return
+    }
 
     const { format } = headerObj
     const { keys } = headerObj
