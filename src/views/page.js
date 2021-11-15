@@ -132,6 +132,7 @@ class Page extends Component {
                   role={this.props.role}
                   row={idxRow}
                   col={idxCol}
+                  key={post._id}
                 />
               )
             })}

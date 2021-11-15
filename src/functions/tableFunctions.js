@@ -45,8 +45,8 @@ export default class tableFunctions {
 
   /**
    * DEPRECATED
-   * @param {*} param0 
-   * @returns 
+   * @param {*} param0
+   * @returns
    */
   /**
    * @param {*} filterClass
@@ -170,7 +170,11 @@ export default class tableFunctions {
 
       if (rowOptions) {
         for (const rowOption of rowOptions.rows) {
-          rowOptionEls.push(<option key={`${rowOption}-pagesize`} id={`${rowOption}-pagesize`}>{rowOption}</option>)
+          rowOptionEls.push(
+            <option key={`${rowOption}-pagesize`} id={`${rowOption}-pagesize`}>
+              {rowOption}
+            </option>,
+          )
         }
         const numPages = rowOptions.selected
           ? Math.ceil(numRows / rowOptions.selected)
@@ -379,6 +383,7 @@ export default class tableFunctions {
       numRows: maxRows,
     })
 
+    console.log('headers', headers)
     return (
       <div className={wrapperClassName}>
         <div className={tableClassName}>
@@ -438,7 +443,7 @@ export default class tableFunctions {
           </div>
         ) : null}
         {loadingContent ? <LoadingSpinner className="table-spinner" /> : null}
-        {footer}
+        {headers.headers.length > 0 ? footer : null}
       </div>
     )
   }
