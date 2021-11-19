@@ -187,7 +187,7 @@ class Page extends Component {
             <div className="leftContainer"></div>
             <div className="midContainer">
               <div className="blog-section">
-                <Backdrop image={backgroundImage} />
+                <Backdrop image={'url("https://www.myersholum.com/wp-content/uploads/2021/06/netsuite-erp-myers-holum-alliance-partner.png")'} />
                 <div className="banner">
                   {inEditMode ? (
                     <input

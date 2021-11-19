@@ -182,7 +182,7 @@ export default class tableFunctions {
         if (numPages > 1) {
           if (currPage > 1) {
             paginationEls.push(
-              <li className="page-item" key="page-1">
+              <li className="page-item" key="page-first">
                 <a className="page-link" name={1} onClick={paginationFunc}>
                   &lt;&lt;
                 </a>

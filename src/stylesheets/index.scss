@@ -1,14 +1,14 @@
 $color-sky: #CAEBF2;
 $color-carbon: #A9A9A9;
-$color-dark-grey: #A2A3A4;
+$color-dark-grey: #78a8f7;
 $color-watermelon: #FF3B3F;
-$color-neutral: #EFEFEF;
-$color-gold: #C9B037;
-$color-silver: #D7D7D7;
-$color-bronze: #AD8A56;
-$color-nav: #212529;
+$color-neutral: black;
+$color-gold: black;
+$color-silver: #78a8f7;
+$color-bronze: #78a8f7;
+$color-nav: #78a8f7;
 $color-faded-white: rgb(255 255 255 / 0.3);
-$color-opaque-black: rgb(0 0 0 / 0.6);
+$color-opaque-black: #78a8f7;
 $height-nav: 60px;
 
 /* The typing effect */
@@ -98,7 +98,7 @@ body, html {
 }
 
 .leftContainer {
-  background: rgb(0 0 0 / 0.9);
+  background: rgb(255 255 255 / 0.5);
   grid-column: 1 / 2;
   grid-row: 1 / 4;
 }
@@ -110,12 +110,12 @@ body, html {
   align-items: center;
   grid-column: 2 / 3;
   grid-row: 1 / 4;
-  background: rgb(0 0 0 / 0.9);
+  background: rgb(255 255 255 / 0.5);
 }
 
 .midContainer::after {
   position: fixed;
-  content: 'Website by Novater \A Copyright © 2021 The Golden House';
+  content: 'Website by Novater';
   text-align: center;
   white-space: pre-wrap;
   width: fit-content;
@@ -129,7 +129,7 @@ body, html {
 }
 
 .rightContainer {
-  background: rgb(0 0 0 / 0.9);
+  background: rgb(255 255 255 / 0.5);
   grid-column: 3 / 4;
   grid-row: 1 / 4;
 }
@@ -282,6 +282,8 @@ body, html {
   display: grid;
   place-items: center;
   overflow: auto;
+  box-shadow: 0px 0px 2px 2px $color-carbon;
+  border-radius: 5px;
 
   th {
     cursor: pointer;
@@ -312,17 +314,17 @@ body, html {
   }
 
   .info-row:nth-child(odd) {
-    background-color: $color-opaque-black;
+    background-color: rgb(156 188 242 / 0.5);
   }
 
   .info-row:nth-child(even) {
-    background-color: rgb(0 0 0 / 0.4);
+    background-color: lightgrey;
   }
 }
 
 .page-item.focused > a {
-  color: $color-gold;
-  background-color: $color-neutral;  
+  color: white;
+  background-color: #78a8f7;  
 }
 
 .page-link {
@@ -342,7 +344,7 @@ body, html {
 
     &:hover {
       color: $color-gold;
-      background-color: $color-neutral;
+      background-color: #1e5aca;
     }
   }
 }
@@ -369,7 +371,7 @@ body, html {
   padding-bottom: 20px;
   margin: 20px;
   height: 100%;
-  background-color: $color-opaque-black;
+  background-color: white;
   color: $color-neutral;
   border-radius: 5px;
   box-shadow: 0px 0px 2px 2px rgb(0 0 0 / 0.15);
@@ -552,7 +554,7 @@ thead {
 .table-header-row {
   height: 50px;
   width: 100%;
-  color: white;
+  color: black;
   font-family: Arial, Helvetica, sans-serif;
   text-align: center;
   position: sticky;
@@ -561,7 +563,7 @@ thead {
   z-index: 1;
 
   th {
-    background: black;
+    background: #1e5aca;
     user-select: none; /* supported by Chrome and Opera */
     -webkit-user-select: none; /* Safari */
     -khtml-user-select: none; /* Konqueror HTML */
@@ -581,16 +583,16 @@ thead {
     width: fit-content;
     height: fit-content;
     color: white;
-    background-color: black;
+    background-color: #78a8f7;
   }
 
   .numrows-select {
     display: flex;
     flex-direction: row;
-    color: white;
+    color: black;
     flex-shrink: 0;
     margin-right: 20px;
-
+    margin-left: 5em;
     p {
       margin-right: 10px;
     }
@@ -749,12 +751,12 @@ thead {
   }
 
   .filter-checkbox {
-    background-color: black;
+    background-color: #78a8f7;
     border: 0.5px solid $color-faded-white;
   }
 
   select {
-    background-color: black;
+    background-color: #78a8f7;
     color: $color-neutral;
     border-radius: 5px !important;
     margin-bottom: 5px;
@@ -813,8 +815,8 @@ thead {
 }
 
 .table-editor-container {
-  color: $color-opaque-black;
-  background-color: $color-neutral;
+  color: black;
+  background-color: white;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -825,6 +827,7 @@ thead {
   right: 0;
   top: $height-nav;
   width: 500px;
+  max-width: 100vw;
   height: 100vh;
   z-index: 2;
 }
@@ -836,16 +839,16 @@ thead {
   z-index: 1;
   width: fit-content;
   padding: 10px;
-  background-color: $color-opaque-black;
+  background-color: white;
   border-radius: 5px;
   box-shadow: 0px 0px 2px 2px rgb(0 0 0 / 0.2);
 
   button {
-    background-color: black;
-    color: $color-neutral;
+    background-color: white;
+    color: #1e5aca;
 
     &:hover {
-      color:$color-gold;
+      color: #1e5aca;
     }
   }
 
@@ -869,7 +872,7 @@ thead {
     flex-wrap: wrap;
     justify-content: center;
     flex-grow: 1;
-    background-color: $color-carbon;
+    background-color:#1e5aca;
     border-radius: 5px;
     margin: 10px;
     position: relative;
@@ -880,13 +883,15 @@ thead {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    input {
+    flex-wrap: wrap;
+    textarea {
       background-color: $color-opaque-black;
       border-radius: 5px;
       color: $color-neutral;
       flex-grow: 1;
       max-width: 220px;
-
+      height: 50px !important;
+      flex-shrink: 1;
       &:focus {
         background-color: $color-nav;
       }
@@ -946,7 +951,7 @@ thead {
   }
 
   &.add-new {
-    background-color: $color-neutral;
+    background-color: white;
     display: flex;
     justify-content: center;
     padding: 5px;
@@ -959,7 +964,7 @@ thead {
   
       &:hover {
         color: $color-gold;
-        
+        background-color: #1e5aca;
       }
     }
   }
@@ -971,6 +976,7 @@ thead {
     height: 50px;
     flex-grow: 1;
     max-width: 180px;
+    min-width: 180px;
 
     &:focus {
       background-color: $color-nav;
@@ -993,6 +999,7 @@ thead {
 .table-edit-col {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   margin: 5px;
@@ -1025,7 +1032,7 @@ thead {
   cursor: pointer;
 
   &:hover {
-    background-color: $color-opaque-black;
+    background-color: #1e5aca;
   }
 
   p {
@@ -1087,7 +1094,7 @@ thead {
 
 .banner {
   margin-top: 20px;
-  color: $color-gold;
+  color: #1e5aca;
   width: 100%;
   z-index: 1;
   input {
@@ -1095,7 +1102,7 @@ thead {
     text-align: center;
     height: 50px;
     font-size: 18px;
-    background-color: $color-neutral;
+    background-color: #78a8f7;
   }
 }
 

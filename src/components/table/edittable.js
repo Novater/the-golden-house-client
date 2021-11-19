@@ -228,7 +228,7 @@ export default function TableEditor({
         <hr />
         <div className="table-edit-row searchable">
           <h4>{`Searchable:`}</h4>
-          <input defaultValue={searchable} onBlur={updateSearchable}></input>
+          <textarea defaultValue={searchable} onBlur={updateSearchable}></textarea>
         </div>
         <hr />
         <div className="table-edit-row data-url">

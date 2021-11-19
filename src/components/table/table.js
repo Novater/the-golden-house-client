@@ -259,9 +259,15 @@ class Table extends Component {
         let thisFilterLookupAMatch = false
         selectedEl.map((el) => {
           const { lookFor } = el
-
-          if (stringRep.match(lookFor)) {
-            thisFilterLookupAMatch = true
+          const isNumeric = lookFor.match(/{(.*)}/)
+          if (isNumeric) {
+            const numericExpression = isNumeric.pop()
+            const bool = eval(stringRep.toString() + numericExpression)
+            if (bool) thisFilterLookupAMatch = true
+          } else {
+            if (stringRep.match(lookFor)) {
+              thisFilterLookupAMatch = true
+            }
           }
         })
 

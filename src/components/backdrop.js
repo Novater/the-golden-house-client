@@ -6,7 +6,7 @@ export default function Backdrop({ image }) {
   if (!image) return null
   return (
     <LazyLoadImage
-      src={image.default}
+      src='https://www.myersholum.com/wp-content/uploads/2021/06/netsuite-erp-myers-holum-alliance-partner.png'
       className="banner-img"
       effect="opacity"
       alt="banner"

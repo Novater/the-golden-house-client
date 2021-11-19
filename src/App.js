@@ -76,7 +76,7 @@ class App extends Component {
       <Route key={`route-${_id}`} exact path={path}>
         <Page
           key={_id}
-          title={title}
+          title={"Test form"}
           tabName={tabName}
           editTablePermissions={this.state.editTablePermissions}
           backgroundImage={backgroundURL}
