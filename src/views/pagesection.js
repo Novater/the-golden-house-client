@@ -1,17 +1,15 @@
 import axios from 'axios'
-import React, { Component, Suspense, useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import _generate from '../functions/index'
 import NewPost from '../components/newpostbutton'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrash, faPen, faPlus } from '@fortawesome/free-solid-svg-icons'
 import LoadingSpinner from '../components/loadingspinner'
+import ContentSelector from '../components/contentselector'
 import SampleDataGenerator from '../config/sampleData'
 import { connect } from 'react-redux'
 import store from '../store/store'
 
 const Table = React.lazy(() => import('../components/table/table'))
 const BlogSection = React.lazy(() => import('../components/blogsection'))
-const POST_CONSTANTS = require('../constants/postConstants')
 const EDIT_CONSTANTS = require('../constants/editConstants')
 axios.defaults.withCredentials = false
 // TODO: PERMISSIONS
@@ -60,7 +58,8 @@ function PageSection({
               data = []
               if (Array.isArray(dataSource)) data = dataSource
               if (Array.isArray(dataSource.data)) data = dataSource.data
-              if (Array.isArray(dataSource.data.data)) data = dataSource.data.data
+              if (Array.isArray(dataSource.data.data))
+                data = dataSource.data.data
 
               setTableRecords(data)
             }
@@ -76,69 +75,34 @@ function PageSection({
   }, [data.dataSource])
 
   function createNewPost(event) {
+    const DIRECTION_MAP = {
+      'up': {
+        row: row,
+        col: 0
+      },
+      'down': {
+        row: row + 1,
+        col: 0
+      },
+      'left': {
+        row: row,
+        col: col
+      },
+      'right': {
+        row: row,
+        col: col + 1
+      }
+    }
+
     // CLOSE EDIT SIDEBAR
     store.dispatch({ type: EDIT_CONSTANTS.CLOSE_SIDEBAR })
     const direction = event.target.id.split('-')[0]
-    const newPost = {
-      tite: 'Enter title here.',
-      content: 'Enter content here.',
-      row: 0,
-      col: 0,
-      tabname: tab,
-      type: 'post',
-    }
-    switch (direction) {
-      case 'up': {
-        newPost.row = row
-        newPost.col = 0
-        return store.dispatch({
-          type: POST_CONSTANTS.INSERT_POST,
-          payload: {
-            row: row,
-            newRow: true,
-            post: newPost,
-          },
-        })
-      }
-      case 'down': {
-        newPost.row = row + 1
-        newPost.col = 0
-        return store.dispatch({
-          type: POST_CONSTANTS.INSERT_POST,
-          payload: {
-            row: row + 1,
-            newRow: true,
-            post: newPost,
-          },
-        })
-      }
-      case 'left': {
-        newPost.row = row
-        newPost.col = col
-        return store.dispatch({
-          type: POST_CONSTANTS.INSERT_POST,
-          payload: {
-            row: row,
-            col: col,
-            post: newPost,
-          },
-        })
-      }
-      case 'right': {
-        newPost.row = row
-        newPost.col = col + 1
-        return store.dispatch({
-          type: POST_CONSTANTS.INSERT_POST,
-          payload: {
-            row: row,
-            col: col + 1,
-            post: newPost,
-          },
-        })
-      }
-      default:
-        break
-    }
+
+    store.dispatch({
+      type: EDIT_CONSTANTS.TOGGLE_EDIT_SIDEBAR,
+      payload: { editor: <ContentSelector position={DIRECTION_MAP[direction]}/> },
+    })
+
   }
 
   async function lazyLoadTable() {

@@ -157,21 +157,23 @@ class Table extends Component {
         })
       }
 
-      store.dispatch({
-        type: EDIT_CONSTANTS.UPDATE_SIDEBAR,
-        payload: {
-          editor: this.createTableEditor({
-            row: this.props.row,
-            col: this.props.col,
-            searchable: this.props.searchable,
-            headers: this.props.headers,
-            dataUrl: this.props.dataUrl,
-            dataSource: this.props.dataSource,
-            finishEdit: this.finishEdit,
-            pagination: this.props.rowSelectOptions,
-          }),
-        },
-      })
+      if (this.state.editingTable) {
+        store.dispatch({
+          type: EDIT_CONSTANTS.UPDATE_SIDEBAR,
+          payload: {
+            editor: this.createTableEditor({
+              row: this.props.row,
+              col: this.props.col,
+              searchable: this.props.searchable,
+              headers: this.props.headers,
+              dataUrl: this.props.dataUrl,
+              dataSource: this.props.dataSource,
+              finishEdit: this.finishEdit,
+              pagination: this.props.rowSelectOptions,
+            }),
+          },
+        })
+      }
     }
   }
 
