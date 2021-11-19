@@ -78,11 +78,13 @@ function PageSection({
     const DIRECTION_MAP = {
       'up': {
         row: row,
-        col: 0
+        col: 0,
+        newRow: true
       },
       'down': {
         row: row + 1,
-        col: 0
+        col: 0,
+        newRow: true
       },
       'left': {
         row: row,
@@ -100,7 +102,7 @@ function PageSection({
 
     store.dispatch({
       type: EDIT_CONSTANTS.TOGGLE_EDIT_SIDEBAR,
-      payload: { editor: <ContentSelector position={DIRECTION_MAP[direction]}/> },
+      payload: { editor: <ContentSelector tab={tab} position={DIRECTION_MAP[direction]}/> },
     })
 
   }

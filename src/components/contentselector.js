@@ -13,8 +13,7 @@ import store from '../store/store'
 const POST_CONSTANTS = require('../constants/postConstants')
 const config = require('../config/index')
 
-export default function ContentSelector({ position }) {
-
+export default function ContentSelector({ position, tab }) {
   function createContent() {
     const newPost = {
       tite: 'Enter title here.',
@@ -30,6 +29,7 @@ export default function ContentSelector({ position }) {
       payload: {
         row: position.row,
         col: position.col,
+        newRow: position.newRow,
         post: newPost,
       },
     })
@@ -37,7 +37,10 @@ export default function ContentSelector({ position }) {
 
   return (
     <div className="content-select-container">
-      This is where you will select new content to add.
+      <h4>{'Select New Content Type'}</h4>
+      {`Add new content at position ${position.row} ${position.col}`}
+      <button>Add table</button>
+      <button onClick={createContent}>Add post</button>
     </div>
   )
 }
