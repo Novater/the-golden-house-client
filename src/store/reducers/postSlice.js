@@ -60,7 +60,6 @@ export default function postReducer(state = initialState, action) {
 
       if (newRow) {
         copiedPosts.splice(row, 0, [action.payload.post])
-        console.log(copiedPosts)
         return {
           ...state,
           posts: copiedPosts,
@@ -74,6 +73,7 @@ export default function postReducer(state = initialState, action) {
       }
     }
     case POST_CONSTANTS.EDIT_POST: {
+      console.log('editing post')
       const { row, col, post } = action.payload
       let copiedPosts = []
 
@@ -86,7 +86,7 @@ export default function postReducer(state = initialState, action) {
         copiedPost[editKey] = post[editKey]
       })
       copiedPosts[row][col] = copiedPost
-
+      console.log('copied post', copiedPosts[row][col])
       return {
         ...state,
         posts: copiedPosts,

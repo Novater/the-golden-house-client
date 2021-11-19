@@ -206,7 +206,7 @@ function PageSection({
               searchable={!!data.searchable}
               dataSource={records || []}
               dataUrl={data.dataSource}
-              rowSelectOptions={JSON.parse(data.rowSelectOptions)}
+              rowSelectOptions={data.rowSelectOptions}
               // SAMPLE DATA CONFIG
               // headers={SampleDataGenerator.sampleTableHeader()}
               // dataSource={SampleDataGenerator.sampleTableData()}

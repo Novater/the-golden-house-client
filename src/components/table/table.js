@@ -101,16 +101,17 @@ class Table extends Component {
       const CLOSE_SIDEBAR =
         this.props.showSideBar !== prevProps.showSideBar &&
         this.props.showSideBar === false
-      // const ROWSELECT_CHANGE =
-      //   this.props.rowSelectOptions !== prevProps.rowSelectOptions
-      // if (ROWSELECT_CHANGE) {
-      //   this.setState({
-      //     rowSelectOptions: this.props.rowSelectOptions,
-      //     pageRows: this.props.rowSelectOptions
-      //       ? this.props.rowSelectOptions.selected
-      //       : '',
-      //   })
-      // }
+      const ROWSELECT_CHANGE =
+        this.props.rowSelectOptions !== prevProps.rowSelectOptions
+      if (ROWSELECT_CHANGE) {
+        console.log('row select change')
+        this.setState({
+          rowSelectOptions: this.props.rowSelectOptions,
+          pageRows: this.props.rowSelectOptions
+            ? this.props.rowSelectOptions.selected
+            : '',
+        })
+      }
       if (DATASOURCE_CHANGE || HEADER_CHANGE) {
         const filterObj = {}
         this.props.headers.map((header) => {

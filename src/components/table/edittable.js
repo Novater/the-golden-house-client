@@ -133,16 +133,17 @@ export default function TableEditor({
   }
 
   function updatePagination(event) {
-    // store.dispatch({
-    //   type: POST_CONSTANTS.EDIT_POST,
-    //   payload: {
-    //     post: {
-    //       rowSelectOptions: JSON.stringify({}),
-    //     },
-    //     row,
-    //     col,
-    //   },
-    // })
+    console.log(JSON.parse(event.target.value))
+    store.dispatch({
+      type: POST_CONSTANTS.EDIT_POST,
+      payload: {
+        post: {
+          rowSelectOptions: JSON.parse(event.target.value),
+        },
+        row,
+        col,
+      },
+    })
   }
 
   function updateSearchable(event) {

@@ -9,12 +9,39 @@ import { connect } from 'react-redux'
 import ContentEditor from './contenteditor'
 import _generate from '../functions/index'
 import store from '../store/store'
+import table from './table/table'
 
 const POST_CONSTANTS = require('../constants/postConstants')
 const config = require('../config/index')
 
 export default function ContentSelector({ position, tab }) {
-  function createContent() {
+  function createTableComponent() {
+    const newPost = {
+      tablename: 'abyss',
+      rowSelectOptions: {
+        rows: ['10', '20', '50', '100'],
+        selected: '100',
+      },
+      headers: [],
+      row: position.row,
+      col: position.kcol,
+      tabname: tab,
+      type: 'table',
+      dataSource: 'https://calm-plains-52439.herokuapp.com/record/import',
+      searchable: true,
+    }
+
+    store.dispatch({
+      type: POST_CONSTANTS.INSERT_POST,
+      payload: {
+        row: position.row,
+        col: position.col,
+        newRow: position.newRow,
+        post: newPost,
+      },
+    })
+  }
+  function createBlogComponent() {
     const newPost = {
       tite: 'Enter title here.',
       content: 'Enter content here.',
@@ -39,8 +66,8 @@ export default function ContentSelector({ position, tab }) {
     <div className="content-select-container">
       <h4>{'Select New Content Type'}</h4>
       {`Add new content at position ${position.row} ${position.col}`}
-      <button>Add table</button>
-      <button onClick={createContent}>Add post</button>
+      <button onClick={createTableComponent}>Add table</button>
+      <button onClick={createBlogComponent}>Add post</button>
     </div>
   )
 }
