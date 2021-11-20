@@ -3,10 +3,10 @@ import React, { Suspense, useEffect, useState } from 'react'
 import _generate from '../functions/index'
 import NewPost from '../components/newpostbutton'
 import LoadingSpinner from '../components/loadingspinner'
-import ContentSelector from '../components/contentselector'
 import SampleDataGenerator from '../config/sampleData'
 import { connect } from 'react-redux'
 import store from '../store/store'
+import _ from 'lodash'
 
 const Table = React.lazy(() => import('../components/table/table'))
 const BlogSection = React.lazy(() => import('../components/blogsection'))
@@ -38,6 +38,24 @@ function PageSection({
     editButtonClass: 'table-edit',
   }
 
+  function findArrayInObject(obj) {
+    let stack = [obj]
+
+    while (stack.length > 0) {
+      const currObj = stack.shift()
+      const keysInObj = _.keys(currObj)
+      for (let i = 0; i < keysInObj.length; i += 1) {
+        const key = keysInObj[i]
+        if (_.isArray(currObj[key])) {
+          return currObj[key]
+        }
+        stack.push(currObj[key])
+      }
+    }
+
+    return []
+  }
+
   useEffect(() => {
     // Memory leak??
     if (data.dataSource) {
@@ -63,11 +81,12 @@ function PageSection({
                   credentials: 'same-origin',
                 })
 
-                if (Array.isArray(dataSource)) loadedData = dataSource
-                if (Array.isArray(dataSource.data)) loadedData = dataSource.data
-                if (Array.isArray(dataSource.data.data))
-                  loadedData = dataSource.data.data
-
+                // if (Array.isArray(dataSource)) loadedData = dataSource
+                // if (Array.isArray(dataSource.data)) loadedData = dataSource.data
+                // if (Array.isArray(dataSource.data.data))
+                console.log(dataSource)
+                loadedData = findArrayInObject(dataSource)
+                console.log('loadedData', loadedData)
                 setTableRecords(loadedData)
                 if (loadedData.length > 0) {
                   window.sessionStorage.setItem(
