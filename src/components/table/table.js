@@ -3,7 +3,6 @@
 import React, { Component } from 'react'
 import _generate from '../../functions/index'
 import TableFilters from './tablefilters'
-import TableEditor from './edittable'
 import PageModal from '../modal'
 import _ from 'lodash'
 import 'bootstrap/dist/css/bootstrap.css'
@@ -13,7 +12,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash, faPen } from '@fortawesome/free-solid-svg-icons'
 import store from '../../store/store'
 import { connect } from 'react-redux'
-import { EDIT_POST } from '../../constants/postConstants'
 
 const POST_CONSTANTS = require('../../constants/postConstants')
 const EDIT_CONSTANTS = require('../../constants/editConstants')
@@ -72,7 +70,6 @@ class Table extends Component {
       deleteLineIds: [],
       currIdSelected: '',
       tableSaving: false,
-      editingTable: false,
     }
   }
 
@@ -89,141 +86,108 @@ class Table extends Component {
 
   // This method will get the data from the database
   componentDidUpdate(prevProps) {
-    if (
-      this.props.dataSource !== prevProps.dataSource ||
-      this.props.headers !== prevProps.headers ||
-      (this.props.showSideBar !== prevProps.showSideBar &&
-        this.props.showSideBar === false) ||
+    const DATASOURCE_CHANGE = this.props.dataSource !== prevProps.dataSource
+    const HEADER_CHANGE = this.props.headers !== prevProps.headers
+    const ROWSELECT_CHANGE =
       this.props.rowSelectOptions !== prevProps.rowSelectOptions
-    ) {
-      const DATASOURCE_CHANGE = this.props.dataSource !== prevProps.dataSource
-      const HEADER_CHANGE = this.props.headers !== prevProps.headers
-      const CLOSE_SIDEBAR =
-        this.props.showSideBar !== prevProps.showSideBar &&
-        this.props.showSideBar === false
-      const ROWSELECT_CHANGE =
-        this.props.rowSelectOptions !== prevProps.rowSelectOptions
-      if (ROWSELECT_CHANGE) {
-        console.log('row select change')
-        this.setState({
-          rowSelectOptions: this.props.rowSelectOptions,
-          pageRows: this.props.rowSelectOptions
-            ? this.props.rowSelectOptions.selected
-            : '',
-        })
-      }
-      if (DATASOURCE_CHANGE || HEADER_CHANGE) {
-        const filterObj = {}
-        this.props.headers.map((header) => {
-          const { filterValues, filterStyle } = header
+    if (DATASOURCE_CHANGE || HEADER_CHANGE) {
+      const filterObj = {}
+      this.props.headers.map((header) => {
+        const { filterValues, filterStyle } = header
 
-          if (filterValues && filterValues.length > 0) {
-            if (
-              !filterValues.reduce(
-                (currVal, filter) => currVal || filter.selected,
-                false,
-              )
-            ) {
-              if (filterStyle !== 'checkbox') filterValues[0].selected = true
-            }
-
-            filterObj[header.title] = {
-              rows: filterValues,
-              filterStyle,
-            }
-          } else {
-            filterObj[header.title] = {
-              rows: [],
-            }
+        if (filterValues && filterValues.length > 0) {
+          if (
+            !filterValues.reduce(
+              (currVal, filter) => currVal || filter.selected,
+              false,
+            )
+          ) {
+            if (filterStyle !== 'checkbox') filterValues[0].selected = true
           }
-        })
-        this.setState({ filters: filterObj, records: [] })
-        if (this.state.sortKey) {
-          this.sortTable(
-            this.state.sortKey,
-            this.state.sortDir || 1,
-            this.props.dataSource,
-            true,
-          )
+
+          filterObj[header.title] = {
+            rows: filterValues,
+            filterStyle,
+          }
         } else {
-          this.setState({
-            records: this.props.dataSource,
-          })
+          filterObj[header.title] = {
+            rows: [],
+          }
         }
-      }
-
-      if (CLOSE_SIDEBAR) {
+      })
+      this.setState({ filters: filterObj, records: [] })
+      if (this.state.sortKey) {
+        this.sortTable(
+          this.state.sortKey,
+          this.state.sortDir || 1,
+          this.props.dataSource,
+          true,
+        )
+      } else {
         this.setState({
-          editingTable: false,
+          records: this.props.dataSource,
         })
       }
 
-      if (this.state.editingTable) {
+      if (this.props.id === this.props.editorId) {
         store.dispatch({
           type: EDIT_CONSTANTS.UPDATE_SIDEBAR,
           payload: {
-            editor: this.createTableEditor({
+            data: {
               row: this.props.row,
               col: this.props.col,
               searchable: this.props.searchable,
               headers: this.props.headers,
               dataUrl: this.props.dataUrl,
               dataSource: this.props.dataSource,
-              finishEdit: this.finishEdit,
               pagination: this.props.rowSelectOptions,
-            }),
+            },
           },
         })
       }
+    }
+
+    if (ROWSELECT_CHANGE) {
+      console.log('row select change')
+      this.setState({
+        rowSelectOptions: this.props.rowSelectOptions,
+        pageRows: this.props.rowSelectOptions
+          ? this.props.rowSelectOptions.selected
+          : '',
+      })
     }
   }
 
   componentWillUnmount() {}
 
-  createTableEditor = ({
+  editPost = ({
     row,
     col,
     searchable,
     headers,
     dataUrl,
     dataSource,
-    finishEdit,
     pagination,
   }) => {
-    return (
-      <TableEditor
-        row={row}
-        col={col}
-        searchable={searchable}
-        headers={headers}
-        dataUrl={dataUrl}
-        dataSource={dataSource}
-        finishEdit={finishEdit}
-        pagination={pagination}
-      />
-    )
-  }
-
-  editPost = (editor) => {
     return (event) => {
       store.dispatch({ type: EDIT_CONSTANTS.CLOSE_SIDEBAR })
       store.dispatch({
         type: EDIT_CONSTANTS.TOGGLE_EDIT_SIDEBAR,
         payload: {
-          editor,
+          editorId: this.props.id,
+          type: 'table',
+          data: {
+            row,
+            col,
+            searchable,
+            headers,
+            dataUrl,
+            dataSource,
+            pagination,
+          },
         },
       })
-      this.setState({
-        editingTable: true,
-      })
     }
-  }
-
-  finishEdit = () => {
-    store.dispatch({ type: EDIT_CONSTANTS.CLOSE_SIDEBAR })
-    this.setState({
-      editingTable: false,
-    })
   }
 
   deletePost = () => {
@@ -505,7 +469,6 @@ class Table extends Component {
     ranking = false,
     filters = null,
   ) => {
-    console.log('sorting table', records)
     let headerObj
     const { headers } = this.props
 
@@ -639,6 +602,9 @@ class Table extends Component {
       col,
       dataUrl,
       dataSource,
+      showSideBar,
+      editorId,
+      id,
     } = this.props
     let {
       filters,
@@ -652,7 +618,6 @@ class Table extends Component {
       approveLineIds,
       deleteLineIds,
       tableSaving,
-      editingTable,
     } = this.state
 
     const generatedFilters = []
@@ -697,35 +662,23 @@ class Table extends Component {
         }
       : {}
 
-    const editor = this.createTableEditor({
-      row,
-      col,
-      searchable,
-      headers: this.props.headers,
-      dataUrl,
-      dataSource,
-      finishEdit: this.finishEdit,
-      pagination: rowSelectOptions,
-    })
-
     return (
       <>
-        {/* {editingTable && adminPermission ? (
-          <TableEditor
-            row={row}
-            col={col}
-            searchable={searchable}
-            headers={this.props.headers}
-            dataUrl={dataUrl}
-            dataSource={dataSource}
-            finishEdit={this.finishEdit}
-            pagination={rowSelectOptions}
-          />
-        ) : null} */}
         <div className={containerClass || 'table-container'}>
-          {adminPermission && !editingTable ? (
+          {adminPermission && editorId !== id ? (
             <div className="edit">
-              <FontAwesomeIcon icon={faPen} onClick={this.editPost(editor)} />
+              <FontAwesomeIcon
+                icon={faPen}
+                onClick={this.editPost({
+                  row,
+                  col,
+                  searchable,
+                  headers: this.props.headers,
+                  dataUrl,
+                  dataSource,
+                  pagination: rowSelectOptions,
+                })}
+              />
               <FontAwesomeIcon icon={faTrash} onClick={this.deletePost} />
             </div>
           ) : null}
@@ -805,6 +758,7 @@ Table.propTypes = {
 
 const mapState = (state) => ({
   showSideBar: state.edit.showSideBar,
+  editorId: state.edit.editorId,
 })
 
 export default connect(mapState)(Table)

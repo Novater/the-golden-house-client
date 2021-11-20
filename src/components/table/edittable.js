@@ -158,6 +158,7 @@ export default function TableEditor({
       },
     })
   }
+  
   return (
     <div className="table-editor-container">
       <div className="table-edit-close">
@@ -222,6 +223,7 @@ export default function TableEditor({
         <h4>{`Your Data Structure:`}</h4>
         <div className="table-edit-row data">
           <textarea
+            readOnly={true}
             className="edit-sample-data"
             value={JSON.stringify(dataSource[0], undefined, 2)}
           ></textarea>

@@ -63,7 +63,7 @@ class App extends Component {
 
   createExactPage = (
     path,
-    { title, tabName, backgroundImage, tableName, navBar, dataSource, _id },
+    { title, tabName, backgroundImage, navBar, _id },
   ) => {
     let backgroundURL
     try {
@@ -80,17 +80,15 @@ class App extends Component {
           tabName={tabName}
           editTablePermissions={this.state.editTablePermissions}
           backgroundImage={backgroundURL}
-          tableName={tableName}
           navBar={navBar}
-          dataSource={dataSource}
         />
       </Route>
     )
   }
 
   render() {
-    const { tab, loggedIn, editor } = this.props
-
+    const { tab, loggedIn, editorType, editorData } = this.props
+    console.log(this.props)
     return (
       <div className="app-container">
         {tab !== 'fullpage-table' ? (
@@ -116,21 +114,17 @@ class App extends Component {
             title,
             tabName,
             backgroundImage,
-            dataSource,
-            tableName,
             _id,
           }) => {
             return this.createExactPage(url, {
               title,
               tabName,
               backgroundImage,
-              tableName,
-              dataSource,
               _id,
             })
           },
         )}
-        <EditSideBar content={editor} />
+        <EditSideBar type={editorType} content={editorData} />
         <PageModal
           title={
             this.props.inEditMode ? 'Leave Edit Mode?' : 'Enter Edit Mode?'
@@ -172,7 +166,9 @@ const mapState = (state) => ({
   isEditing: state.edit.isEditing,
   showEditModal: state.edit.showEditModal,
   showSaveModal: state.post.showSaveModal,
-  editor: state.edit.editor,
+  editorData: state.edit.editorData,
+  editorType: state.edit.editorType,
+  editorId: state.edit.editorId,
   loggedIn: state.auth.loggedIn,
   tab: state.post.tab,
   posts: state.post.posts,

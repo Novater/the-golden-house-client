@@ -39,29 +39,43 @@ function PageSection({
   }
 
   useEffect(() => {
+    // Memory leak??
     if (data.dataSource) {
       ;(async () => {
         try {
           // let SERVER_URL = _generate.serverFunctions.getServerURL()
           switch (type) {
             case CONTENT_TYPES.TABLE: {
-              const dataSource = await axios(`${data.dataSource}`, {
-                method: 'GET',
-                mode: 'no-cors',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                withCredentials: false,
-                credentials: 'same-origin',
-              })
+              let loadedData = []
+              console.log(data._id)
+              if (window.sessionStorage.getItem(data.dataSource)) {
+                setTableRecords(
+                  JSON.parse(window.sessionStorage.getItem(data.dataSource)),
+                )
+              } else {
+                const dataSource = await axios(`${data.dataSource}`, {
+                  method: 'GET',
+                  mode: 'no-cors',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  withCredentials: false,
+                  credentials: 'same-origin',
+                })
 
-              data = []
-              if (Array.isArray(dataSource)) data = dataSource
-              if (Array.isArray(dataSource.data)) data = dataSource.data
-              if (Array.isArray(dataSource.data.data))
-                data = dataSource.data.data
+                if (Array.isArray(dataSource)) loadedData = dataSource
+                if (Array.isArray(dataSource.data)) loadedData = dataSource.data
+                if (Array.isArray(dataSource.data.data))
+                  loadedData = dataSource.data.data
 
-              setTableRecords(data)
+                setTableRecords(loadedData)
+                if (loadedData.length > 0) {
+                  window.sessionStorage.setItem(
+                    data.dataSource,
+                    JSON.stringify(loadedData),
+                  )
+                }
+              }
             }
             case CONTENT_TYPES.POST:
             default:
@@ -75,36 +89,40 @@ function PageSection({
   }, [data.dataSource])
 
   function createNewPost(event) {
-    const DIRECTION_MAP = {
-      'up': {
-        row: row,
-        col: 0,
-        newRow: true
-      },
-      'down': {
-        row: row + 1,
-        col: 0,
-        newRow: true
-      },
-      'left': {
-        row: row,
-        col: col
-      },
-      'right': {
-        row: row,
-        col: col + 1
-      }
-    }
-
     // CLOSE EDIT SIDEBAR
     store.dispatch({ type: EDIT_CONSTANTS.CLOSE_SIDEBAR })
     const direction = event.target.id.split('-')[0]
-
+    const DIRECTION_MAP = {
+      up: {
+        row: row,
+        col: 0,
+        newRow: true,
+      },
+      down: {
+        row: row + 1,
+        col: 0,
+        newRow: true,
+      },
+      left: {
+        row: row,
+        col: col,
+      },
+      right: {
+        row: row,
+        col: col + 1,
+      },
+    }
     store.dispatch({
       type: EDIT_CONSTANTS.TOGGLE_EDIT_SIDEBAR,
-      payload: { editor: <ContentSelector tab={tab} position={DIRECTION_MAP[direction]}/> },
+      payload: {
+        editorId: `${data._id}-${direction}`,
+        type: 'new-content',
+        data: {
+          direction: DIRECTION_MAP[direction],
+          tab,
+        },
+      },
     })
-
   }
 
   async function lazyLoadTable() {
@@ -199,7 +217,8 @@ function PageSection({
             <Table
               row={row}
               col={col}
-              key={`${data.tablename}-datatable`}
+              key={`${data._id}-datatable`}
+              id={`${data._id}-datatable`}
               defaultSortKey="Time"
               defaultSortDir={1}
               headers={data.headers}

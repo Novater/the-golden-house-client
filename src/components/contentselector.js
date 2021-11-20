@@ -24,10 +24,10 @@ export default function ContentSelector({ position, tab }) {
       },
       headers: [],
       row: position.row,
-      col: position.kcol,
+      col: position.col,
       tabname: tab,
       type: 'table',
-      dataSource: 'https://calm-plains-52439.herokuapp.com/record/import',
+      dataSource: '',
       searchable: true,
     }
 

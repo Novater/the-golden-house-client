@@ -46,41 +46,6 @@ class Page extends Component {
     })
 
     store.dispatch(loadPosts)
-
-    // let SERVER_URL = _generate.serverFunctions.getServerURL()
-    // let data = []
-    // let adminData = []
-    // if (this.props.dataSource) {
-    //   const role = this.props.role
-    //   const hasPermission = this.props.editTablePermissions.indexOf(role) >= 0
-    //   this.setState({ tableEditPermission: hasPermission })
-    //   if (hasPermission) {
-    //     const dataSource = await axios.get(
-    //       `${SERVER_URL}${this.props.dataSource}/admin`,
-    //     )
-    //     adminData = dataSource.data
-    //   }
-
-    //   const dataSource = await axios.get(
-    //     `${SERVER_URL}${this.props.dataSource}`,
-    //   )
-    //   data = dataSource.data
-    // }
-
-    // this.setState({
-    //   // posts: SampleDataGenerator.samplePostData(), // postData,
-    //   records: data,
-    //   adminRecords: adminData,
-    // })
-
-    // if (this.props.tableName) {
-    //   const { rowSelectOptions, headers } =
-    //     await _generate.tableFunctions.getTableConfigs(this.props.tableName)
-    //   this.setState({
-    //     rowSelectOptions,
-    //     tableHeaders: headers,
-    //   })
-    // }
   }
 
   async componentDidUpdate(prevProps) {

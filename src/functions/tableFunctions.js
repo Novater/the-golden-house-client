@@ -11,24 +11,7 @@ const config = require('../config/index')
 axios.defaults.withCredentials = true
 
 export default class tableFunctions {
-  static async getTableConfigs(tableName) {
-    if (!tableName) {
-      return {
-        rowSelectOptions: '',
-        headers: '',
-        dataSource: '',
-      }
-    }
 
-    const SERVER_URL = _generate.serverFunctions.getServerURL()
-    const tableConfig = await axios.get(`${SERVER_URL}/table/${tableName}`)
-    const { rowSelectOptions, headers } = tableConfig.data
-
-    return {
-      rowSelectOptions: JSON.parse(rowSelectOptions),
-      headers: JSON.parse(headers),
-    }
-  }
   /**
    *
    * @param {*} param0
@@ -383,7 +366,6 @@ export default class tableFunctions {
       numRows: maxRows,
     })
 
-    console.log('headers', headers)
     return (
       <div className={wrapperClassName}>
         <div className={tableClassName}>
