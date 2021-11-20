@@ -5,7 +5,7 @@ import ContentSelector from './contentselector'
 import store from '../store/store'
 const EDIT_CONSTANTS = require('../constants/editConstants')
 
-function EditSideBar({ type, content }) {
+function EditSideBar({ type, content, editorId }) {
   const TYPES = {
     TABLE: 'table',
     NEWCONTENT: 'new-content',
@@ -16,10 +16,12 @@ function EditSideBar({ type, content }) {
   }
 
   function renderSidebar({ type, content }) {
+    console.log(content)
     switch (type) {
       case TYPES.TABLE:
         return (
           <TableEditor
+            key={editorId}
             row={content.row}
             col={content.col}
             searchable={content.searchable}
@@ -43,6 +45,7 @@ function EditSideBar({ type, content }) {
 
 const mapState = (state) => ({
   posts: state.post.posts,
+  editorId: state.edit.editorId,
 })
 
 export default connect(mapState)(EditSideBar)
