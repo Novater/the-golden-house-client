@@ -11,7 +11,7 @@ import _ from 'lodash'
 const Table = React.lazy(() => import('../components/table/table'))
 const BlogSection = React.lazy(() => import('../components/blogsection'))
 const EDIT_CONSTANTS = require('../constants/editConstants')
-axios.defaults.withCredentials = false
+axios.defaults.withCredentials = true
 // TODO: PERMISSIONS
 // ADDING TABLE/OTHER CONTENT TYPES
 // TABLE FUNCTIONS
@@ -27,6 +27,7 @@ function PageSection({
   inEditMode,
 }) {
   const [records, setTableRecords] = useState(null)
+  const [isLoading, setLoading] = useState(false)
   const [permissionList, setPermissionList] = useState(
     SampleDataGenerator.samplePermissions(),
   )
@@ -60,39 +61,43 @@ function PageSection({
     // Memory leak??
     if (data.dataSource) {
       ;(async () => {
+        setLoading(true)
         try {
-          // let SERVER_URL = _generate.serverFunctions.getServerURL()
           switch (type) {
             case CONTENT_TYPES.TABLE: {
+              const SERVER_URL = _generate.serverFunctions.getServerURL()
+
               let loadedData = []
-              console.log(data._id)
               if (window.sessionStorage.getItem(data.dataSource)) {
                 setTableRecords(
                   JSON.parse(window.sessionStorage.getItem(data.dataSource)),
                 )
               } else {
-                const dataSource = await axios(`${data.dataSource}`, {
-                  method: 'GET',
-                  mode: 'no-cors',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                  withCredentials: false,
-                  credentials: 'same-origin',
-                })
-
-                // if (Array.isArray(dataSource)) loadedData = dataSource
-                // if (Array.isArray(dataSource.data)) loadedData = dataSource.data
-                // if (Array.isArray(dataSource.data.data))
-                console.log(dataSource)
+                const encodedURI = encodeURIComponent(data.dataSource)
+                const dataSource = await axios.get(
+                  `${SERVER_URL}/api/${encodedURI}`,
+                )
                 loadedData = findArrayInObject(dataSource)
-                console.log('loadedData', loadedData)
-                setTableRecords(loadedData)
                 if (loadedData.length > 0) {
+                  setTableRecords(loadedData)
                   window.sessionStorage.setItem(
                     data.dataSource,
                     JSON.stringify(loadedData),
                   )
+                  store.dispatch({
+                    type: EDIT_CONSTANTS.UPDATE_SIDEBAR,
+                    payload: {
+                      data: {
+                        row,
+                        col,
+                        searchable: data.searchable,
+                        headers: data.headers,
+                        dataUrl: data.dataSource,
+                        dataSource: loadedData || [],
+                        pagination: data.rowSelectOptions,
+                      },
+                    },
+                  })
                 }
               }
             }
@@ -100,8 +105,11 @@ function PageSection({
             default:
               break
           }
+          setLoading(false)
         } catch (error) {
           console.log(error)
+          setLoading(false)
+          setTableRecords([])
         }
       })()
     }
@@ -166,6 +174,10 @@ function PageSection({
     axios.post(`${SERVER_URL}${data.dataSource}/approve`, {
       records: records,
     })
+  }
+
+  if (isLoading) {
+    return <LoadingSpinner />
   }
 
   switch (type) {

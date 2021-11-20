@@ -114,7 +114,7 @@ class Navbar extends Component {
                       data-bs-toggle="dropdown"
                       aria-expanded="false"
                     >
-                      Welcome {id}
+                      {`Welcome ${id}`}
                     </a>
                     <ul
                       className="dropdown-menu"
@@ -123,10 +123,10 @@ class Navbar extends Component {
                       <li>
                         <div
                           key="nav-logout"
-                          className="dropdown-item"
+                          className="dropdown-item logout"
                           onClick={this.logOut}
                         >
-                          Logout
+                          {`Logout`}
                         </div>
                       </li>
                     </ul>

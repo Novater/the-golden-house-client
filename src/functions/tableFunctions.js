@@ -7,11 +7,12 @@ import _ from 'lodash'
 import LoadingSpinner from '../components/loadingspinner'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons'
+
 const config = require('../config/index')
+const ObjectId = require('bson-objectid')
 axios.defaults.withCredentials = true
 
 export default class tableFunctions {
-
   /**
    *
    * @param {*} param0
@@ -138,6 +139,7 @@ export default class tableFunctions {
     onClickSave,
     onClickCancel,
   ) {
+
     function initializeTableFooters({
       footerClass,
       rowOptions,
@@ -268,14 +270,19 @@ export default class tableFunctions {
       const rowClasses = [props.className, deletedClass, approvedClass].join(
         ' ',
       )
+
       return (
-        <tr key={record._id} id={record._id} className={rowClasses}>
+        <tr
+          key={props.uniqueKey}
+          id={props.id}
+          className={rowClasses}
+        >
           {hasEditPermission && approveOnClick ? (
-            <td key={`a_${record._id}`}>
+            <td key={`a_${props.uniqueKey}`}>
               <button
                 className={approveButtonClass || 'approve-button'}
                 type="button"
-                id={`a_${record._id}`}
+                id={`a_${props.id}`}
                 onClick={approveOnClick}
               >
                 {approvedClass ? '\u2015' : '✓'}
@@ -283,11 +290,11 @@ export default class tableFunctions {
             </td>
           ) : null}
           {hasEditPermission && deleteOnClick ? (
-            <td key={`d_${record._id}`}>
+            <td key={`d_${props.uniqueKey}`}>
               <button
                 className={deleteButtonClass || 'delete-button'}
                 type="button"
-                id={`d_${record._id}`}
+                id={`d_${props.id}`}
                 onClick={deleteOnClick}
               >
                 {deletedClass ? '\u2015' : 'X'}
@@ -297,9 +304,9 @@ export default class tableFunctions {
           {headerKeyFormats.map((header) => {
             if (header.title === 'Rank') {
               return (
-                <td key={`rank-${record.rank}`}>
+                <td key={`rank-${record.rank}-${props.uniqueKey}`}>
                   <div
-                    key={`${header.title}-${record._id}`}
+                    key={`${props.uniqueKey}`}
                     className="rank-col"
                     id={`rank-${record.rank}`}
                   >
@@ -318,7 +325,7 @@ export default class tableFunctions {
 
             return (
               <td
-                key={`${header.title}-${record._id}`}
+                key={`${header.title}-${props.uniqueKey}`}
                 dangerouslySetInnerHTML={{
                   __html: _generate.cleanHTML.clean(
                     format.toString(),
@@ -345,12 +352,18 @@ export default class tableFunctions {
       const row = rows[numRows]
       numRows += 1
       currRow += 1
+
+      let uniqueKey
+      if (!row.thisRec._id) {
+        uniqueKey = new ObjectId()
+      }
+
       tableBuildRows.push(
         <TableEntry
           className={row.trClass}
           record={row.thisRec}
-          key={row.thisRec._id}
-          id={row.thisRec._id}
+          uniqueKey={row.thisRec._id || uniqueKey}
+          id={row.thisRec._id || uniqueKey}
         />,
       )
     }

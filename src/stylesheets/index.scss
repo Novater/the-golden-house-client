@@ -1,11 +1,11 @@
-$color-sky: #CAEBF2;
-$color-carbon: #A9A9A9;
-$color-dark-grey: #A2A3A4;
-$color-watermelon: #FF3B3F;
-$color-neutral: #EFEFEF;
-$color-gold: #C9B037;
-$color-silver: #D7D7D7;
-$color-bronze: #AD8A56;
+$color-sky: #caebf2;
+$color-carbon: #a9a9a9;
+$color-dark-grey: #a2a3a4;
+$color-watermelon: #ff3b3f;
+$color-neutral: #efefef;
+$color-gold: #c9b037;
+$color-silver: #d7d7d7;
+$color-bronze: #ad8a56;
 $color-nav: #212529;
 $color-faded-white: rgb(255 255 255 / 0.3);
 $color-opaque-black: rgb(0 0 0 / 0.6);
@@ -13,8 +13,12 @@ $height-nav: 60px;
 
 /* The typing effect */
 @keyframes typing {
-  from { width: 0 }
-  to { width: 80% }
+  from {
+    width: 0;
+  }
+  to {
+    width: 80%;
+  }
 }
 
 @keyframes blinking {
@@ -31,20 +35,22 @@ $height-nav: 60px;
 
 @keyframes hovering {
   from {
-    box-shadow: 0px 0px 0px 0px rgb(0 0 0 / 0)
+    box-shadow: 0px 0px 0px 0px rgb(0 0 0 / 0);
   }
 
   to {
-    box-shadow: 10px 10px 10px 10px rgb(0 0 0 / 0.5)
+    box-shadow: 10px 10px 10px 10px rgb(0 0 0 / 0.5);
   }
 }
 
-body, html {
+body,
+html {
   height: 100vh;
   width: 100%;
 }
 
-#root, .app-container {
+#root,
+.app-container {
   height: inherit;
   width: inherit;
 }
@@ -69,7 +75,7 @@ body, html {
   display: grid;
   place-items: center;
   width: 100%;
-  height: 200px;
+  height: 100%;
   margin: 50px;
   background-color: $color-opaque-black;
 }
@@ -77,7 +83,7 @@ body, html {
 .save-button {
   border-radius: 5px;
   background-color: $color-opaque-black;
-  color:$color-neutral;
+  color: $color-neutral;
   width: 100px;
   &:hover {
     color: $color-gold;
@@ -303,8 +309,12 @@ body, html {
   }
 
   &::-webkit-scrollbar-thumb {
-    background-image: linear-gradient(180deg, $color-gold 50%, rgb(0 0 0 / 0.5));
-    box-shadow: inset 2px 2px 5px 0 rgba(#FFF, 0.5);
+    background-image: linear-gradient(
+      180deg,
+      $color-gold 50%,
+      rgb(0 0 0 / 0.5)
+    );
+    box-shadow: inset 2px 2px 5px 0 rgba(#fff, 0.5);
     border-radius: 100px;
   }
 
@@ -323,7 +333,7 @@ body, html {
 
 .page-item.focused > a {
   color: $color-gold;
-  background-color: $color-neutral;  
+  background-color: $color-neutral;
 }
 
 .page-link {
@@ -331,7 +341,6 @@ body, html {
 }
 
 .page-item {
-
   a {
     background-color: $color-opaque-black;
     color: $color-neutral;
@@ -382,7 +391,8 @@ body, html {
   justify-content: flex-start;
   align-items: center;
 
-  .new-post-up, .new-post-down {
+  .new-post-up,
+  .new-post-down {
     position: absolute;
     width: 100%;
     height: fit-content;
@@ -394,7 +404,7 @@ body, html {
     z-index: 1;
 
     &:hover {
-      background: #A9A9A9;
+      background: #a9a9a9;
       cursor: pointer;
     }
 
@@ -403,7 +413,8 @@ body, html {
     }
   }
 
-  .new-post-left, .new-post-right {
+  .new-post-left,
+  .new-post-right {
     width: fit-content;
     height: 100%;
     background: rgb(0 0 0 / 0.2);
@@ -414,7 +425,7 @@ body, html {
     position: absolute;
 
     &:hover {
-      background: #A9A9A9;
+      background: #a9a9a9;
       cursor: pointer;
     }
 
@@ -470,14 +481,14 @@ body, html {
   align-items: center;
   flex-grow: 1;
   z-index: 1;
-  
+
   .header {
     display: flex;
     justify-content: space-between;
     width: 100%;
     color: $color-gold;
 
-    h4 { 
+    h4 {
       flex-grow: 1;
     }
   }
@@ -746,7 +757,8 @@ thead {
   max-width: 200px;
   margin-right: 20px;
 
-  .filter-checkbox, .filter-label {
+  .filter-checkbox,
+  .filter-label {
     margin-right: 10px;
   }
 
@@ -787,6 +799,36 @@ thead {
   margin-bottom: 5px;
 }
 
+.logout {
+  cursor: pointer;
+}
+.modal-dialog {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: fit-content;
+  height: fit-content;
+  transform: translate(-50%, -50%) !important;
+  background-color: $color-nav;
+  box-shadow: 0px 0px 3px 3px $color-nav;
+
+  .modal-content {
+    background-color: $color-nav;
+    color: $color-neutral;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+
+  .modal-header {
+    width: 100%;
+    border: none;
+    color: $color-gold;
+  }
+
+  .modal-footer {
+    border: none;
+  }
+}
 .filter-container {
   width: 80%;
   height: fit-content;
@@ -808,7 +850,7 @@ thead {
   display: flex;
   justify-content: center;
   align-items: center;
-  
+
   .container-fluid {
     display: none;
   }
@@ -866,10 +908,9 @@ thead {
     color: $color-neutral;
 
     &:hover {
-      color:$color-gold;
+      color: $color-gold;
     }
   }
-
 }
 .table-editor-component {
   display: flex;
@@ -882,7 +923,6 @@ thead {
 }
 
 .table-edit-row {
-
   &.columns {
     display: flex;
     flex-direction: row;
@@ -954,7 +994,7 @@ thead {
     justify-content: center;
     height: 300px;
 
-    &>.edit-sample-data {
+    & > .edit-sample-data {
       height: 300px !important;
       word-wrap: wrap;
       width: 100%;
@@ -977,10 +1017,9 @@ thead {
       color: $color-neutral;
       border-radius: 5px;
       box-shadow: 0px 0px 2px 2px rgb(0 0 0 / 0.5);
-  
+
       &:hover {
         color: $color-gold;
-        
       }
     }
   }
@@ -1070,7 +1109,6 @@ thead {
   }
 }
 
-
 .save-icon {
   display: grid;
   place-items: center;
@@ -1089,7 +1127,6 @@ thead {
 }
 
 .edit-icon {
-
   display: grid;
   place-items: center;
   height: fit-content;
@@ -1121,11 +1158,12 @@ thead {
 }
 
 .sidebar-open {
-  width: calc(100% - 500px)
+  width: calc(100% - 500px);
 }
 
 @media (max-width: 900px) {
-  .abyss-table, .filter-container {
+  .abyss-table,
+  .filter-container {
     width: 100%;
     font-size: 10px;
   }
@@ -1141,7 +1179,8 @@ thead {
 }
 
 @media (max-width: 1200px) {
-  .filter-container, .web-table {
+  .filter-container,
+  .web-table {
     width: 90%;
     font-size: 11px;
   }
@@ -1164,7 +1203,6 @@ thead {
   .blog-section {
     flex-direction: column;
     margin-bottom: 0;
-
   }
   .search-container {
     width: 90%;
@@ -1182,7 +1220,8 @@ thead {
     grid-column: 1 / 4;
   }
 
-  .leftContainer, .rightContainer {
+  .leftContainer,
+  .rightContainer {
     display: none;
   }
 }

@@ -128,23 +128,6 @@ class Table extends Component {
           records: this.props.dataSource,
         })
       }
-
-      if (this.props.id === this.props.editorId) {
-        store.dispatch({
-          type: EDIT_CONSTANTS.UPDATE_SIDEBAR,
-          payload: {
-            data: {
-              row: this.props.row,
-              col: this.props.col,
-              searchable: this.props.searchable,
-              headers: this.props.headers,
-              dataUrl: this.props.dataUrl,
-              dataSource: this.props.dataSource,
-              pagination: this.props.rowSelectOptions,
-            },
-          },
-        })
-      }
     }
 
     if (ROWSELECT_CHANGE) {
@@ -154,6 +137,24 @@ class Table extends Component {
         pageRows: this.props.rowSelectOptions
           ? this.props.rowSelectOptions.selected
           : '',
+      })
+    }
+
+    // Update our edit sidebar if the table ever changes
+    if (this.props.id === this.props.editorId) {
+      store.dispatch({
+        type: EDIT_CONSTANTS.UPDATE_SIDEBAR,
+        payload: {
+          data: {
+            row: this.props.row,
+            col: this.props.col,
+            searchable: this.props.searchable,
+            headers: this.props.headers,
+            dataUrl: this.props.dataUrl,
+            dataSource: this.props.dataSource,
+            pagination: this.props.rowSelectOptions,
+          },
+        },
       })
     }
   }

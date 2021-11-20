@@ -19,6 +19,7 @@ export default function TableEditor({
   pagination,
   dataSource,
 }) {
+  console.log(dataSource)
   const TABLE_HEADER_KEYS = {
     TITLE: 'title',
     FORMAT: 'format',
@@ -225,7 +226,7 @@ export default function TableEditor({
           <textarea
             readOnly={true}
             className="edit-sample-data"
-            value={JSON.stringify(dataSource[0], undefined, 2)}
+            value={JSON.stringify(dataSource[0] || { message: 'No data retrieved from the endpoint.'}, undefined, 2)}
           ></textarea>
         </div>
         <hr />

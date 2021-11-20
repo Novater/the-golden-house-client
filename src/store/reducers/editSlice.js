@@ -18,6 +18,10 @@ export default function editReducer(state = initialState, action) {
         inEditMode: true,
         isEditing: false,
         showEditModal: false,
+        showSideBar: false,
+        editorId: null,
+        editorType: null,
+        editorData: null,
       }
     }
     case EDIT_CONSTANTS.LEAVE_EDIT_MODE: {
@@ -26,6 +30,10 @@ export default function editReducer(state = initialState, action) {
         inEditMode: false,
         isEditing: false,
         showEditModal: false,
+        showSideBar: false,
+        editorId: null,
+        editorType: null,
+        editorData: null,
       }
     }
     case EDIT_CONSTANTS.START_EDITING: {
@@ -38,7 +46,15 @@ export default function editReducer(state = initialState, action) {
       return { ...state, showEditModal: false }
     }
     case EDIT_CONSTANTS.CHANGE_EDIT_MODE: {
-      return { ...state, inEditMode: !state.inEditMode, showEditModal: false }
+      return {
+        ...state,
+        inEditMode: !state.inEditMode,
+        showEditModal: false,
+        showSideBar: false,
+        editorId: null,
+        editorType: null,
+        editorData: null,
+      }
     }
     case EDIT_CONSTANTS.TOGGLE_EDIT_SIDEBAR: {
       return {
@@ -50,7 +66,13 @@ export default function editReducer(state = initialState, action) {
       }
     }
     case EDIT_CONSTANTS.CLOSE_SIDEBAR: {
-      return { ...state, showSideBar: false, editorType: null, editorId: null, editorData: null }
+      return {
+        ...state,
+        showSideBar: false,
+        editorType: null,
+        editorId: null,
+        editorData: null,
+      }
     }
     case EDIT_CONSTANTS.UPDATE_SIDEBAR: {
       if (state.showSideBar) {
