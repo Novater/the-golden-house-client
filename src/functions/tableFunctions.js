@@ -138,8 +138,9 @@ export default class tableFunctions {
     approveLineIds,
     onClickSave,
     onClickCancel,
+    sortKey,
+    sortDir,
   ) {
-
     function initializeTableFooters({
       footerClass,
       rowOptions,
@@ -150,6 +151,7 @@ export default class tableFunctions {
       paginationFunc,
       numRows,
     }) {
+      const displayElements = 'test'
       const rowOptionEls = []
       const paginationEls = []
 
@@ -186,6 +188,12 @@ export default class tableFunctions {
             )
           }
 
+          // Ellipses pagination
+          let leftEllipses = false
+          let rightEllipses = false
+          let lastTwoPages = [] // [numPages, numPages - 1]
+          let firstTwoPages = [] // [1, 2]
+
           for (let i = 0; i < numPages; i += 1) {
             if (i + 1 == currPage) {
               paginationEls.push(
@@ -199,7 +207,11 @@ export default class tableFunctions {
                   </a>
                 </li>,
               )
-            } else {
+            } else if (
+              Math.abs(i + 1 - currPage) < 3 ||
+              lastTwoPages.indexOf(i + 1) >= 0 ||
+              firstTwoPages.indexOf(i + 1) >= 0
+            ) {
               paginationEls.push(
                 <li className="page-item" key={`page-${i + 1}`}>
                   <a
@@ -211,6 +223,29 @@ export default class tableFunctions {
                   </a>
                 </li>,
               )
+            } else {
+              if (i + 1 > currPage && !rightEllipses) {
+                paginationEls.push(
+                  <li
+                    className="page-item"
+                    key={`page-right-ellipses-${i + 1}`}
+                  >
+                    <a className="page-link" name={i + 1}>
+                      {`...`}
+                    </a>
+                  </li>,
+                )
+                rightEllipses = true
+              } else if (i + 1 < currPage && !leftEllipses) {
+                paginationEls.push(
+                  <li className="page-item" key={`page-left-ellipses-${i + 1}`}>
+                    <a className="page-link" name={i + 1}>
+                      {`...`}
+                    </a>
+                  </li>,
+                )
+                leftEllipses = true
+              }
             }
           }
           if (currPage < numPages) {
@@ -236,22 +271,31 @@ export default class tableFunctions {
         }
       }
 
+      let firstElementOnPageIndex = (currPage - 1) * rowOptions.selected
+      let lastElementOnPageIndex = Math.min(
+        currPage * rowOptions.selected,
+        numRows,
+      )
+
       return (
         <div className={footerClass}>
           {rowOptions ? (
             <div className={rowClass}>
-              <p>Rows Displayed: </p>
-              <select
-                className="form-select"
-                onChange={onRowUpdate}
-                defaultValue={rowOptions.selected}
-              >
-                {rowOptionEls}
-              </select>
+              <p>{`Showing ${firstElementOnPageIndex} to ${lastElementOnPageIndex} of ${numRows}`}</p>
+              <div className="row-select-display">
+                <p>Rows Displayed: </p>
+                <select
+                  className="form-select"
+                  onChange={onRowUpdate}
+                  defaultValue={rowOptions.selected}
+                >
+                  {rowOptionEls}
+                </select>
+              </div>
             </div>
           ) : null}
 
-          <nav aria-label="Page navigation example">
+          <nav aria-label="table-pagination">
             <ul className="pagination">{paginationEls}</ul>
           </nav>
         </div>
@@ -272,11 +316,7 @@ export default class tableFunctions {
       )
 
       return (
-        <tr
-          key={props.uniqueKey}
-          id={props.id}
-          className={rowClasses}
-        >
+        <tr key={props.uniqueKey} id={props.id} className={rowClasses}>
           {hasEditPermission && approveOnClick ? (
             <td key={`a_${props.uniqueKey}`}>
               <button
@@ -397,6 +437,7 @@ export default class tableFunctions {
                       name={header.title}
                       key={`${header.title}-${idx}`}
                       id={`${header.title}-${idx}`}
+                      className={header.title === sortKey && sortDir === 1 ? 'header-sorted ascend' : header.title === sortKey && sortDir === -1 ? 'header-sorted descend' : null}
                     >
                       {header.title}
                       {/* <div>

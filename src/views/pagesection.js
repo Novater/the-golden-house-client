@@ -68,7 +68,7 @@ function PageSection({
               const SERVER_URL = _generate.serverFunctions.getServerURL()
 
               let loadedData = []
-              if (window.sessionStorage.getItem(data.dataSource)) {
+              if (window.sessionStorage.getItem(data.dataSource) && !isLoggedIn) {
                 setTableRecords(
                   JSON.parse(window.sessionStorage.getItem(data.dataSource)),
                 )

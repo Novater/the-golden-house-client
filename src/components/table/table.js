@@ -122,7 +122,7 @@ class Table extends Component {
           this.state.sortDir || 1,
           this.props.dataSource,
           true,
-          filterObj
+          filterObj,
         )
       } else {
         this.setState({
@@ -605,7 +605,6 @@ class Table extends Component {
       col,
       dataUrl,
       dataSource,
-      showSideBar,
       editorId,
       id,
     } = this.props
@@ -621,6 +620,8 @@ class Table extends Component {
       approveLineIds,
       deleteLineIds,
       tableSaving,
+      sortKey,
+      sortDir,
     } = this.state
 
     const generatedFilters = []
@@ -630,7 +631,7 @@ class Table extends Component {
       const filterForDefault = filterObj.rows.filter(
         (filter) => filter.selected,
       )
-      
+
       if (filterObj.rows && filterObj.rows.length > 0) {
         generatedFilters.push(
           <TableFilters
@@ -725,6 +726,8 @@ class Table extends Component {
                 approveRows ? approveLineIds : [],
                 this.onClickSave,
                 this.onClickCancel,
+                sortKey,
+                sortDir,
               )}
             </div>
           )}
