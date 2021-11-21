@@ -11,6 +11,7 @@ import SampleDataGenerator from '../config/sampleData'
 import { connect } from 'react-redux'
 import { loadPosts, savePosts } from '../store/reducers/postSlice'
 import store from '../store/store'
+import { post } from 'jquery'
 
 const Table = React.lazy(() => import('../components/table/table'))
 const BlogSection = React.lazy(() => import('../components/blogsection'))
@@ -96,6 +97,7 @@ class Page extends Component {
       this.props.posts.map((row, idxRow) => {
         const rowKey = row.map((post) => post._id).join('-')
         return (
+          <>
           <div className="blog-section" key={rowKey} id={rowKey}>
             {row.map((post, idxCol) => {
               return (
@@ -110,6 +112,8 @@ class Page extends Component {
               )
             })}
           </div>
+          {/* {idxRow !== this.props.posts.length - 1 && <hr className="blog-separator" style={{ width: '100%' }} />} */}
+          </>
         )
       })
     ) : this.props.inEditMode ? (

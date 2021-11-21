@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 import { React, Component } from 'react'
-import { Route, Redirect } from 'react-router-dom'
+import { Route, Redirect, Switch } from 'react-router-dom'
 import Navbar from './components/navbar/navbar'
 import PageModal from './components/modal'
 import Page from './views/page'
@@ -87,7 +87,8 @@ class App extends Component {
   }
 
   render() {
-    const { tab, loggedIn, editorType, editorData, saveFailed, saveSuccess } = this.props
+    const { tab, loggedIn, editorType, editorData, saveFailed, saveSuccess } =
+      this.props
 
     return (
       <div className="app-container">
@@ -108,16 +109,25 @@ class App extends Component {
             />
           )}
         </Route>
-        {this.state.pages.map(
-          ({ url, title, tabName, backgroundImage, _id }) => {
-            return this.createExactPage(url, {
-              title,
-              tabName,
-              backgroundImage,
-              _id,
-            })
-          },
-        )}
+        <Switch>
+          {this.state.pages.map(
+            ({ url, title, tabName, backgroundImage, _id }) => {
+              return this.createExactPage(url, {
+                title,
+                tabName,
+                backgroundImage,
+                _id,
+              })
+            },
+          )}
+          <Route key={`route-not-found`}>
+            <Page
+              key={`page-not-found`}
+              title={`Page Not Found`}
+              tabName={`not-found`}
+            />
+          </Route>
+        </Switch>
         <EditSideBar type={editorType} content={editorData} />
         <PageModal
           title={
