@@ -87,7 +87,7 @@ class App extends Component {
   }
 
   render() {
-    const { tab, loggedIn, editorType, editorData } = this.props
+    const { tab, loggedIn, editorType, editorData, saveFailed } = this.props
 
     return (
       <div className="app-container">
@@ -133,6 +133,14 @@ class App extends Component {
           closeFunc={this.closeEditModal}
         />
         <PageModal
+          title={
+            'Saved Failed'
+          }
+          content={'Something went wrong while saving your updates.'}
+          showState={saveFailed}
+          saveFunc={store.dispatch({ type: POST_CONSTANTS.CLOSE_SAVE_POST_FAILURE })}
+        />
+        <PageModal
           title={'Save Edits?'}
           content={
             'Are you sure you want to push your current page edits to the live site?'
@@ -166,6 +174,7 @@ const mapState = (state) => ({
   loggedIn: state.auth.loggedIn,
   tab: state.post.tab,
   posts: state.post.posts,
+  saveFailed: state.post.saveFailed,
 })
 
 export default connect(mapState)(App)

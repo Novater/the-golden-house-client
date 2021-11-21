@@ -14,6 +14,7 @@ const initialState = {
   loadingPosts: false,
   tab: '',
   showSaveModal: false,
+  saveFailed: false,
 }
 
 export default function postReducer(state = initialState, action) {
@@ -137,6 +138,13 @@ export default function postReducer(state = initialState, action) {
       return {
         ...state,
         savingPosts: false,
+        saveFailed: true,
+      }
+    }
+    case POST_CONSTANTS.CLOSE_SAVE_POST_FAILURE: {
+      return {
+        ...state,
+        saveFailed: false,
       }
     }
     case POST_CONSTANTS.WIPE_POSTS: {
