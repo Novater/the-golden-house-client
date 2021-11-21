@@ -39,7 +39,6 @@ export default function TableEditor({
         return { ...header }
       })
       copiedHeaders.splice(thisIndex, 1)
-      console.log(copiedHeaders)
       store.dispatch({
         type: POST_CONSTANTS.EDIT_POST,
         payload: {
@@ -85,8 +84,9 @@ export default function TableEditor({
         key === 'keys'
           ? event.target.value.toString().split(',')
           : event.target.value
-      // if (key === 'keys') event.target.value.join(',')
+
       copiedHeaders[thisIndex][key] = JSON.parse(updateVal)
+
       store.dispatch({
         type: POST_CONSTANTS.EDIT_POST,
         payload: {
@@ -134,7 +134,6 @@ export default function TableEditor({
   }
 
   function updatePagination(event) {
-    console.log(JSON.parse(event.target.value))
     store.dispatch({
       type: POST_CONSTANTS.EDIT_POST,
       payload: {
@@ -159,7 +158,7 @@ export default function TableEditor({
       },
     })
   }
-  
+
   return (
     <div className="table-editor-container">
       <div className="table-edit-close">
@@ -226,7 +225,13 @@ export default function TableEditor({
           <textarea
             readOnly={true}
             className="edit-sample-data"
-            value={JSON.stringify(dataSource[0] || { message: 'No data retrieved from the endpoint.'}, undefined, 2)}
+            value={JSON.stringify(
+              dataSource[0] || {
+                message: 'No data retrieved from the endpoint.',
+              },
+              undefined,
+              2,
+            )}
           ></textarea>
         </div>
         <hr />

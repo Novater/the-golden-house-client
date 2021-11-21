@@ -60,7 +60,7 @@ export default function TableFilters({
         className="form-select"
         name={title}
         onChange={onChange}
-        defaultValue={defaultValues[0].title}
+        value={defaultValues[0].title}
         key={`${title}-dropdown`}
         id={`${title}-dropdown`}
       >

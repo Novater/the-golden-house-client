@@ -51,7 +51,6 @@ export default function postReducer(state = initialState, action) {
       const col = action.payload.col
 
       action.payload.post._id = new ObjectId()
-      console.log('post', action.payload.post)
       let copiedPosts = []
 
       for (let i = 0; i < state.posts.length; i += 1) {
@@ -73,7 +72,6 @@ export default function postReducer(state = initialState, action) {
       }
     }
     case POST_CONSTANTS.EDIT_POST: {
-      console.log('editing post')
       const { row, col, post } = action.payload
       let copiedPosts = []
 
@@ -86,7 +84,6 @@ export default function postReducer(state = initialState, action) {
         copiedPost[editKey] = post[editKey]
       })
       copiedPosts[row][col] = copiedPost
-      console.log('copied post', copiedPosts[row][col])
       return {
         ...state,
         posts: copiedPosts,

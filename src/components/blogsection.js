@@ -41,7 +41,6 @@ class BlogSection extends Component {
   }
 
   deletePost = () => {
-    console.log(this.props.col)
     store.dispatch({
       type: POST_CONSTANTS.DELETE_POST,
       payload: {
@@ -171,7 +170,6 @@ class BlogSection extends Component {
   }
 
   saveBlogPost = () => {
-    console.log('saving', this.props)
     store.dispatch({
       type: POST_CONSTANTS.EDIT_POST,
       payload: {

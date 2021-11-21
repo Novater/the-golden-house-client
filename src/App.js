@@ -88,7 +88,7 @@ class App extends Component {
 
   render() {
     const { tab, loggedIn, editorType, editorData } = this.props
-    console.log(this.props)
+
     return (
       <div className="app-container">
         {tab !== 'fullpage-table' ? (
@@ -109,13 +109,7 @@ class App extends Component {
           )}
         </Route>
         {this.state.pages.map(
-          ({
-            url,
-            title,
-            tabName,
-            backgroundImage,
-            _id,
-          }) => {
+          ({ url, title, tabName, backgroundImage, _id }) => {
             return this.createExactPage(url, {
               title,
               tabName,

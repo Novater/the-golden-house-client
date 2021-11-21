@@ -122,6 +122,7 @@ class Table extends Component {
           this.state.sortDir || 1,
           this.props.dataSource,
           true,
+          filterObj
         )
       } else {
         this.setState({
@@ -628,7 +629,7 @@ class Table extends Component {
       const filterForDefault = filterObj.rows.filter(
         (filter) => filter.selected,
       )
-
+      
       if (filterObj.rows && filterObj.rows.length > 0) {
         generatedFilters.push(
           <TableFilters

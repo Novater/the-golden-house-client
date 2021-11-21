@@ -16,7 +16,6 @@ function EditSideBar({ type, content, editorId }) {
   }
 
   function renderSidebar({ type, content }) {
-    console.log(content)
     switch (type) {
       case TYPES.TABLE:
         return (
@@ -39,7 +38,6 @@ function EditSideBar({ type, content, editorId }) {
     }
   }
 
-  console.log('sidebar', type)
   return <>{renderSidebar({ type, content })}</>
 }
 
