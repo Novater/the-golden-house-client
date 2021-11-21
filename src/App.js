@@ -87,7 +87,7 @@ class App extends Component {
   }
 
   render() {
-    const { tab, loggedIn, editorType, editorData, saveFailed } = this.props
+    const { tab, loggedIn, editorType, editorData, saveFailed, saveSuccess } = this.props
 
     return (
       <div className="app-container">
