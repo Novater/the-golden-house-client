@@ -915,6 +915,31 @@ thead {
   height: 100vh;
   z-index: 2;
   box-shadow: 0px 0px 2px 2px $color-nav;
+
+  .content-select-row {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    height: fit-content;
+    padding: 2em;
+    flex-wrap: wrap;
+
+    .content-select-type {
+      font-size: 7em;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+
+      &:hover {
+        color: $color-nav;
+      }
+
+      p {
+        font-size: 1rem !important;
+        text-align: center;
+      }
+    }
+  }
 }
 
 .table-edit-close {

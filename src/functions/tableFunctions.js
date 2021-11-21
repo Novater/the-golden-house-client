@@ -437,19 +437,15 @@ export default class tableFunctions {
                       name={header.title}
                       key={`${header.title}-${idx}`}
                       id={`${header.title}-${idx}`}
-                      className={header.title === sortKey && sortDir === 1 ? 'header-sorted ascend' : header.title === sortKey && sortDir === -1 ? 'header-sorted descend' : null}
+                      className={
+                        header.title === sortKey && sortDir === 1
+                          ? 'header-sorted ascend'
+                          : header.title === sortKey && sortDir === -1
+                          ? 'header-sorted descend'
+                          : null
+                      }
                     >
                       {header.title}
-                      {/* <div>
-                        <FontAwesomeIcon
-                          title="Toggle Sort Up"
-                          icon={faSortUp}
-                        />
-                        <FontAwesomeIcon
-                          title="Toggle Sort Down"
-                          icon={faSortDown}
-                        />
-                      </div> */}
                     </th>
                   ))}
                 </tr>
