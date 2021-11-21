@@ -100,15 +100,7 @@ class App extends Component {
             title="The Golden House"
           />
         ) : null}
-        <Route exact path="/admin">
-          {this.props.loggedIn ? (
-            <Redirect to="/" />
-          ) : (
-            <LoginPage
-              backgroundImage={require('./assets/banner-image-tgh-2.png')}
-            />
-          )}
-        </Route>
+
         <Switch>
           {this.state.pages.map(
             ({ url, title, tabName, backgroundImage, _id }) => {
@@ -120,6 +112,15 @@ class App extends Component {
               })
             },
           )}
+          <Route exact path="/admin">
+            {this.props.loggedIn ? (
+              <Redirect to="/" />
+            ) : (
+              <LoginPage
+                backgroundImage={require('./assets/banner-image-tgh-2.png')}
+              />
+            )}
+          </Route>
           <Route key={`route-not-found`}>
             <Page
               key={`page-not-found`}
