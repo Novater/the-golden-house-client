@@ -192,6 +192,7 @@ export async function savePosts(dispatch, getState) {
       posts,
       tab,
     })
+    console.log(savePostRes.status)
     if (savePostRes.status != 200)
       throw Error({ message: 'Something went wrong updating posts.' })
     dispatch({

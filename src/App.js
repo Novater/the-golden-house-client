@@ -138,7 +138,7 @@ class App extends Component {
           }
           content={'Something went wrong while saving your updates.'}
           showState={saveFailed}
-          saveFunc={store.dispatch({ type: POST_CONSTANTS.CLOSE_SAVE_POST_FAILURE })}
+          saveFunc={() => store.dispatch({ type: POST_CONSTANTS.CLOSE_SAVE_POST_FAILURE })}
         />
         <PageModal
           title={'Save Edits?'}
