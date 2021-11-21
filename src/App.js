@@ -183,6 +183,7 @@ const mapState = (state) => ({
   tab: state.post.tab,
   posts: state.post.posts,
   saveFailed: state.post.saveFailed,
+  saveSuccess: state.post.saveSuccess,
 })
 
 export default connect(mapState)(App)
