@@ -918,12 +918,14 @@ export default class SampleDataGenerator {
     return {
       POST: 'post',
       TABLE: 'table',
+      PLACEHOLDER: 'placeholder',
     }
   }
   static samplePermissions() {
     return {
       table: ['MOD', 'ADMIN'],
       post: ['ADMIN'],
+      placeholder: ['ADMIN']
     }
   }
 }

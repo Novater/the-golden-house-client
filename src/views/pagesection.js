@@ -68,7 +68,10 @@ function PageSection({
               const SERVER_URL = _generate.serverFunctions.getServerURL()
 
               let loadedData = []
-              if (window.sessionStorage.getItem(data.dataSource) && !isLoggedIn) {
+              if (
+                window.sessionStorage.getItem(data.dataSource) &&
+                !isLoggedIn
+              ) {
                 setTableRecords(
                   JSON.parse(window.sessionStorage.getItem(data.dataSource)),
                 )
@@ -179,7 +182,7 @@ function PageSection({
   if (isLoading) {
     return <LoadingSpinner />
   }
-
+  console.log(data)
   switch (type) {
     case CONTENT_TYPES.POST:
       return (
@@ -287,7 +290,36 @@ function PageSection({
       } else {
         return null
       }
-
+    case CONTENT_TYPES.PLACEHOLDER:
+      return (
+        <Suspense key={`loading-${data._id}`} fallback={<LoadingSpinner />}>
+          <div className="page-post">
+            {inEditMode ? (
+              <>
+                <NewPost
+                  direction="down"
+                  id={data._id}
+                  onClick={createNewPost}
+                />
+              </>
+            ) : null}
+            <BlogSection
+              title={data.title}
+              content={data.content}
+              key={data._id}
+              id={data._id}
+              row={row}
+              col={col}
+              editPermission={
+                permissionList.post.indexOf(role) >= 0 &&
+                isLoggedIn &&
+                inEditMode
+              }
+              isDummy={true}
+            />
+          </div>
+        </Suspense>
+      )
     default:
       return null
   }

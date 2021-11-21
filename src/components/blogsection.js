@@ -115,7 +115,7 @@ class BlogSection extends Component {
               ),
             }}
           ></h4>
-          {this.props.editPermission ? (
+          {this.props.editPermission && !this.props.isDummy ? (
             <div className="edit">
               <FontAwesomeIcon icon={faPen} onClick={this.editPost} />
               <FontAwesomeIcon icon={faTrash} onClick={this.deletePost} />

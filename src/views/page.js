@@ -42,7 +42,7 @@ class Page extends Component {
       payload: { tab: this.props.tabName },
     })
     store.dispatch({
-      type: EDIT_CONSTANTS.CLOSE_SIDEBAR
+      type: EDIT_CONSTANTS.CLOSE_SIDEBAR,
     })
 
     store.dispatch(loadPosts)
@@ -84,6 +84,14 @@ class Page extends Component {
   }
 
   renderPosts() {
+    const placeHolderEl = {
+      col: -1,
+      row: -1,
+      title: `Looks like you don't have any posts yet on this page...`,
+      content: '',
+      id: `placeholder-el-${this.props.tabName}`,
+    }
+
     return this.props.posts.length > 0 ? (
       this.props.posts.map((row, idxRow) => {
         const rowKey = row.map((post) => post._id).join('-')
@@ -106,18 +114,14 @@ class Page extends Component {
       })
     ) : this.props.inEditMode ? (
       <div className="blog-section">
-        <Suspense key="" fallback={<LoadingSpinner />}>
-          <BlogSection
-            title="Looks like you don't have any posts on this page yet..."
-            content=""
-            index=""
-            id=""
-            key=""
-            row={-1}
-            col={-1}
-            isDummy={true}
-          />
-        </Suspense>
+        <PageSection
+          type={`placeholder`}
+          role={this.props.role}
+          row={-1}
+          col={-1}
+          key={`placeholder-el-${this.props.tabName}`}
+          data={placeHolderEl}
+        />
       </div>
     ) : (
       ''
@@ -132,7 +136,6 @@ class Page extends Component {
 
   render() {
     const { loggingOut, inEditMode, showSideBar, backgroundImage } = this.props
-    console.log(inEditMode)
     return (
       <div
         className={`pageContainer ${
@@ -165,9 +168,7 @@ class Page extends Component {
                   )}
                 </div>
               </div>
-              <Suspense
-                fallback={<LoadingSpinner />}
-              >
+              <Suspense fallback={<LoadingSpinner />}>
                 {this.renderPosts()}
               </Suspense>
             </div>
