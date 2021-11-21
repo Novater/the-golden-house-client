@@ -133,12 +133,20 @@ class App extends Component {
           closeFunc={this.closeEditModal}
         />
         <PageModal
-          title={
-            'Saved Failed'
+          title={'Saved Successful!'}
+          content={'Your updates have been pushed to the live site.'}
+          showState={saveSuccess}
+          saveFunc={() =>
+            store.dispatch({ type: POST_CONSTANTS.CLOSE_SAVE_POST_SUCCESS })
           }
+        />
+        <PageModal
+          title={'Saved Failed'}
           content={'Something went wrong while saving your updates.'}
           showState={saveFailed}
-          saveFunc={() => store.dispatch({ type: POST_CONSTANTS.CLOSE_SAVE_POST_FAILURE })}
+          saveFunc={() =>
+            store.dispatch({ type: POST_CONSTANTS.CLOSE_SAVE_POST_FAILURE })
+          }
         />
         <PageModal
           title={'Save Edits?'}

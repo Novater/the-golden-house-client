@@ -15,6 +15,7 @@ const initialState = {
   tab: '',
   showSaveModal: false,
   saveFailed: false,
+  saveSuccess: false,
 }
 
 export default function postReducer(state = initialState, action) {
@@ -131,6 +132,7 @@ export default function postReducer(state = initialState, action) {
       return {
         ...state,
         savingPosts: false,
+        saveSuccess: true,
       }
     }
     case POST_CONSTANTS.SAVING_POSTS_FAILURE: {
@@ -145,6 +147,12 @@ export default function postReducer(state = initialState, action) {
       return {
         ...state,
         saveFailed: false,
+      }
+    }
+    case POST_CONSTANTS.CLOSE_SAVE_POST_SUCCESS: {
+      return {
+        ...state,
+        saveSuccess: false,
       }
     }
     case POST_CONSTANTS.WIPE_POSTS: {
@@ -192,7 +200,6 @@ export async function savePosts(dispatch, getState) {
       posts,
       tab,
     })
-    console.log(savePostRes.status)
     if (savePostRes.status != 200)
       throw Error({ message: 'Something went wrong updating posts.' })
     dispatch({
