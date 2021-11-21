@@ -229,7 +229,8 @@ class Table extends Component {
         selectedEl.map((el) => {
           const { lookFor } = el
 
-          if (stringRep.match(lookFor)) {
+          const matchAttempt = stringRep.match(lookFor)
+          if (matchAttempt && matchAttempt[0] === stringRep) {
             thisFilterLookupAMatch = true
           }
         })
