@@ -41,7 +41,6 @@ export default function postReducer(state = initialState, action) {
       }
     }
     case POST_CONSTANTS.LOADING_POSTS_FAILURE: {
-      console.error(action.payload.error)
       return {
         ...state,
         loadingPosts: false,
