@@ -360,7 +360,7 @@ export default class tableFunctions {
             const { keys } = header
 
             for (const key of keys) {
-              format = format.replace(`{${key}}`, record[key] || '')
+              format = format.replace(`{${key}}`, _.get(record, key) || '')
             }
 
             return (

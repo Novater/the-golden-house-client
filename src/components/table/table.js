@@ -217,7 +217,7 @@ class Table extends Component {
         let stringRep = format
 
         for (const key of keys) {
-          stringRep = stringRep.replace(`{${key}}`, rec[key])
+          stringRep = stringRep.replace(`{${key}}`, _.get(rec, key))
         }
 
         const thisFilter = filters[header.title].rows
@@ -492,7 +492,7 @@ class Table extends Component {
     for (let i = 0; i < records.length; i += 1) {
       let stringRep = format
       for (const key of keys) {
-        stringRep = stringRep.replace(`{${key}}`, records[i][key])
+        stringRep = stringRep.replace(`{${key}}`, _.get(records[i], key))
       }
       records[i].sortVal = isNaN(stringRep) ? stringRep : Number(stringRep)
     }
