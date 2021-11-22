@@ -36,6 +36,7 @@ class Navbar extends Component {
   logOut() {
     store.dispatch({ type: AUTH_CONSTANTS.AUTH_LOGOUT_REQUEST })
     store.dispatch(logoutUser)
+    store.dispatch({ type: EDIT_CONSTANTS.LEAVE_EDIT_MODE })
   }
 
   addNewNav() {
