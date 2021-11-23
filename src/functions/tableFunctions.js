@@ -372,7 +372,15 @@ export default class tableFunctions {
               for (let char of charArr) {
                 if (charGifMap[char]) {
                   console.log(charGifMap[char])
-                  gifs.push(<img className="char-img" src={charGifMap[char]} alt={char} aria-describedby={char} title={char} />)
+                  gifs.push(
+                    <img
+                      className="char-img"
+                      src={charGifMap[char]}
+                      alt={char}
+                      aria-describedby={char}
+                      title={char}
+                    />,
+                  )
                 } else {
                   gifs.push(char)
                 }
