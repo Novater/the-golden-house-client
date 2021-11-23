@@ -7,6 +7,7 @@ import _ from 'lodash'
 import LoadingSpinner from '../components/loadingspinner'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons'
+import SampleDataGenerator from '../config/sampleData'
 
 const config = require('../config/index')
 const ObjectId = require('bson-objectid')
@@ -361,6 +362,23 @@ export default class tableFunctions {
 
             for (const key of keys) {
               format = format.replace(`{${key}}`, _.get(record, key) || '')
+            }
+
+            if (header.title === 'Characters') {
+              const charGifMap = SampleDataGenerator.characterToGif()
+              console.log(format)
+              const charArr = format.split(',')
+              let gifs = []
+              for (let char of charArr) {
+                if (charGifMap[char]) {
+                  console.log(charGifMap[char])
+                  gifs.push(<img className="char-img" src={charGifMap[char]} alt={char} aria-describedby={char} title={char} />)
+                } else {
+                  gifs.push(char)
+                }
+              }
+
+              return <td key={`${header.title}-${props.uniqueKey}`}>{gifs}</td>
             }
 
             return (

@@ -1,3 +1,45 @@
+import AmberGif from '../assets/genshin-table-gifs/amber.gif'
+import AlbedoGif from '../assets/genshin-table-gifs/albedo.gif'
+import BarbaraGif from '../assets/genshin-table-gifs/barbara.gif'
+import BeidouGif from '../assets/genshin-table-gifs/beidou.gif'
+import BennettGif from '../assets/genshin-table-gifs/bennett.gif'
+import ChongyunGif from '../assets/genshin-table-gifs/chongyun.gif'
+import DilucGif from '../assets/genshin-table-gifs/diluc.gif'
+import DionaGif from '../assets/genshin-table-gifs/diona.gif'
+import EulaGif from '../assets/genshin-table-gifs/eula.gif'
+import FischlGif from '../assets/genshin-table-gifs/fischl.gif'
+import GanyuGif from '../assets/genshin-table-gifs/ganyu.gif'
+import HuTaoGif from '../assets/genshin-table-gifs/hutao.gif'
+import JeanGif from '../assets/genshin-table-gifs/jean.gif'
+import KazuhaGif from '../assets/genshin-table-gifs/kaedehara kazuha.gif'
+import KaeyaGif from '../assets/genshin-table-gifs/kaeya.gif'
+import AyakaGif from '../assets/genshin-table-gifs/kamisato ayaka.gif'
+import KeqingGif from '../assets/genshin-table-gifs/keqing.gif'
+import KleeGif from '../assets/genshin-table-gifs/klee.gif'
+import KujouSaraGif from '../assets/genshin-table-gifs/kujou sara.gif'
+import LisaGif from '../assets/genshin-table-gifs/lisa.gif'
+import MonaGif from '../assets/genshin-table-gifs/mona.gif'
+import NingguangGif from '../assets/genshin-table-gifs/ningguang.gif'
+import NoelleGif from '../assets/genshin-table-gifs/noelle.gif'
+import QiqiGif from '../assets/genshin-table-gifs/qiqi.gif'
+import RaidenGif from '../assets/genshin-table-gifs/raiden shogun.gif'
+import RazorGif from '../assets/genshin-table-gifs/razor.gif'
+import RosariaGif from '../assets/genshin-table-gifs/rosaria.gif'
+import KokomiGif from '../assets/genshin-table-gifs/sangonomiya kokomi.gif'
+import SayuGif from '../assets/genshin-table-gifs/sayu.gif'
+import SucroseGif from '../assets/genshin-table-gifs/sucrose.gif'
+import TartagliaGif from '../assets/genshin-table-gifs/tartaglia.gif'
+import ThomaGif from '../assets/genshin-table-gifs/thoma.gif'
+import TravelerGif from '../assets/genshin-table-gifs/lumine.gif'
+import VentiGif from '../assets/genshin-table-gifs/venti.gif'
+import XianglingGif from '../assets/genshin-table-gifs/xiangling.gif'
+import XiaoGif from '../assets/genshin-table-gifs/xiao.gif'
+import XingqiuGif from '../assets/genshin-table-gifs/xingqiu.gif'
+import XinyanGif from '../assets/genshin-table-gifs/xinyan.gif'
+import YanfeiGif from '../assets/genshin-table-gifs/yanfei.gif'
+import YoimiyaGif from '../assets/genshin-table-gifs/yoimiya.gif'
+import ZhongliGif from '../assets/genshin-table-gifs/zhongli.gif'
+
 export default class SampleDataGenerator {
   static sampleTableHeader(empty = false) {
     if (empty) {
@@ -925,7 +967,53 @@ export default class SampleDataGenerator {
     return {
       table: ['MOD', 'ADMIN'],
       post: ['ADMIN'],
-      placeholder: ['ADMIN']
+      placeholder: ['ADMIN'],
+    }
+  }
+  static characterToGif() {
+    return {
+      Albedo: AlbedoGif,
+      Aloy: '',
+      Amber: AmberGif,
+      Barbara: BarbaraGif,
+      Beidou: BeidouGif,
+      Bennett: BennettGif,
+      Chongyun: ChongyunGif,
+      Diluc: DilucGif,
+      Diona: DionaGif,
+      Eula: EulaGif,
+      Fischl: FischlGif,
+      Ganyu: GanyuGif,
+      'Hu Tao': HuTaoGif,
+      Jean: JeanGif,
+      'Kaedehara Kazuha': KazuhaGif,
+      Kaeya: KaeyaGif,
+      'Kamisato Ayaka': AyakaGif,
+      Keqing: KeqingGif,
+      Klee: KleeGif,
+      'Kujou Sara': KujouSaraGif,
+      Lisa: LisaGif,
+      Mona: MonaGif,
+      Ningguang: NingguangGif,
+      Noelle: NoelleGif,
+      Qiqi: QiqiGif,
+      'Raiden Shogun': RaidenGif,
+      Razor: RazorGif,
+      Rosaria: RosariaGif,
+      'Sangonomiya Kokomi': KokomiGif,
+      Sayu: SayuGif,
+      Sucrose: SucroseGif,
+      Tartaglia: TartagliaGif,
+      Thoma: ThomaGif,
+      Traveler: TravelerGif,
+      Venti: VentiGif,
+      Xiangling: XianglingGif,
+      Xiao: XiaoGif,
+      Xingqiu: XingqiuGif,
+      Xinyan: XinyanGif,
+      Yanfei: YanfeiGif,
+      Yoimiya: YoimiyaGif,
+      Zhongli: ZhongliGif,
     }
   }
 }

@@ -11,10 +11,12 @@ import LoadingSpinner from '../loadingspinner'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash, faPen } from '@fortawesome/free-solid-svg-icons'
 import store from '../../store/store'
+
 import { connect } from 'react-redux'
 
 const POST_CONSTANTS = require('../../constants/postConstants')
 const EDIT_CONSTANTS = require('../../constants/editConstants')
+
 
 class Table extends Component {
   constructor(props) {

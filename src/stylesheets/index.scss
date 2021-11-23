@@ -9,6 +9,7 @@ $color-bronze: #ad8a56;
 $color-nav: #212529;
 $color-faded-white: rgb(255 255 255 / 0.3);
 $color-opaque-black: rgb(0 0 0 / 0.6);
+$color-opaque-black-2: rgb(0 0 0 / 0.2);
 $height-nav: 60px;
 $sidebar-width: 500px;
 $default-border-radius: 5px;
@@ -327,11 +328,11 @@ html {
   }
 
   .info-row:nth-child(odd) {
-    background-color: $color-neutral;
+    background-color: $color-opaque-black;
   }
 
   .info-row:nth-child(even) {
-    background-color: $color-silver;
+    background-color: $color-opaque-black-2;
   }
 }
 
@@ -688,12 +689,12 @@ thead {
   border: 1px;
 
   &:hover {
-    background-color: rgb(0 0 0 / 0.9);
+    background-color: $color-faded-white;
   }
 
   td {
     position: relative !important;
-    color: $color-nav !important;
+    color: $color-neutral !important;
 
     a:link {
       color: $color-gold !important;
@@ -1199,6 +1200,14 @@ thead {
     bottom: 5px;
     left: 50%;
   }
+}
+
+.char-img {
+  width: 3em;
+  aspect-ratio: 1.1;
+  border-radius: calc($default-border-radius * 2);
+  margin: 0.5em;
+  box-shadow: 0px 0px 1px 1px $color-neutral;
 }
 
 .save-icon {
