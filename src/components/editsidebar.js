@@ -29,6 +29,7 @@ function EditSideBar({ type, content, editorId }) {
             dataSource={content.dataSource}
             finishEdit={finishEdit}
             pagination={content.pagination}
+            refreshRate={content.refreshRate}
           />
         )
       case TYPES.NEWCONTENT:

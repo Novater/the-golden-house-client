@@ -11,6 +11,7 @@ $color-faded-white: rgb(255 255 255 / 0.3);
 $color-opaque-black: rgb(0 0 0 / 0.6);
 $height-nav: 60px;
 $sidebar-width: 500px;
+$default-border-radius: 5px;
 
 /* The typing effect */
 @keyframes typing {
@@ -59,7 +60,7 @@ html {
 .app-container {
   display: grid;
   grid-template-rows: $height-nav auto;
-  grid-template-columns: 1fr 4fr 1fr;
+  grid-template-columns: 1fr 9fr 1fr;
 }
 
 .table-spinner {
@@ -73,12 +74,17 @@ html {
   z-index: 1;
 }
 .spinner-container {
+  position: absolute;
+  left: 50%;
+  top: 50%;
   display: grid;
   place-items: center;
-  width: 100%;
-  height: 100%;
-  margin: 50px;
+  width: 50%;
+  height: 50%;
+  border-radius: $default-border-radius;
+  transform: translate(-50%, -50%);
   background-color: $color-opaque-black;
+  z-index: 2;
 }
 
 .save-button {
@@ -279,7 +285,7 @@ html {
 }
 
 .table {
-  max-height: 800px;
+  max-height: 650px;
   overflow: auto;
   position: relative;
   border-radius: 5px;
@@ -290,6 +296,7 @@ html {
   display: grid;
   place-items: center;
   overflow: auto;
+  position: relative;
 
   th {
     cursor: pointer;
@@ -1054,6 +1061,23 @@ thead {
     }
   }
 
+  &.refresh-rate {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    textarea {
+      flex-grow: 1;
+      max-width: none;
+      width: 100%;
+      height: 50px;
+
+      &:focus {
+        background-color: $color-nav;
+      }
+    }
+  }
+
   &.add-new {
     background-color: $color-neutral;
     display: flex;
@@ -1211,16 +1235,18 @@ thead {
 
 @media (max-width: 700px) {
   .abyss-table,
-  .filter-container, .search-container {
+  .filter-container,
+  .search-container {
     width: 100%;
     font-size: 10px;
 
-    option, .form-select {
+    option,
+    .form-select {
       font-size: 10px !important;
     }
 
     .blog-post {
-      font-size: 10px !important;
+      font-size: 11px !important;
     }
   }
 
@@ -1229,33 +1255,42 @@ thead {
   }
 
   .midContainer::after {
-    font-size: 10px;
+    font-size: 11px;
     z-index: -1;
   }
 }
 
 @media (max-width: 1500px) {
   .filter-container,
-  .web-table, .search-container {
+  .web-table,
+  .search-container {
     width: 85%;
     font-size: 11px !important;
 
-    option, .form-select {
+    option,
+    .form-select {
       font-size: 11px !important;
     }
   }
 
+  .pageContainer {
+    grid-template-columns: 1fr 20fr 1fr;
+  }
+
   .blog-post {
-    font-size: 11px !important;
+    font-size: 12px !important;
   }
 }
+
 @media (max-width: 1200px) {
   .filter-container,
-  .web-table, .search-container {
+  .web-table,
+  .search-container {
     width: 90%;
     font-size: 11px !important;
 
-    option, .form-select {
+    option,
+    .form-select {
       font-size: 11px !important;
     }
   }
@@ -1271,8 +1306,8 @@ thead {
     width: 100%;
   }
 
-  .page-container {
-    width: 100%;
+  .page-post {
+    width: 95%;
   }
 
   .blog-section {

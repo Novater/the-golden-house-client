@@ -170,6 +170,7 @@ class Table extends Component {
     dataUrl,
     dataSource,
     pagination,
+    refreshRate,
   }) => {
     return (event) => {
       store.dispatch({ type: EDIT_CONSTANTS.CLOSE_SIDEBAR })
@@ -186,6 +187,7 @@ class Table extends Component {
             dataUrl,
             dataSource,
             pagination,
+            refreshRate,
           },
         },
       })
@@ -607,6 +609,8 @@ class Table extends Component {
       dataSource,
       editorId,
       id,
+      isLoading,
+      refreshRate,
     } = this.props
     let {
       filters,
@@ -681,6 +685,7 @@ class Table extends Component {
                   dataUrl,
                   dataSource,
                   pagination: rowSelectOptions,
+                  refreshRate,
                 })}
               />
               <FontAwesomeIcon icon={faTrash} onClick={this.deletePost} />
@@ -705,31 +710,34 @@ class Table extends Component {
           {tableSaving ? (
             <LoadingSpinner />
           ) : (
-            <div className={tableClass || 'web-table'}>
-              {_generate.tableFunctions.createTable(
-                'table-wrapper',
-                'table table-hover',
-                headers,
-                this.tableList(),
-                editPermission,
-                search,
-                currPage,
-                !lazyLoadFn ? pageRows : null,
-                footerObj,
-                this.handleScroll.bind(this),
-                loadingContent,
-                deleteButtonClass,
-                approveButtonClass,
-                deleteRows ? this.deleteLine : null,
-                approveRows ? this.approveLine : null,
-                deleteRows ? deleteLineIds : [],
-                approveRows ? approveLineIds : [],
-                this.onClickSave,
-                this.onClickCancel,
-                sortKey,
-                sortDir,
-              )}
-            </div>
+            <>
+              <div className={tableClass || 'web-table'}>
+                {isLoading && <LoadingSpinner />}
+                {_generate.tableFunctions.createTable(
+                  'table-wrapper',
+                  'table table-hover',
+                  headers,
+                  this.tableList(),
+                  editPermission,
+                  search,
+                  currPage,
+                  !lazyLoadFn ? pageRows : null,
+                  footerObj,
+                  this.handleScroll.bind(this),
+                  loadingContent,
+                  deleteButtonClass,
+                  approveButtonClass,
+                  deleteRows ? this.deleteLine : null,
+                  approveRows ? this.approveLine : null,
+                  deleteRows ? deleteLineIds : [],
+                  approveRows ? approveLineIds : [],
+                  this.onClickSave,
+                  this.onClickCancel,
+                  sortKey,
+                  sortDir,
+                )}
+              </div>
+            </>
           )}
 
           {approveRows ? (

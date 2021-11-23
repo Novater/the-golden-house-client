@@ -18,6 +18,7 @@ export default function TableEditor({
   finishEdit,
   pagination,
   dataSource,
+  refreshRate,
 }) {
   console.log(dataSource)
   const TABLE_HEADER_KEYS = {
@@ -109,7 +110,7 @@ export default function TableEditor({
   }
 
   function unsetCurrentColumn() {
-    selectNew(null)
+    // selectNew(null)
   }
 
   function getHeaderSerial(title, idx) {
@@ -139,6 +140,19 @@ export default function TableEditor({
       payload: {
         post: {
           rowSelectOptions: JSON.parse(event.target.value),
+        },
+        row,
+        col,
+      },
+    })
+  }
+
+  function updateRefreshRate(event) {
+    store.dispatch({
+      type: POST_CONSTANTS.EDIT_POST,
+      payload: {
+        post: {
+          refreshRate: JSON.parse(event.target.value),
         },
         row,
         col,
@@ -250,6 +264,13 @@ export default function TableEditor({
           <textarea
             defaultValue={`${JSON.stringify(pagination, undefined, 2)}`}
             onBlur={updatePagination}
+          ></textarea>
+        </div>
+        <div className="table-edit-row refresh-rate">
+          <h4>{`Refresh Rate:`}</h4>
+          <textarea
+            defaultValue={refreshRate}
+            onBlur={updateRefreshRate}
           ></textarea>
         </div>
       </div>

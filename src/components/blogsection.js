@@ -7,6 +7,7 @@ import { faTrash, faPen, faPlus } from '@fortawesome/free-solid-svg-icons'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import ContentEditor from './contenteditor'
+import LoadingSpinner from '../components/loadingspinner'
 import _generate from '../functions/index'
 import store from '../store/store'
 
@@ -56,6 +57,8 @@ class BlogSection extends Component {
 
   getBlogEditMode = () => {
     return (
+      <>
+      {this.props.isLoading && <LoadingSpinner />}
       <div className="blog-post" id={this.state.id}>
         <form className="blog-form" onSubmit={this.handleSubmit}>
           <div className="form-group row">
@@ -99,6 +102,7 @@ class BlogSection extends Component {
           </div>
         </form>
       </div>
+      </>
     )
   }
 

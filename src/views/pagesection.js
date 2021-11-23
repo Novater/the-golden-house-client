@@ -57,66 +57,81 @@ function PageSection({
     return []
   }
 
+  function fetchContent({ useCache }) {
+    return async () => {
+      setLoading(true)
+      try {
+        switch (type) {
+          case CONTENT_TYPES.TABLE: {
+            const SERVER_URL = _generate.serverFunctions.getServerURL()
+
+            let loadedData = []
+            if (
+              window.sessionStorage.getItem(data.dataSource) &&
+              !isLoggedIn &&
+              useCache
+            ) {
+              setTableRecords(
+                JSON.parse(window.sessionStorage.getItem(data.dataSource)),
+              )
+            } else {
+              const encodedURI = encodeURIComponent(data.dataSource)
+              const dataSource = await axios.get(
+                `${SERVER_URL}/api/${encodedURI}`,
+              )
+              loadedData = findArrayInObject(dataSource)
+              if (loadedData.length > 0) {
+                setTableRecords(loadedData)
+                window.sessionStorage.setItem(
+                  data.dataSource,
+                  JSON.stringify(loadedData),
+                )
+                store.dispatch({
+                  type: EDIT_CONSTANTS.UPDATE_SIDEBAR,
+                  payload: {
+                    data: {
+                      row,
+                      col,
+                      searchable: data.searchable,
+                      headers: data.headers,
+                      dataUrl: data.dataSource,
+                      dataSource: loadedData || [],
+                      pagination: data.rowSelectOptions,
+                    },
+                  },
+                })
+              }
+            }
+          }
+          case CONTENT_TYPES.POST:
+          default:
+            break
+        }
+        setLoading(false)
+      } catch (error) {
+        console.log(error)
+        setLoading(false)
+        setTableRecords([])
+      }
+    }
+  }
+
   useEffect(() => {
     // Memory leak??
     if (data.dataSource) {
-      ;(async () => {
-        setLoading(true)
-        try {
-          switch (type) {
-            case CONTENT_TYPES.TABLE: {
-              const SERVER_URL = _generate.serverFunctions.getServerURL()
-
-              let loadedData = []
-              if (
-                window.sessionStorage.getItem(data.dataSource) &&
-                !isLoggedIn
-              ) {
-                setTableRecords(
-                  JSON.parse(window.sessionStorage.getItem(data.dataSource)),
-                )
-              } else {
-                const encodedURI = encodeURIComponent(data.dataSource)
-                const dataSource = await axios.get(
-                  `${SERVER_URL}/api/${encodedURI}`,
-                )
-                loadedData = findArrayInObject(dataSource)
-                if (loadedData.length > 0) {
-                  setTableRecords(loadedData)
-                  window.sessionStorage.setItem(
-                    data.dataSource,
-                    JSON.stringify(loadedData),
-                  )
-                  store.dispatch({
-                    type: EDIT_CONSTANTS.UPDATE_SIDEBAR,
-                    payload: {
-                      data: {
-                        row,
-                        col,
-                        searchable: data.searchable,
-                        headers: data.headers,
-                        dataUrl: data.dataSource,
-                        dataSource: loadedData || [],
-                        pagination: data.rowSelectOptions,
-                      },
-                    },
-                  })
-                }
-              }
-            }
-            case CONTENT_TYPES.POST:
-            default:
-              break
-          }
-          setLoading(false)
-        } catch (error) {
-          console.log(error)
-          setLoading(false)
-          setTableRecords([])
-        }
-      })()
+      fetchContent({ useCache: true })()
     }
   }, [data.dataSource])
+
+  useEffect(() => {
+    const refetchContent = setInterval(() => {
+      if (data.dataSource && data.refreshRate && !isLoggedIn) {
+        fetchContent({ useCache: false })()
+      }
+    }, data.refreshRate)
+
+    return () => clearInterval(refetchContent)
+  }, [])
 
   function createNewPost(event) {
     // CLOSE EDIT SIDEBAR
@@ -179,50 +194,35 @@ function PageSection({
     })
   }
 
-  if (isLoading) {
-    return <LoadingSpinner />
-  }
-  console.log(data)
   switch (type) {
     case CONTENT_TYPES.POST:
       return (
-        <Suspense key={`loading-${data._id}`} fallback={<LoadingSpinner />}>
-          <div className="page-post">
-            {inEditMode ? (
-              <>
-                <NewPost direction="up" id={data._id} onClick={createNewPost} />
-                <NewPost
-                  direction="down"
-                  id={data._id}
-                  onClick={createNewPost}
-                />
-                <NewPost
-                  direction="left"
-                  id={data._id}
-                  onClick={createNewPost}
-                />
-                <NewPost
-                  direction="right"
-                  id={data._id}
-                  onClick={createNewPost}
-                />
-              </>
-            ) : null}
-            <BlogSection
-              title={data.title}
-              content={data.content}
-              key={data._id}
-              id={data._id}
-              row={row}
-              col={col}
-              editPermission={
-                permissionList.post.indexOf(role) >= 0 &&
-                isLoggedIn &&
-                inEditMode
-              }
-            />
-          </div>
-        </Suspense>
+        <div className="page-post">
+          {inEditMode ? (
+            <>
+              <NewPost direction="up" id={data._id} onClick={createNewPost} />
+              <NewPost direction="down" id={data._id} onClick={createNewPost} />
+              <NewPost direction="left" id={data._id} onClick={createNewPost} />
+              <NewPost
+                direction="right"
+                id={data._id}
+                onClick={createNewPost}
+              />
+            </>
+          ) : null}
+          <BlogSection
+            title={data.title}
+            content={data.content}
+            key={data._id}
+            id={data._id}
+            row={row}
+            col={col}
+            editPermission={
+              permissionList.post.indexOf(role) >= 0 && isLoggedIn && inEditMode
+            }
+            isLoading={isLoading}
+          />
+        </div>
       )
     case CONTENT_TYPES.TABLE:
       if (data.headers) {
@@ -260,19 +260,21 @@ function PageSection({
               dataSource={records || []}
               dataUrl={data.dataSource}
               rowSelectOptions={data.rowSelectOptions}
-              // SAMPLE DATA CONFIG
-              // headers={SampleDataGenerator.sampleTableHeader()}
-              // dataSource={SampleDataGenerator.sampleTableData()}
               approveButtonClass={buttonClasses.approveButtonClass}
               approveRows={handleApproveRows}
-              // deleteButtonClass={buttonClasses.deleteButtonClass}
-              // deleteRows={handleDeleteRows}
               editPermission={false}
               adminPermission={
                 permissionList.table.indexOf(role) >= 0 &&
                 isLoggedIn &&
                 inEditMode
               }
+              isLoading={isLoading}
+              refreshRate={data.refreshRate}
+              // SAMPLE DATA CONFIG
+              // deleteButtonClass={buttonClasses.deleteButtonClass}
+              // deleteRows={handleDeleteRows}
+              // headers={SampleDataGenerator.sampleTableHeader()}
+              // dataSource={SampleDataGenerator.sampleTableData()}
               // rowClass='test-row-class'
               // filterContainerClass='test-filter-container-class'
               // filterClass='test-filter'
