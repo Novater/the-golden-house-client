@@ -110,7 +110,7 @@ export default function TableEditor({
   }
 
   function unsetCurrentColumn() {
-    // selectNew(null)
+    selectNew(null)
   }
 
   function getHeaderSerial(title, idx) {
@@ -187,7 +187,6 @@ export default function TableEditor({
                 className="table-edit-row columns"
                 key={`table-edit-row-${header.title}-${idx}`}
                 id={`table-edit-row-${header.title}-${idx}`}
-                onClick={unsetCurrentColumn}
               >
                 {_.keys(header).map((key, idxHeader) => {
                   return (
@@ -205,6 +204,7 @@ export default function TableEditor({
                     </div>
                   )
                 })}
+                <div className="collapse-header" onClick={unsetCurrentColumn}/>
                 <FontAwesomeIcon
                   className="delete-table-header"
                   icon={faTrash}

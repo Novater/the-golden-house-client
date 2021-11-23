@@ -977,6 +977,26 @@ thead {
   }
 }
 
+.collapse-header {
+  margin-top: 1em;
+  width: 100%;
+  height: 1em;
+  position: relative;
+  cursor: pointer;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 1.5em;
+    height: 1.5em;
+    transform: translate(-50%, -50%) rotate(45deg);
+    border-top: 0.3em solid $color-nav;
+    border-left: 0.3em solid $color-nav;
+  }
+}
+
 .table-edit-row {
   &.columns {
     display: flex;
@@ -989,7 +1009,6 @@ thead {
     border-radius: 5px;
     margin: 5px;
     position: relative;
-    cursor: pointer;
   }
 
   &.searchable {
@@ -1158,6 +1177,7 @@ thead {
 
   &:hover {
     background-color: $color-opaque-black;
+    color: $color-gold;
   }
 
   p {
