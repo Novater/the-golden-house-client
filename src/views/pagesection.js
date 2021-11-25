@@ -25,6 +25,7 @@ function PageSection({
   tab,
   isLoggedIn,
   inEditMode,
+  editorId,
 }) {
   const [records, setTableRecords] = useState(null)
   const [isLoading, setLoading] = useState(false)
@@ -194,11 +195,13 @@ function PageSection({
     })
   }
 
+  const showAddPost = inEditMode && !editorId
+
   switch (type) {
     case CONTENT_TYPES.POST:
       return (
         <div className="page-post">
-          {inEditMode ? (
+          {showAddPost ? (
             <>
               <NewPost direction="up" id={data._id} onClick={createNewPost} />
               <NewPost direction="down" id={data._id} onClick={createNewPost} />
@@ -228,7 +231,7 @@ function PageSection({
       if (data.headers) {
         return (
           <div className="page-post">
-            {inEditMode ? (
+            {showAddPost ? (
               <>
                 <NewPost direction="up" id={data._id} onClick={createNewPost} />
                 <NewPost
@@ -331,6 +334,7 @@ const mapState = (state) => ({
   isLoggedIn: state.auth.loggedIn,
   inEditMode: state.edit.inEditMode,
   tab: state.post.tab,
+  editorId: state.edit.editorId,
 })
 
 export default connect(mapState)(PageSection)

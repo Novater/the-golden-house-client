@@ -20,7 +20,6 @@ export default function TableEditor({
   dataSource,
   refreshRate,
 }) {
-  console.log(dataSource)
   const TABLE_HEADER_KEYS = {
     TITLE: 'title',
     FORMAT: 'format',

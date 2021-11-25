@@ -134,7 +134,6 @@ class Table extends Component {
     }
 
     if (ROWSELECT_CHANGE) {
-      console.log('row select change')
       this.setState({
         rowSelectOptions: this.props.rowSelectOptions,
         pageRows: this.props.rowSelectOptions

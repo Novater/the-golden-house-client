@@ -366,12 +366,10 @@ export default class tableFunctions {
 
             if (header.title === 'Characters') {
               const charGifMap = SampleDataGenerator.characterToGif()
-              console.log(format)
               const charArr = format.split(',')
               let gifs = []
               for (let char of charArr) {
                 if (charGifMap[char]) {
-                  console.log(charGifMap[char])
                   gifs.push(
                     <img
                       className="char-img"

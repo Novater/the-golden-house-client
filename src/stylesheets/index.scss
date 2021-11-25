@@ -505,7 +505,8 @@ html {
     width: 100%;
     height: fit-content;
     margin-top: 20px;
-
+    overflow: auto;
+    
     p {
       flex-grow: 1;
     }
