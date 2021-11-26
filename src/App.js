@@ -87,11 +87,23 @@ class App extends Component {
   }
 
   render() {
-    const { tab, loggedIn, editorType, editorData, saveFailed, saveSuccess } =
-      this.props
+    const {
+      tab,
+      loggedIn,
+      editorType,
+      editorData,
+      saveFailed,
+      saveSuccess,
+      showSideBar,
+      inEditMode,
+    } = this.props
 
     return (
-      <div className="app-container">
+      <div
+        className={`app-container ${
+          showSideBar && inEditMode ? `sidebar-open` : ``
+        }`}
+      >
         {tab !== 'fullpage-table' ? (
           <Navbar
             className="main-nav"
@@ -195,6 +207,7 @@ const mapState = (state) => ({
   posts: state.post.posts,
   saveFailed: state.post.saveFailed,
   saveSuccess: state.post.saveSuccess,
+  showSideBar: state.edit.showSideBar,
 })
 
 export default connect(mapState)(App)

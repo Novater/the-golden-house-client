@@ -20,6 +20,12 @@ export default function TableEditor({
   dataSource,
   refreshRate,
 }) {
+  const EDIT_TABLE_SUBTABS = {
+    HEADERS: 'Headers',
+    DATA_SETUP: 'Data Setup',
+    FINISH_EDIT: 'Finish Edit',
+  }
+
   const TABLE_HEADER_KEYS = {
     TITLE: 'title',
     FORMAT: 'format',
@@ -29,7 +35,47 @@ export default function TableEditor({
   }
 
   useEffect(() => {}, [headers])
-  const [currentSelected, selectNew] = useState(null)
+  const [currentSelectedHeader, selectNewHeader] = useState(null)
+  const [currentSelectedTab, selectNewTab] = useState(
+    EDIT_TABLE_SUBTABS.HEADERS,
+  )
+
+  function setSubTab(event) {
+    console.log(event.target.innerText)
+    selectNewTab(event.target.innerText)
+  }
+  function EditTableNavbar({ elements, currentSelected }) {
+    return (
+      <nav className={`edit-table-nav`}>
+        {elements.map((element) => {
+          if (element === EDIT_TABLE_SUBTABS.FINISH_EDIT) {
+            return (
+              <div
+                className={`table-subtab ${
+                  element === currentSelectedTab ? `selected` : ``
+                }`}
+                onClick={finishEdit}
+                key={`edit-table-navbar-${element}`}
+              >
+                {element}
+              </div>
+            )
+          }
+          return (
+            <div
+              className={`table-subtab ${
+                element === currentSelectedTab ? `selected` : ``
+              }`}
+              onClick={setSubTab}
+              key={`edit-table-navbar-${element}`}
+            >
+              {element}
+            </div>
+          )
+        })}
+      </nav>
+    )
+  }
 
   function deleteTableHeader(index) {
     return function (event) {
@@ -104,12 +150,12 @@ export default function TableEditor({
 
   function setCurrentColumn(title, idx) {
     return function (event) {
-      selectNew(getHeaderSerial(title, idx))
+      selectNewHeader(getHeaderSerial(title, idx))
     }
   }
 
   function unsetCurrentColumn() {
-    selectNew(null)
+    selectNewHeader(null)
   }
 
   function getHeaderSerial(title, idx) {
@@ -172,107 +218,248 @@ export default function TableEditor({
     })
   }
 
-  return (
-    <div className="table-editor-container">
-      <div className="table-edit-close">
-        <button onClick={finishEdit}>{'Finish Editing'}</button>
-      </div>
-      <div className="table-editor-component">
-        <h4>{'Columns:'}</h4>
-        {headers.map((header, idx) => {
-          if (getHeaderSerial(header.title, idx) === currentSelected) {
-            return (
-              <div
-                className="table-edit-row columns"
-                key={`table-edit-row-${header.title}-${idx}`}
-                id={`table-edit-row-${header.title}-${idx}`}
-              >
-                {_.keys(header).map((key, idxHeader) => {
+  switch (currentSelectedTab) {
+    case EDIT_TABLE_SUBTABS.HEADERS: {
+      return (
+        <div className="table-editor-container">
+          <EditTableNavbar elements={_.values(EDIT_TABLE_SUBTABS)} />
+          <div className="table-editor-component">
+            <h4>{'Columns:'}</h4>
+            <div className="table-headers">
+              {headers.map((header, idx) => {
+                if (
+                  getHeaderSerial(header.title, idx) === currentSelectedHeader
+                ) {
                   return (
                     <div
-                      key={`table-edit-col-${key}-${idx}-${idxHeader}`}
-                      id={`table-edit-col-${key}-${idx}-${idxHeader}`}
-                      className={`table-edit-col ${key}`}
+                      className="table-edit-row columns"
+                      key={`table-edit-row-${header.title}-${idx}`}
+                      id={`table-edit-row-${header.title}-${idx}`}
                     >
-                      <p>{`${key.toUpperCase()}:`}</p>
-                      <textarea
-                        defaultValue={JSON.stringify(header[key], undefined, 2)}
-                        onBlur={updateTableHeader(key, idx)}
-                        onClick={preventDefault}
-                      ></textarea>
+                      {_.keys(header).map((key, idxHeader) => {
+                        return (
+                          <div
+                            key={`table-edit-col-${key}-${idx}-${idxHeader}`}
+                            id={`table-edit-col-${key}-${idx}-${idxHeader}`}
+                            className={`table-edit-col ${key}`}
+                          >
+                            <p>{`${key.toUpperCase()}:`}</p>
+                            <textarea
+                              defaultValue={JSON.stringify(
+                                header[key],
+                                undefined,
+                                2,
+                              )}
+                              onBlur={updateTableHeader(key, idx)}
+                              onClick={preventDefault}
+                            ></textarea>
+                          </div>
+                        )
+                      })}
+                      <div
+                        className="collapse-header"
+                        onClick={unsetCurrentColumn}
+                      />
+                      <FontAwesomeIcon
+                        className="delete-table-header"
+                        icon={faTrash}
+                        onClick={deleteTableHeader(idx)}
+                      />
                     </div>
                   )
-                })}
-                <div className="collapse-header" onClick={unsetCurrentColumn}/>
-                <FontAwesomeIcon
-                  className="delete-table-header"
-                  icon={faTrash}
-                  onClick={deleteTableHeader(idx)}
-                />
+                } else {
+                  if (!currentSelectedHeader) {
+                    const randomize = Math.random()
+                    return (
+                      <div
+                        className="table-edit-row-collapsed columns"
+                        id={`table-edit-col-${header.title}-${idx}-${randomize}`}
+                        key={`table-edit-col-${header.title}-${idx}-${randomize}`}
+                        onClick={setCurrentColumn(header.title, idx)}
+                      >
+                        <p className="table-edit-header">{`${header.title}`}</p>
+                        <FontAwesomeIcon
+                          className="delete-table-header"
+                          icon={faTrash}
+                          onClick={deleteTableHeader(idx)}
+                        />
+                      </div>
+                    )
+                  }
+                }
+              })}
+              {!currentSelectedHeader && (
+                <div className="table-edit-row add-new">
+                  <div className="add-new-btn" onClick={addTableHeader}></div>
+                </div>
+              )}
+            </div>
+            <h4>{`Data Structure:`}</h4>
+            <div className="table-edit-row data">
+              <textarea
+                readOnly={true}
+                className="edit-sample-data"
+                value={JSON.stringify(
+                  dataSource[0] || `No data retrieved from endpoint. Check the data setup.`,
+                  undefined,
+                  2,
+                )}
+              ></textarea>
+            </div>
+          </div>
+        </div>
+      )
+    }
+    case EDIT_TABLE_SUBTABS.DATA_SETUP: {
+      return (
+        <div className="table-editor-container">
+          <EditTableNavbar elements={_.values(EDIT_TABLE_SUBTABS)} />
+          <div className="table-editor-component">
+            <h4>{`Searchable:`}</h4>
+            <div className="table-edit-row searchable">
+              <input
+                defaultValue={searchable}
+                onBlur={updateSearchable}
+              ></input>
+            </div>
+            <hr />
+            <div className="table-edit-row data-url">
+              <h4>{`Data URL:`}</h4>
+              <textarea defaultValue={dataUrl} onBlur={updateURL}></textarea>
+            </div>
+            <hr />
+            <div className="table-edit-row pagination">
+              <h4>{`Pagination:`}</h4>
+              <textarea
+                defaultValue={`${JSON.stringify(pagination, undefined, 2)}`}
+                onBlur={updatePagination}
+              ></textarea>
+            </div>
+            <div className="table-edit-row refresh-rate">
+              <h4>{`Refresh Rate:`}</h4>
+              <textarea
+                defaultValue={refreshRate}
+                onBlur={updateRefreshRate}
+              ></textarea>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    default: {
+      return (
+        <div className="table-editor-container">
+          <div className="table-editor-component">
+            <h4>{'Columns:'}</h4>
+            <div className="table-headers">
+              {headers.map((header, idx) => {
+                if (
+                  getHeaderSerial(header.title, idx) === currentSelectedHeader
+                ) {
+                  return (
+                    <div
+                      className="table-edit-row columns"
+                      key={`table-edit-row-${header.title}-${idx}`}
+                      id={`table-edit-row-${header.title}-${idx}`}
+                    >
+                      {_.keys(header).map((key, idxHeader) => {
+                        return (
+                          <div
+                            key={`table-edit-col-${key}-${idx}-${idxHeader}`}
+                            id={`table-edit-col-${key}-${idx}-${idxHeader}`}
+                            className={`table-edit-col ${key}`}
+                          >
+                            <p>{`${key.toUpperCase()}:`}</p>
+                            <textarea
+                              defaultValue={JSON.stringify(
+                                header[key],
+                                undefined,
+                                2,
+                              )}
+                              onBlur={updateTableHeader(key, idx)}
+                              onClick={preventDefault}
+                            ></textarea>
+                          </div>
+                        )
+                      })}
+                      <div
+                        className="collapse-header"
+                        onClick={unsetCurrentColumn}
+                      />
+                      <FontAwesomeIcon
+                        className="delete-table-header"
+                        icon={faTrash}
+                        onClick={deleteTableHeader(idx)}
+                      />
+                    </div>
+                  )
+                } else {
+                  const randomize = Math.random()
+                  return (
+                    <div
+                      className="table-edit-row-collapsed columns"
+                      id={`table-edit-col-${header.title}-${idx}-${randomize}`}
+                      key={`table-edit-col-${header.title}-${idx}-${randomize}`}
+                      onClick={setCurrentColumn(header.title, idx)}
+                    >
+                      <p className="table-edit-header">{`${header.title}`}</p>
+                      <FontAwesomeIcon
+                        className="delete-table-header"
+                        icon={faTrash}
+                        onClick={deleteTableHeader(idx)}
+                      />
+                    </div>
+                  )
+                }
+              })}
+              <div className="table-edit-row add-new">
+                <div className="add-new-btn" onClick={addTableHeader}></div>
               </div>
-            )
-          } else {
-            const randomize = Math.random()
-            return (
-              <div
-                className="table-edit-row-collapsed columns"
-                id={`table-edit-col-${header.title}-${idx}-${randomize}`}
-                key={`table-edit-col-${header.title}-${idx}-${randomize}`}
-                onClick={setCurrentColumn(header.title, idx)}
-              >
-                <p className="table-edit-header">{`${header.title}`}</p>
-                <FontAwesomeIcon
-                  className="delete-table-header"
-                  icon={faTrash}
-                  onClick={deleteTableHeader(idx)}
-                />
-              </div>
-            )
-          }
-        })}
-        <div className="table-edit-row add-new">
-          <button onClick={addTableHeader}>{'Add New Header'}</button>
+            </div>
+            <h4>{`Your Data Structure:`}</h4>
+            <div className="table-edit-row data">
+              <textarea
+                readOnly={true}
+                className="edit-sample-data"
+                value={JSON.stringify(
+                  dataSource[0] || `No data retrieved from endpoint. Check the data setup.`,
+                  undefined,
+                  2,
+                )}
+              ></textarea>
+            </div>
+            <hr />
+            <div className="table-edit-row searchable">
+              <h4>{`Searchable:`}</h4>
+              <input
+                defaultValue={searchable}
+                onBlur={updateSearchable}
+              ></input>
+            </div>
+            <hr />
+            <div className="table-edit-row data-url">
+              <h4>{`Data URL:`}</h4>
+              <textarea defaultValue={dataUrl} onBlur={updateURL}></textarea>
+            </div>
+            <hr />
+            <div className="table-edit-row pagination">
+              <h4>{`Pagination:`}</h4>
+              <textarea
+                defaultValue={`${JSON.stringify(pagination, undefined, 2)}`}
+                onBlur={updatePagination}
+              ></textarea>
+            </div>
+            <div className="table-edit-row refresh-rate">
+              <h4>{`Refresh Rate:`}</h4>
+              <textarea
+                defaultValue={refreshRate}
+                onBlur={updateRefreshRate}
+              ></textarea>
+            </div>
+          </div>
         </div>
-        <h4>{`Your Data Structure:`}</h4>
-        <div className="table-edit-row data">
-          <textarea
-            readOnly={true}
-            className="edit-sample-data"
-            value={JSON.stringify(
-              dataSource[0] || {
-                message: 'No data retrieved from the endpoint.',
-              },
-              undefined,
-              2,
-            )}
-          ></textarea>
-        </div>
-        <hr />
-        <div className="table-edit-row searchable">
-          <h4>{`Searchable:`}</h4>
-          <input defaultValue={searchable} onBlur={updateSearchable}></input>
-        </div>
-        <hr />
-        <div className="table-edit-row data-url">
-          <h4>{`Data URL:`}</h4>
-          <textarea defaultValue={dataUrl} onBlur={updateURL}></textarea>
-        </div>
-        <hr />
-        <div className="table-edit-row pagination">
-          <h4>{`Pagination:`}</h4>
-          <textarea
-            defaultValue={`${JSON.stringify(pagination, undefined, 2)}`}
-            onBlur={updatePagination}
-          ></textarea>
-        </div>
-        <div className="table-edit-row refresh-rate">
-          <h4>{`Refresh Rate:`}</h4>
-          <textarea
-            defaultValue={refreshRate}
-            onBlur={updateRefreshRate}
-          ></textarea>
-        </div>
-      </div>
-    </div>
-  )
+      )
+    }
+  }
 }

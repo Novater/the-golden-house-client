@@ -98,21 +98,21 @@ class Page extends Component {
         const rowKey = row.map((post) => post._id).join('-')
         return (
           <>
-          <div className="blog-section" key={rowKey} id={rowKey}>
-            {row.map((post, idxCol) => {
-              return (
-                <PageSection
-                  type={post.type}
-                  data={post}
-                  role={this.props.role}
-                  row={idxRow}
-                  col={idxCol}
-                  key={post._id}
-                />
-              )
-            })}
-          </div>
-          {/* {idxRow !== this.props.posts.length - 1 && <hr className="blog-separator" style={{ width: '100%' }} />} */}
+            <div className="blog-section" key={rowKey} id={rowKey}>
+              {row.map((post, idxCol) => {
+                return (
+                  <PageSection
+                    type={post.type}
+                    data={post}
+                    role={this.props.role}
+                    row={idxRow}
+                    col={idxCol}
+                    key={post._id}
+                  />
+                )
+              })}
+            </div>
+            {/* {idxRow !== this.props.posts.length - 1 && <hr className="blog-separator" style={{ width: '100%' }} />} */}
           </>
         )
       })
@@ -143,7 +143,7 @@ class Page extends Component {
     return (
       <div
         className={`pageContainer ${
-          showSideBar && inEditMode ? `sidebar-open` : ``
+          showSideBar && inEditMode ? `sidebar-page` : ``
         }`}
       >
         {loggingOut ? (
