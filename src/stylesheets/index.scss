@@ -1320,6 +1320,7 @@ thead {
 .sidebar-open {
   position: fixed;
   top: $sidebar-height;
+  height: calc(100% - $sidebar-height);
   overflow: auto;
   border-top: 5px solid $color-gold;
   background: rgb(0 0 0 / 0.9);
