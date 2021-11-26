@@ -11,7 +11,7 @@ $color-faded-white: rgb(255 255 255 / 0.3);
 $color-opaque-black: rgb(0 0 0 / 0.6);
 $color-opaque-black-2: rgb(0 0 0 / 0.2);
 $height-nav: 60px;
-$sidebar-height: 550px;
+$sidebar-height: 40vh;
 $default-border-radius: 5px;
 
 /* The typing effect */
@@ -114,7 +114,7 @@ html {
       color: $color-gold;
     }
   }
-  
+
   .selected {
     color: $color-neutral;
     border-bottom: 5px solid $color-carbon;
@@ -1132,7 +1132,6 @@ thead {
   }
 
   &.add-new {
-    
     display: grid;
     place-items: center;
 
@@ -1225,13 +1224,13 @@ thead {
   background-color: $color-dark-grey;
   color: $color-neutral;
   width: fit-content;
-  height: 60px;
+  height: 4.5em;
   border-radius: 5px;
-  margin: 5px;
-  padding-left: 50px;
-  padding-right: 50px;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  margin: 1em;
+  padding-left: 3em;
+  padding-right: 3em;
+  padding-top: 1em;
+  padding-bottom: 1em;
   position: relative;
   cursor: pointer;
 
@@ -1324,7 +1323,7 @@ thead {
   overflow: auto;
   border-top: 5px solid $color-gold;
   background: rgb(0 0 0 / 0.9);
-  
+
   .banner-img {
     top: calc(50% + $sidebar-height);
     z-index: -1;
