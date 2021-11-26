@@ -46,6 +46,15 @@ $default-border-radius: 5px;
   }
 }
 
+@keyframes popin {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 body,
 html {
   height: 100vh;
@@ -924,9 +933,7 @@ thead {
   display: flex;
   flex-direction: column;
   align-content: flex-start;
-
   align-items: center;
-  overflow: auto;
   padding: 20px;
   position: fixed;
   left: 0;
@@ -1005,6 +1012,8 @@ thead {
   top: $height-nav;
   left: 0;
   padding: 2em;
+  overflow: auto;
+  height: calc($sidebar-height - $height-nav);
 
   h4 {
     font-weight: bold;
@@ -1043,6 +1052,8 @@ thead {
     border-radius: 5px;
     margin: 5px;
     position: relative;
+    animation-name: popin;
+    animation-duration: 0.3s;
   }
 
   &.searchable {
@@ -1233,6 +1244,8 @@ thead {
   padding-bottom: 1em;
   position: relative;
   cursor: pointer;
+  animation-name: popin;
+  animation-duration: 0.2s;
 
   &:hover {
     background-color: $color-nav;
@@ -1322,7 +1335,6 @@ thead {
   top: $sidebar-height;
   height: calc(100% - $sidebar-height);
   overflow: auto;
-  border-top: 5px solid $color-gold;
   background: rgb(0 0 0 / 0.9);
 
   .banner-img {
@@ -1362,7 +1374,7 @@ thead {
   }
 }
 
-@media (max-width: 1500px) {
+@media (max-width: 1700px) {
   .filter-container,
   .web-table,
   .search-container {
@@ -1377,6 +1389,11 @@ thead {
 
   .pageContainer {
     grid-template-columns: 1fr 20fr 1fr;
+  }
+
+  .leftContainer,
+  .rightContainer {
+    display: none;
   }
 
   .blog-post {

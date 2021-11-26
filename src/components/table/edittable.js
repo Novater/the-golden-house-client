@@ -44,6 +44,7 @@ export default function TableEditor({
     console.log(event.target.innerText)
     selectNewTab(event.target.innerText)
   }
+
   function EditTableNavbar({ elements, currentSelected }) {
     return (
       <nav className={`edit-table-nav`}>
@@ -101,10 +102,13 @@ export default function TableEditor({
   function addTableHeader() {
     const copiedHeaders = [...headers]
     const defaultHeader = {
-      title: 'New Header',
+      title: 'Header Name Here',
       format: '{keys}-{here}',
       keys: ['keys', 'here'],
-      filterValues: [],
+      filterValues: [
+        { title: 'All', lookFor: '.*' },
+        { title: 'filter-title', lookFor: 'regex-string' },
+      ],
       filterStyle: 'dropdown',
     }
     copiedHeaders.push(defaultHeader)
@@ -127,11 +131,14 @@ export default function TableEditor({
         return { ...header }
       })
       let updateVal =
-        key === 'keys'
+        key === TABLE_HEADER_KEYS
           ? event.target.value.toString().split(',')
           : event.target.value
 
-      copiedHeaders[thisIndex][key] = JSON.parse(updateVal)
+      copiedHeaders[thisIndex][key] =
+        key === TABLE_HEADER_KEYS.FILTERVALUES || key === TABLE_HEADER_KEYS.KEYS
+          ? JSON.parse(updateVal)
+          : updateVal
 
       store.dispatch({
         type: POST_CONSTANTS.EDIT_POST,
@@ -224,7 +231,6 @@ export default function TableEditor({
         <div className="table-editor-container">
           <EditTableNavbar elements={_.values(EDIT_TABLE_SUBTABS)} />
           <div className="table-editor-component">
-            <h4>{'Columns:'}</h4>
             <div className="table-headers">
               {headers.map((header, idx) => {
                 if (
@@ -245,11 +251,11 @@ export default function TableEditor({
                           >
                             <p>{`${key.toUpperCase()}:`}</p>
                             <textarea
-                              defaultValue={JSON.stringify(
-                                header[key],
-                                undefined,
-                                2,
-                              )}
+                              defaultValue={
+                                typeof header[key] === 'object'
+                                  ? JSON.stringify(header[key], null, 2)
+                                  : header[key].toString()
+                              }
                               onBlur={updateTableHeader(key, idx)}
                               onClick={preventDefault}
                             ></textarea>
@@ -300,7 +306,8 @@ export default function TableEditor({
                 readOnly={true}
                 className="edit-sample-data"
                 value={JSON.stringify(
-                  dataSource[0] || `No data retrieved from endpoint. Check the data setup.`,
+                  dataSource[0] ||
+                    `No data retrieved from endpoint. Check the data setup.`,
                   undefined,
                   2,
                 )}
@@ -351,7 +358,6 @@ export default function TableEditor({
       return (
         <div className="table-editor-container">
           <div className="table-editor-component">
-            <h4>{'Columns:'}</h4>
             <div className="table-headers">
               {headers.map((header, idx) => {
                 if (
@@ -423,7 +429,8 @@ export default function TableEditor({
                 readOnly={true}
                 className="edit-sample-data"
                 value={JSON.stringify(
-                  dataSource[0] || `No data retrieved from endpoint. Check the data setup.`,
+                  dataSource[0] ||
+                    `No data retrieved from endpoint. Check the data setup.`,
                   undefined,
                   2,
                 )}

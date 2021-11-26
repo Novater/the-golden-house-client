@@ -104,6 +104,7 @@ class App extends Component {
           showSideBar && inEditMode ? `sidebar-open` : ``
         }`}
       >
+        <EditSideBar type={editorType} content={editorData} />
         {tab !== 'fullpage-table' ? (
           <Navbar
             className="main-nav"
@@ -141,7 +142,6 @@ class App extends Component {
             />
           </Route>
         </Switch>
-        <EditSideBar type={editorType} content={editorData} />
         <PageModal
           title={
             this.props.inEditMode ? 'Leave Edit Mode?' : 'Enter Edit Mode?'
