@@ -225,17 +225,17 @@ export default function TableEditor({
   }
 
   function editFilter(idx) {
-    return ({ filterIndex, title, lookFor }) => {
+    return ({ filterIndex, title, lookFor, type }) => {
       console.log(filterIndex)
       const copiedHeaders = headers.map((header) => {
         return { ...header }
       })
-      console.log('updating')
       copiedHeaders[idx][TABLE_HEADER_KEYS.FILTERVALUES][filterIndex].title =
         title
       copiedHeaders[idx][TABLE_HEADER_KEYS.FILTERVALUES][filterIndex].lookFor =
         lookFor
-
+      copiedHeaders[idx][TABLE_HEADER_KEYS.FILTERVALUES][filterIndex].type =
+        type
       store.dispatch({
         type: POST_CONSTANTS.EDIT_POST,
         payload: {
@@ -257,7 +257,6 @@ export default function TableEditor({
       })
 
       return (event) => {
-        console.log('header', copiedHeaders[thisIndex])
         copiedHeaders[thisIndex][TABLE_HEADER_KEYS.FILTERVALUES].splice(
           filterIdx,
           1,
@@ -271,8 +270,6 @@ export default function TableEditor({
           },
           false,
         )
-
-        console.log('hasDefault', hasDefault)
 
         if (
           !hasDefault &&

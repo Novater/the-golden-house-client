@@ -2,6 +2,11 @@ import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import PageModal from '../../modal'
 import { faPen } from '@fortawesome/free-solid-svg-icons'
+import 'bootstrap/dist/js/bootstrap.js'
+import _ from 'lodash'
+
+const FILTER_TYPES = require('../../../config').filterTypes
+
 export default function FilterValues({
   content,
   addNewFilter,
@@ -12,6 +17,7 @@ export default function FilterValues({
   const [filterEditIdx, toggleFilterEditIdx] = useState(null)
   const [filterEditTitle, toggleFilterEditTitle] = useState(null)
   const [filterEditString, toggleFilterEditString] = useState(null)
+  const [filterEditType, toggleFilterEditType] = useState(null)
   const [screenX, toggleScreenX] = useState(null)
   const [screenY, toggleScreenY] = useState(null)
 
@@ -29,8 +35,12 @@ export default function FilterValues({
       filterIndex: filterEditIdx,
       title: filterEditTitle,
       lookFor: filterEditString,
+      type: filterEditType,
     })
     toggleFilterEditIdx(null)
+    toggleFilterEditString(null)
+    toggleFilterEditType(null)
+    toggleFilterEditTitle(null)
   }
 
   function closeFilterPreview(event) {
@@ -41,6 +51,7 @@ export default function FilterValues({
     return function (event) {
       toggleFilterEditTitle(content[index].title)
       toggleFilterEditString(content[index].lookFor)
+      toggleFilterEditType(content[index].type || FILTER_TYPES.EXACT)
       toggleFilterEditIdx(index)
     }
   }
@@ -53,17 +64,42 @@ export default function FilterValues({
     toggleFilterEditString(event.target.value)
   }
 
+  function updateType(event) {
+    toggleFilterEditType(event.target.value)
+  }
+
   return (
     <div className="filter-value-container">
       {filterEditIdx !== null ? (
         <div className="filter-edit">
           <span className="filter-edit-row">
             <p>{'Title: '}</p>
-            <input value={filterEditTitle} onChange={updateTitle}></input>
+            <input value={filterEditTitle} onChange={updateTitle} spellCheck={false}></input>
+          </span>
+          <span className="filter-edit-row form-check">
+            <p>{'Filter Type: '}</p>
+            <div className="filter-selections" onChange={updateType}>
+              {_.values(FILTER_TYPES).map((type) => {
+                return (
+                  <>
+                    <label htmlFor={`${filterEditIdx}-${type}`}>{type}</label>
+                    <input
+                      type="radio"
+                      name="filter-type-radio"
+                      auria-labelledby={`${filterEditString}-${type}`}
+                      value={type}
+                      id={`${filterEditIdx}-${type}`}
+                      className="form-check-input"
+                      checked={filterEditType === type}
+                    ></input>
+                  </>
+                )
+              })}
+            </div>
           </span>
           <span className="filter-edit-row">
             <p>{'Filter By: '}</p>
-            <input value={filterEditString} onChange={updateLookFor}></input>
+            <input value={filterEditString} onChange={updateLookFor} spellCheck={false}></input>
           </span>
           <span className="filter-edit-row">
             <button onClick={finishFilterEdit}>Done</button>
@@ -113,6 +149,7 @@ export default function FilterValues({
                   >
                     <p>{`Title: ${content[filterPreviewIdx].title}`}</p>
                     <p>{`Matching: ${content[filterPreviewIdx].lookFor}`}</p>
+                    <p>{`Match Type: ${content[filterPreviewIdx].type}`}</p>
                   </div>
                 ) : null}
               </>

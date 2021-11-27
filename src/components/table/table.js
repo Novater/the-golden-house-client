@@ -16,6 +16,7 @@ import { connect } from 'react-redux'
 
 const POST_CONSTANTS = require('../../constants/postConstants')
 const EDIT_CONSTANTS = require('../../constants/editConstants')
+const FILTER_TYPES = require('../../config').filterTypes
 
 
 class Table extends Component {
@@ -229,13 +230,40 @@ class Table extends Component {
         if (selectedEl.length === 0) continue
 
         let thisFilterLookupAMatch = false
+        
         selectedEl.map((el) => {
-          const { lookFor } = el
+          const { lookFor, type } = el
 
-          const matchAttempt = stringRep.match(lookFor)
-          if (matchAttempt && matchAttempt[0] === stringRep) {
-            thisFilterLookupAMatch = true
+          let matchAttempt;
+          switch(type) {
+            case FILTER_TYPES.EXACT:
+              matchAttempt = stringRep.match(lookFor)
+              if (matchAttempt && matchAttempt[0] === stringRep) {
+                thisFilterLookupAMatch = true
+              }
+              return
+            case FILTER_TYPES.ROUGH:
+              matchAttempt = stringRep.match(`.*${lookFor}.*`)
+              if (matchAttempt && matchAttempt[0] === stringRep) {
+                thisFilterLookupAMatch = true
+              }
+              return
+            case FILTER_TYPES.TEXTFORMULA:
+              matchAttempt = stringRep.match(`.*${lookFor}.*`)
+              if (matchAttempt && matchAttempt[0] === stringRep) {
+                thisFilterLookupAMatch = true
+              }
+              return
+            case FILTER_TYPES.NUMBERFORMULA:
+              matchAttempt = stringRep.match(`.*${lookFor}.*`)
+              if (matchAttempt && matchAttempt[0] === stringRep) {
+                thisFilterLookupAMatch = true
+              }
+              return
+            default:
+              return
           }
+
         })
 
         if (!thisFilterLookupAMatch) {

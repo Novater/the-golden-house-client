@@ -11,7 +11,7 @@ $color-faded-white: rgb(255 255 255 / 0.3);
 $color-opaque-black: rgb(0 0 0 / 0.6);
 $color-opaque-black-2: rgb(0 0 0 / 0.2);
 $height-nav: 60px;
-$sidebar-height: 40vh;
+$sidebar-height: 50vh;
 $default-border-radius: 5px;
 
 /* The typing effect */
@@ -59,6 +59,10 @@ body,
 html {
   height: 100vh;
   width: 100%;
+}
+
+input, textarea {
+  text-decoration: none !important;
 }
 
 #root,
@@ -163,6 +167,29 @@ html {
   justify-content: flex-start;
   width: fit-content;
 
+  .form-check {
+    display: flex;
+    flex-direction: column !important;
+  }
+
+  .filter-selections {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+
+    label {
+      width: fit-content;
+      margin-left: 1.5em;
+      margin-right: 0.5em;
+    }
+
+    input {
+      margin: 0;
+    }
+  }
+
   .filter-edit-row {
     width: 100%;
     height: fit-content;
@@ -173,6 +200,7 @@ html {
     padding: 0.5em;
     line-height: fit-content;
     height: fit-content;
+    flex-wrap: wrap;
 
     p {
       margin-bottom: 0;
@@ -235,6 +263,10 @@ html {
   z-index: 2;
   height: fit-content;
   width: fit-content;
+
+  p {
+    margin: 0;
+  }
 
   &::after {
     position: absolute;
@@ -336,9 +368,9 @@ html {
 .main-nav {
   color: white;
   width: 100% !important;
-  position: fixed;
   grid-row: 1 / 2;
   z-index: 3;
+  position: fixed;
 
   a {
     color: white !important;
@@ -1077,11 +1109,10 @@ thead {
   align-content: flex-start;
   align-items: center;
   padding: 20px;
-  position: fixed;
-  left: 0;
-  top: 0;
   width: 100%;
-  height: $sidebar-height;
+  min-height: $sidebar-height;
+  overflow: hidden;
+  resize: vertical;
 }
 
 .content-select-container {
@@ -1474,20 +1505,24 @@ thead {
 }
 
 .sidebar-open {
-  position: fixed;
-  top: $sidebar-height;
-  height: calc(100% - $sidebar-height);
-  overflow: auto;
-  background: rgb(0 0 0 / 0.9);
-
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   .banner-img {
     top: calc(50% + $sidebar-height);
     z-index: -1;
   }
+
+  .main-nav {
+    position: relative;
+  }
+
 }
 
 .sidebar-page {
-  background: none;
+  background: rgb(0 0 0 / 0.65);
+  overflow: auto;
+  min-height: calc(100vh - $height-nav - $sidebar-height + 5px);
 }
 
 @media (max-width: 700px) {
