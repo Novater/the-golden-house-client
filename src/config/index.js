@@ -12,4 +12,16 @@ module.exports = {
     logout: '/logout',
     loggedIn: '/logged-in',
   },
+  edittablesubtabs: {
+    HEADERS: 'Headers',
+    DATA_SETUP: 'Data Setup',
+    FINISH_EDIT: 'Finish Edit',
+  },
+  tableheaderkeys: {
+    TITLE: 'title',
+    FORMAT: 'format',
+    KEYS: 'keys',
+    FILTERVALUES: 'filterValues',
+    FILTERSTYLE: 'filterStyle',
+  },
 }

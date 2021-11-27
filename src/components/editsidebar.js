@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
-import TableEditor from './table/edittable'
+import TableEditor from './table/table-editor/edittable'
 import ContentSelector from './contentselector'
 import store from '../store/store'
 const EDIT_CONSTANTS = require('../constants/editConstants')
