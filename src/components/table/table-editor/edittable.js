@@ -202,15 +202,13 @@ export default function TableEditor({
       })
 
       const newFilter = {
-        title: 'your-title',
-        lookFor: 'look-for',
+        title: 'Your-Title',
+        lookFor: '',
+        type: 'Rough'
       }
 
-      console.log(newFilter)
-      console.log(copiedHeaders[thisIndex][TABLE_HEADER_KEYS.FILTERVALUES])
       copiedHeaders[thisIndex][TABLE_HEADER_KEYS.FILTERVALUES].push(newFilter)
 
-      console.log(copiedHeaders)
       store.dispatch({
         type: POST_CONSTANTS.EDIT_POST,
         payload: {
@@ -226,7 +224,6 @@ export default function TableEditor({
 
   function editFilter(idx) {
     return ({ filterIndex, title, lookFor, type }) => {
-      console.log(filterIndex)
       const copiedHeaders = headers.map((header) => {
         return { ...header }
       })
@@ -265,7 +262,6 @@ export default function TableEditor({
         const hasDefault = _.reduce(
           copiedHeaders[thisIndex][TABLE_HEADER_KEYS.FILTERVALUES],
           function (hasSelected, curr) {
-            console.log(curr)
             return hasSelected || !!curr.selected
           },
           false,
@@ -278,7 +274,6 @@ export default function TableEditor({
           copiedHeaders[thisIndex][
             TABLE_HEADER_KEYS.FILTERVALUES
           ][0].selected = true
-        console.log(copiedHeaders[thisIndex])
         store.dispatch({
           type: POST_CONSTANTS.EDIT_POST,
           payload: {
@@ -349,7 +344,10 @@ export default function TableEditor({
                       <div
                         className="collapse-header"
                         onClick={unsetCurrentColumn}
-                      />
+                      >
+                        <p>{`Collapse`}</p>
+                      </div>
+
                       <FontAwesomeIcon
                         className="delete-table-header"
                         icon={faTrash}

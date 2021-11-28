@@ -10,6 +10,7 @@ import PropTypes from 'prop-types'
 import LoadingSpinner from '../loadingspinner'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash, faPen } from '@fortawesome/free-solid-svg-icons'
+import RegexLibrary from '../../functions/regexLibrary'
 import store from '../../store/store'
 
 import { connect } from 'react-redux'
@@ -17,7 +18,6 @@ import { connect } from 'react-redux'
 const POST_CONSTANTS = require('../../constants/postConstants')
 const EDIT_CONSTANTS = require('../../constants/editConstants')
 const FILTER_TYPES = require('../../config').filterTypes
-
 
 class Table extends Component {
   constructor(props) {
@@ -230,40 +230,44 @@ class Table extends Component {
         if (selectedEl.length === 0) continue
 
         let thisFilterLookupAMatch = false
-        
+
         selectedEl.map((el) => {
           const { lookFor, type } = el
 
-          let matchAttempt;
-          switch(type) {
+          let matchAttempt
+          switch (type) {
             case FILTER_TYPES.EXACT:
-              matchAttempt = stringRep.match(lookFor)
-              if (matchAttempt && matchAttempt[0] === stringRep) {
-                thisFilterLookupAMatch = true
-              }
+              thisFilterLookupAMatch = RegexLibrary.matchExact({
+                match: stringRep,
+                matchWith: lookFor,
+              })
               return
             case FILTER_TYPES.ROUGH:
-              matchAttempt = stringRep.match(`.*${lookFor}.*`)
-              if (matchAttempt && matchAttempt[0] === stringRep) {
-                thisFilterLookupAMatch = true
-              }
+              thisFilterLookupAMatch = RegexLibrary.matchRough({
+                match: stringRep,
+                matchWith: lookFor,
+              })
               return
             case FILTER_TYPES.TEXTFORMULA:
-              matchAttempt = stringRep.match(`.*${lookFor}.*`)
-              if (matchAttempt && matchAttempt[0] === stringRep) {
-                thisFilterLookupAMatch = true
-              }
+              thisFilterLookupAMatch = RegexLibrary.matchTextFormula({
+                match: stringRep,
+                matchWith: lookFor,
+              })
               return
             case FILTER_TYPES.NUMBERFORMULA:
-              matchAttempt = stringRep.match(`.*${lookFor}.*`)
-              if (matchAttempt && matchAttempt[0] === stringRep) {
+              thisFilterLookupAMatch = RegexLibrary.matchNumberFormula({
+                match: stringRep,
+                matchWith: lookFor,
+                keys,
+                rec,
+              })
+              return
+            default:
+              if (lookFor == stringRep) {
                 thisFilterLookupAMatch = true
               }
               return
-            default:
-              return
           }
-
         })
 
         if (!thisFilterLookupAMatch) {

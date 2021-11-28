@@ -120,6 +120,7 @@ export default function FilterValues({
                   <div
                     className="filter-name"
                     onMouseEnter={openFilterPreview(idx)}
+                    onClick={openFilterPreview(idx)}
                     onMouseLeave={closeFilterPreview}
                   >
                     <p>{title}</p>
