@@ -1121,15 +1121,13 @@ thead {
   background-color: $color-neutral;
   display: flex;
   flex-direction: column;
+  align-content: flex-start;
   align-items: center;
-  overflow: auto;
   padding: 20px;
-  padding-bottom: 200px;
-  position: fixed;
-  left: 0;
-  top: 0;
   width: 100%;
-  height: $sidebar-height;
+  min-height: $sidebar-height;
+  overflow: hidden;
+  resize: vertical;
 
   .content-select-row {
     display: flex;
