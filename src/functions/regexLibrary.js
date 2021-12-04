@@ -1,5 +1,6 @@
 import _ from 'lodash'
-import Token from './recursivedescentparser/token'
+import ExpressionParser from './algoparse/parser'
+import Token from './algoparse/token'
 export default class RegexLibrary {
   static matchExact({ match, matchWith }) {
     return match === matchWith
@@ -18,11 +19,12 @@ export default class RegexLibrary {
   static matchNumberFormula({ match, matchWith, keys, rec }) {
     let fixedMatchWith
     for (const key of keys) {
-      fixedMatchWith = matchWith.replace(`{${key}}`, _.get(rec, key))
+      fixedMatchWith = matchWith.replaceAll(`{${key}}`, _.get(rec, key))
     }
-    const tokenizer = Token.getInst()
-    const tokenizedMatch = tokenizer.tokenize(fixedMatchWith)
+    const parser = ExpressionParser.getInstance(Token.getInst())
+    const tokenizedMatch = parser.tokenize(fixedMatchWith)
     console.log('tokenizedMatch', tokenizedMatch)
-    // 5 > 3 || 5 < 2
+
+    return parser.evaluate()
   }
 }

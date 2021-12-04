@@ -7,17 +7,39 @@ export default class Token {
       LPAREN: 'LPAREN',
       RPAREN: 'RPAREN',
       OPERATOR: 'OPERATOR',
-      EOF: 'EOF',
     }
   }
 
-  static getInst() {
+  static getInst = () => {
     if (!this.inst) this.inst = new Token()
 
     return this.inst
   }
 
-  tokenize(str) {
+  getTokenTypes = () => {
+    return this.TOKEN_TYPES
+  }
+
+  static comparePrecedence(first, second) {
+    const operators = [
+      '<',
+      '>',
+      '>=',
+      '<=',
+      '==',
+      '!=',
+      '||',
+      '&&',
+      '+',
+      '-',
+      '*',
+      '/',
+    ]
+
+    return operators.indexOf(first) - operators.indexOf(second)
+  }
+
+  tokenize = (str) => {
     this.tokens = []
     console.log(str)
     str = str.trim()
@@ -44,10 +66,6 @@ export default class Token {
         this.tokens.push({ type: this.TOKEN_TYPES.OPERATOR, value: s.trim() })
         s = ''
       }
-
-      if (i == str.length - 1) {
-        this.tokens.push({ type: this.TOKEN_TYPES.EOF })
-      }
     }
 
     return this.tokens
@@ -59,17 +77,18 @@ export default class Token {
 
   #isOperator = (str) => {
     const operators = [
-      '=',
-      '+',
-      '-',
-      '*',
-      '/',
       '<',
       '>',
       '>=',
       '<=',
       '==',
       '!=',
+      '||',
+      '&&',
+      '+',
+      '-',
+      '*',
+      '/',
     ]
 
     return operators.reduce((matchFound, operator) => {
