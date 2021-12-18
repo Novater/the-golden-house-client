@@ -377,6 +377,7 @@ export default class tableFunctions {
                       alt={char}
                       aria-describedby={char}
                       title={char}
+                      key={char}
                     />,
                   )
                 } else {
@@ -428,6 +429,7 @@ export default class tableFunctions {
           record={row.thisRec}
           uniqueKey={row.thisRec._id || uniqueKey}
           id={row.thisRec._id || uniqueKey}
+          key={row.thisRec._id || uniqueKey}
         />,
       )
     }

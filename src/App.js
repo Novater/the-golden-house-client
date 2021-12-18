@@ -75,7 +75,7 @@ class App extends Component {
     return (
       <Route key={`route-${_id}`} exact path={path}>
         <Page
-          key={_id}
+          key={`${_id}`}
           title={title}
           tabName={tabName}
           editTablePermissions={this.state.editTablePermissions}

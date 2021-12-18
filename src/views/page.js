@@ -49,36 +49,6 @@ class Page extends Component {
     store.dispatch(loadPosts)
   }
 
-  async componentDidUpdate(prevProps) {
-    // if (
-    //   prevProps.loggedIn !== this.props.loggedIn ||
-    //   prevProps.inEditMode !== this.props.inEditMode
-    // ) {
-    //   let data = []
-    //   let adminData = []
-    //   let SERVER_URL = _generate.serverFunctions.getServerURL()
-    //   if (this.props.dataSource) {
-    //     const role = this.props.role
-    //     const hasPermission = this.props.editTablePermissions.indexOf(role) >= 0
-    //     this.setState({ tableEditPermission: hasPermission })
-    //     if (hasPermission) {
-    //       const dataSource = await axios.get(
-    //         `${SERVER_URL}${this.props.dataSource}/admin`,
-    //       )
-    //       adminData = dataSource.data
-    //     }
-    //     const dataSource = await axios.get(
-    //       `${SERVER_URL}${this.props.dataSource}`,
-    //     )
-    //     data = dataSource.data
-    //   }
-    //   this.setState({
-    //     records: data,
-    //     adminRecords: adminData,
-    //   })
-    // }
-  }
-
   generatePage = (tabName, objFunc) => {
     let content = objFunc.generatePage(tabName)
     return <div className="pageContainer">{content}</div>
@@ -97,23 +67,21 @@ class Page extends Component {
       this.props.posts.map((row, idxRow) => {
         const rowKey = row.map((post) => post._id).join('-')
         return (
-          <>
-            <div className="blog-section" key={rowKey} id={rowKey}>
-              {row.map((post, idxCol) => {
-                return (
-                  <PageSection
-                    type={post.type}
-                    data={post}
-                    role={this.props.role}
-                    row={idxRow}
-                    col={idxCol}
-                    key={post._id}
-                  />
-                )
-              })}
-            </div>
-            {/* {idxRow !== this.props.posts.length - 1 && <hr className="blog-separator" style={{ width: '100%' }} />} */}
-          </>
+          <div className="blog-section" key={rowKey} id={rowKey}>
+            {row.map((post, idxCol) => {
+              return (
+                <PageSection
+                  type={post.type}
+                  data={post}
+                  role={this.props.role}
+                  row={idxRow}
+                  col={idxCol}
+                  key={post._id}
+                  id={post._id}
+                />
+              )
+            })}
+          </div>
         )
       })
     ) : this.props.inEditMode ? (

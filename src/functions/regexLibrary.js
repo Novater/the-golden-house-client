@@ -11,12 +11,7 @@ export default class RegexLibrary {
     return matchAttempt && matchAttempt[0]
   }
 
-  static matchTextFormula({ match, matchWith }) {
-    const matchAttempt = match.match(matchWith)
-    return matchAttempt && matchAttempt[0]
-  }
-
-  static matchNumberFormula({ match, matchWith, keys, rec }) {
+  static matchNumberFormula({ matchWith, keys, rec }) {
     let fixedMatchWith
     for (const key of keys) {
       fixedMatchWith = matchWith.replaceAll(`{${key}}`, _.get(rec, key))

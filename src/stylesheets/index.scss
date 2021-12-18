@@ -217,6 +217,10 @@ textarea {
       &:focus {
         background-color: $color-nav;
       }
+      
+      &::placeholder {
+        color: $color-faded-white;
+      }
     }
     button {
       width: 100%;

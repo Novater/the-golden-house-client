@@ -30,6 +30,19 @@ export default function FilterValues({
     }
   }
 
+  function placeHolderString(type) {
+    switch (type) {
+      case FILTER_TYPES.EXACT:
+        return '"Test" matches exact Test'
+      case FILTER_TYPES.ROUGH:
+        return '"Test" fuzzy matches Test'
+      case FILTER_TYPES.FORMULA:
+        return '{Text} >= 5'
+      default:
+        return 'N/A'
+    }
+  }
+
   function finishFilterEdit(event) {
     editFilter({
       filterIndex: filterEditIdx,
@@ -74,14 +87,21 @@ export default function FilterValues({
         <div className="filter-edit">
           <span className="filter-edit-row">
             <p>{'Title: '}</p>
-            <input value={filterEditTitle} onChange={updateTitle} spellCheck={false}></input>
+            <input
+              value={filterEditTitle}
+              onChange={updateTitle}
+              spellCheck={false}
+            ></input>
           </span>
           <span className="filter-edit-row form-check">
             <p>{'Filter Type: '}</p>
             <div className="filter-selections" onChange={updateType}>
-              {_.values(FILTER_TYPES).map((type) => {
+              {_.values(FILTER_TYPES).map((type, idx) => {
                 return (
-                  <>
+                  <div
+                    key={`${idx}-${type}`}
+                    style={{ display: 'flex', alignItems: 'center' }}
+                  >
                     <label htmlFor={`${filterEditIdx}-${type}`}>{type}</label>
                     <input
                       type="radio"
@@ -90,16 +110,21 @@ export default function FilterValues({
                       value={type}
                       id={`${filterEditIdx}-${type}`}
                       className="form-check-input"
-                      checked={filterEditType === type}
+                      defaultChecked={filterEditType === type}
                     ></input>
-                  </>
+                  </div>
                 )
               })}
             </div>
           </span>
           <span className="filter-edit-row">
             <p>{'Filter By: '}</p>
-            <input value={filterEditString} onChange={updateLookFor} spellCheck={false}></input>
+            <input
+              value={filterEditString}
+              onChange={updateLookFor}
+              spellCheck={false}
+              placeholder={placeHolderString(filterEditType)}
+            ></input>
           </span>
           <span className="filter-edit-row">
             <button onClick={finishFilterEdit}>Done</button>
@@ -111,9 +136,10 @@ export default function FilterValues({
             const { title, lookFor } = filter
             const uuid = Math.random()
             return (
-              <>
+              <div key={`${title}-${lookFor}-${uuid}`}>
                 <div
                   className="filter-value"
+                  id={`${title}-${lookFor}-${uuid}`}
                   key={`${title}-${lookFor}-${uuid}`}
                   title={title}
                 >
@@ -153,13 +179,14 @@ export default function FilterValues({
                     <p>{`Match Type: ${content[filterPreviewIdx].type}`}</p>
                   </div>
                 ) : null}
-              </>
+              </div>
             )
           })}
           <div
             className="add-new-filter"
             onClick={addNewFilter}
             title={`Add New Filter`}
+            key={`new-filter`}
           >{`+`}</div>
         </>
       )}

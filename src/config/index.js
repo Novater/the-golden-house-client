@@ -27,7 +27,6 @@ module.exports = {
   filterTypes: {
     EXACT: 'Exact',
     ROUGH: 'Rough',
-    TEXTFORMULA: 'Text Formula',
-    NUMBERFORMULA: 'Number Formula'
+    FORMULA: 'Formula'
   },
 }

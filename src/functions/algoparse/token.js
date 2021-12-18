@@ -16,27 +16,27 @@ export default class Token {
     return this.inst
   }
 
-  getTokenTypes = () => {
-    return this.TOKEN_TYPES
+  static getPrecedence = (op) => {
+    const opToPrecendenceMap = {
+      '<': 1,
+      '>': 1,
+      '>=': 1,
+      '<=': 1,
+      '==': 1,
+      '!=': 1,
+      '||': 1,
+      '&&': 1,
+      '+': 2,
+      '-': 2,
+      '*': 3,
+      '/': 3,
+    }
+
+    return opToPrecendenceMap[op] || -1
   }
 
-  static comparePrecedence(first, second) {
-    const operators = [
-      '<',
-      '>',
-      '>=',
-      '<=',
-      '==',
-      '!=',
-      '||',
-      '&&',
-      '+',
-      '-',
-      '*',
-      '/',
-    ]
-
-    return operators.indexOf(first) - operators.indexOf(second)
+  getTokenTypes = () => {
+    return this.TOKEN_TYPES
   }
 
   tokenize = (str) => {
@@ -50,7 +50,7 @@ export default class Token {
       console.log(s)
       const peek = str[i + 1]
 
-      if (this.#isNum(s) && !this.#isNum(peek)) {
+      if (this.#isNum(s) && !this.#isNum(s + peek)) {
         this.tokens.push({ type: this.TOKEN_TYPES.NUM, value: s.trim() })
         s = ''
       }
@@ -62,7 +62,10 @@ export default class Token {
         s = ''
       }
 
-      if (this.#isOperator(s.trim()) && !this.#isOperator(peek.trim())) {
+      if (
+        this.#isOperator(s.trim()) &&
+        !this.#isOperator(s.trim() + peek.trim())
+      ) {
         this.tokens.push({ type: this.TOKEN_TYPES.OPERATOR, value: s.trim() })
         s = ''
       }

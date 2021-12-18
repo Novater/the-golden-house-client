@@ -231,44 +231,43 @@ class Table extends Component {
 
         let thisFilterLookupAMatch = false
 
-        selectedEl.map((el) => {
-          const { lookFor, type } = el
+        try {
+          selectedEl.map((el) => {
+            const { lookFor, type } = el
 
-          let matchAttempt
-          switch (type) {
-            case FILTER_TYPES.EXACT:
-              thisFilterLookupAMatch = RegexLibrary.matchExact({
-                match: stringRep,
-                matchWith: lookFor,
-              })
-              return
-            case FILTER_TYPES.ROUGH:
-              thisFilterLookupAMatch = RegexLibrary.matchRough({
-                match: stringRep,
-                matchWith: lookFor,
-              })
-              return
-            case FILTER_TYPES.TEXTFORMULA:
-              thisFilterLookupAMatch = RegexLibrary.matchTextFormula({
-                match: stringRep,
-                matchWith: lookFor,
-              })
-              return
-            case FILTER_TYPES.NUMBERFORMULA:
-              thisFilterLookupAMatch = RegexLibrary.matchNumberFormula({
-                match: stringRep,
-                matchWith: lookFor,
-                keys,
-                rec,
-              })
-              return
-            default:
-              if (lookFor == stringRep) {
-                thisFilterLookupAMatch = true
-              }
-              return
-          }
-        })
+            let matchAttempt
+            switch (type) {
+              case FILTER_TYPES.EXACT:
+                thisFilterLookupAMatch = RegexLibrary.matchExact({
+                  match: stringRep,
+                  matchWith: lookFor,
+                })
+                return
+              case FILTER_TYPES.ROUGH:
+                thisFilterLookupAMatch = RegexLibrary.matchRough({
+                  match: stringRep,
+                  matchWith: lookFor,
+                })
+                return
+              case FILTER_TYPES.FORMULA:
+                thisFilterLookupAMatch = RegexLibrary.matchNumberFormula({
+                  match: stringRep,
+                  matchWith: lookFor,
+                  keys,
+                  rec,
+                })
+                return
+              default:
+                if (lookFor == stringRep) {
+                  thisFilterLookupAMatch = true
+                }
+                return
+            }
+          })
+        } catch (error) {
+          console.log('Filter Error')
+          console.log('Error:', error)
+        }
 
         if (!thisFilterLookupAMatch) {
           add = false

@@ -66,7 +66,7 @@ export default class ExpressionParser {
           let peek = opStack[opStack.length - 1]
           while (
             opStack.length > 0 &&
-            Token.comparePrecedence(value, peek.value) <= 0
+            Token.getPrecedence(value) <= Token.getPrecedence(peek.value)
           ) {
             let operator = opStack.pop()
             let secondValue = outStack.pop()
@@ -90,10 +90,6 @@ export default class ExpressionParser {
           break
       }
     }
-
-    console.log(outStack)
-    console.log(opStack)
-    debugger
 
     while (opStack.length > 0) {
       let operator = opStack.pop()
