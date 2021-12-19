@@ -183,14 +183,15 @@ function PageSection({
 
   function handleDeleteRows(records) {
     let SERVER_URL = _generate.serverFunctions.getServerURL()
-    axios.post(`${SERVER_URL}${data.dataSource}/delete`, {
+    axios.post(`${SERVER_URL}${this.props.dataSource}/delete`, {
       records: records,
     })
   }
 
   function handleApproveRows(records) {
     let SERVER_URL = _generate.serverFunctions.getServerURL()
-    axios.post(`${SERVER_URL}${data.dataSource}/approve`, {
+    debugger
+    axios.post(`${SERVER_URL}${this.props.dataSource}/approve`, {
       records: records,
     })
   }
@@ -274,8 +275,8 @@ function PageSection({
               isLoading={isLoading}
               refreshRate={data.refreshRate}
               // SAMPLE DATA CONFIG
-              // deleteButtonClass={buttonClasses.deleteButtonClass}
-              // deleteRows={handleDeleteRows}
+              deleteButtonClass={buttonClasses.deleteButtonClass}
+              deleteRows={handleDeleteRows}
               // headers={SampleDataGenerator.sampleTableHeader()}
               // dataSource={SampleDataGenerator.sampleTableData()}
               // rowClass='test-row-class'

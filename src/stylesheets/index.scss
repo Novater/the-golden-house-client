@@ -967,6 +967,13 @@ thead {
   }
 }
 
+.dashboard-container {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: fit-content;
+  height: fit-content;
+}
 .login-form {
   position: absolute;
   left: 50%;

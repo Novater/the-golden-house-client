@@ -9,6 +9,7 @@ import './stylesheets/index.scss'
 import _generate from './functions/index'
 import axios from 'axios'
 import LoginPage from './views/loginPage'
+import DashboardPage from './views/dashboardPage'
 import EditSideBar from './components/editsidebar'
 import store from './store/store'
 import { checkLoggedIn } from './store/reducers/authSlice'
@@ -133,6 +134,9 @@ class App extends Component {
                 backgroundImage={require('./assets/banner-image-tgh-2.png')}
               />
             )}
+          </Route>
+          <Route exact path="/admin/dashboard">
+            <DashboardPage backgroundImage={require('./assets/banner-image-tgh-2.png')}></DashboardPage>
           </Route>
           <Route key={`route-not-found`}>
             <Page

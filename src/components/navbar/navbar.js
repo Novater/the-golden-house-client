@@ -121,6 +121,9 @@ class Navbar extends Component {
                       className="dropdown-menu"
                       aria-labelledby="navbarDropdownMenuLink"
                     >
+                      <NavLink className="dropdown-item" to='/admin/dashboard'>
+                        {`Dashboard`}
+                      </NavLink>
                       <li>
                         <div
                           key="nav-logout"
