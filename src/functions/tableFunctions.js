@@ -360,6 +360,7 @@ export default class tableFunctions {
             let { format } = header
             const { keys } = header
 
+            if (!keys) return
             for (const key of keys) {
               format = format.replace(`{${key}}`, _.get(record, key) || '')
             }

@@ -10,6 +10,8 @@ import EditTableNavbar from './edittablenavbar'
 import FilterValues from './edittablefilters'
 const EDIT_TABLE_SUBTABS = require('../../../config').edittablesubtabs
 const TABLE_HEADER_KEYS = require('../../../config').tableheaderkeys
+const FILTER_STYLES = require('../../../config').filterStyles
+const PLACEHOLDERS = require('../../../config').placeHolders
 const POST_CONSTANTS = require('../../../constants/postConstants')
 import store from '../../../store/store'
 
@@ -37,7 +39,6 @@ export default function TableEditor({
   //   FILTERVALUES: 'filterValues',
   //   FILTERSTYLE: 'filterStyle',
   // }
-
   useEffect(() => {}, [headers])
   const [currentSelectedHeader, selectNewHeader] = useState(null)
   const [currentSelectedTab, selectNewTab] = useState(
@@ -204,7 +205,7 @@ export default function TableEditor({
       const newFilter = {
         title: 'Your-Title',
         lookFor: '',
-        type: 'Rough'
+        type: 'Rough',
       }
 
       copiedHeaders[thisIndex][TABLE_HEADER_KEYS.FILTERVALUES].push(newFilter)
@@ -326,6 +327,35 @@ export default function TableEditor({
                                 editFilter={editFilter(idx)}
                                 deleteFilter={deleteFilter(idx)}
                               />
+                            ) : key === TABLE_HEADER_KEYS.FILTERSTYLE ? (
+                              <div
+                                className="style-selections"
+                                onChange={updateTableHeader(key, idx)}
+                              >
+                                {_.map(FILTER_STYLES, (style) => {
+                                  return (
+                                    <div
+                                      style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                      }}
+                                    >
+                                      <label htmlFor={`${idxHeader}-${style}`}>{style}</label>
+                                      <input
+                                        type="radio"
+                                        name="filter-type-radio"
+                                        auria-labelledby={`${idxHeader}-${style}`}
+                                        value={style}
+                                        id={`${idxHeader}-${style}`}
+                                        className="form-check-input"
+                                        defaultChecked={
+                                          header[key].toString() === style
+                                        }
+                                      ></input>
+                                    </div>
+                                  )
+                                })}
+                              </div>
                             ) : (
                               <textarea
                                 spellCheck={false}
@@ -336,6 +366,7 @@ export default function TableEditor({
                                 }
                                 onBlur={updateTableHeader(key, idx)}
                                 onClick={preventDefault}
+                                placeholder={PLACEHOLDERS[key.toUpperCase()]}
                               ></textarea>
                             )}
                           </div>
@@ -414,12 +445,17 @@ export default function TableEditor({
               <input
                 defaultValue={searchable}
                 onBlur={updateSearchable}
+                placeholder={PLACEHOLDERS.SEARCHABLE}
               ></input>
             </div>
             <hr />
             <div className="table-edit-row data-url">
               <h4>{`Data URL:`}</h4>
-              <textarea defaultValue={dataUrl} onBlur={updateURL}></textarea>
+              <textarea
+                defaultValue={dataUrl}
+                onBlur={updateURL}
+                placeholder={PLACEHOLDERS.DATA_URL}
+              ></textarea>
             </div>
             <hr />
             <div className="table-edit-row pagination">
@@ -427,13 +463,16 @@ export default function TableEditor({
               <textarea
                 defaultValue={`${JSON.stringify(pagination, undefined, 2)}`}
                 onBlur={updatePagination}
+                placeholder={PLACEHOLDERS.PAGINATION}
               ></textarea>
             </div>
+            <hr />
             <div className="table-edit-row refresh-rate">
               <h4>{`Refresh Rate:`}</h4>
               <textarea
                 defaultValue={refreshRate}
                 onBlur={updateRefreshRate}
+                placeholder={PLACEHOLDERS.REFRESH_RATE}
               ></textarea>
             </div>
           </div>

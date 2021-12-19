@@ -233,6 +233,16 @@ textarea {
   }
 }
 
+.style-selections {
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+
+  label {
+    margin-right: 5px;
+  }
+}
+
 .filter-value-container {
   display: flex;
   width: 100%;

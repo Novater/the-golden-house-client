@@ -220,6 +220,7 @@ class Table extends Component {
 
         let stringRep = format
 
+        if (!keys) continue
         for (const key of keys) {
           stringRep = stringRep.replace(`{${key}}`, _.get(rec, key))
         }

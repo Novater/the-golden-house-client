@@ -3,9 +3,7 @@ export default class ExpressionParser {
   constructor(tokenizer) {
     this.instance = null
     this.tokenizer = tokenizer
-    console.log(tokenizer)
     this.tokenTypes = tokenizer.getTokenTypes()
-    console.log('token types', this.tokenTypes)
   }
 
   static getInstance = () => {
@@ -14,9 +12,7 @@ export default class ExpressionParser {
   }
 
   tokenize = (str) => {
-    console.log('Tokenizer: string to tokenize', str)
     this.tokens = this.tokenizer.tokenize(str)
-    console.log('tokens', JSON.stringify(this.tokens))
   }
 
   evaluate = () => {
