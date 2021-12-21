@@ -69,9 +69,9 @@ export default function TableEditor({
   function addTableHeader() {
     const copiedHeaders = [...headers]
     const defaultHeader = {
-      title: 'Header Name Here',
-      format: '{keys}-{here}',
-      keys: ['keys', 'here'],
+      title: '',
+      format: '',
+      keys: [],
       filterValues: [
         { title: 'All', lookFor: '.*' },
         { title: 'filter-title', lookFor: 'regex-string' },
