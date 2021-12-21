@@ -11,6 +11,7 @@ import FilterValues from './edittablefilters'
 const EDIT_TABLE_SUBTABS = require('../../../config').edittablesubtabs
 const TABLE_HEADER_KEYS = require('../../../config').tableheaderkeys
 const FILTER_STYLES = require('../../../config').filterStyles
+const FILTER_TYPES = require('../../../config').filterTypes
 const PLACEHOLDERS = require('../../../config').placeHolders
 const POST_CONSTANTS = require('../../../constants/postConstants')
 import store from '../../../store/store'
@@ -73,8 +74,8 @@ export default function TableEditor({
       format: '',
       keys: [],
       filterValues: [
-        { title: 'All', lookFor: '' },
-        { title: 'filter-title', lookFor: '' },
+        { title: 'All', type: FILTER_TYPES.ROUGH, lookFor: '' },
+        { title: 'filter-title', type: FILTER_TYPES.ROUGH, lookFor: '' },
       ],
       filterStyle: 'dropdown',
     }
@@ -289,7 +290,7 @@ export default function TableEditor({
     }
   }
 
-  console.log('headers', headers);
+  console.log('headers', headers)
   switch (currentSelectedTab) {
     case EDIT_TABLE_SUBTABS.HEADERS: {
       return (
@@ -341,7 +342,9 @@ export default function TableEditor({
                                         alignItems: 'center',
                                       }}
                                     >
-                                      <label htmlFor={`${idxHeader}-${style}`}>{style}</label>
+                                      <label htmlFor={`${idxHeader}-${style}`}>
+                                        {style}
+                                      </label>
                                       <input
                                         type="radio"
                                         name="filter-type-radio"
