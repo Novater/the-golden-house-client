@@ -347,7 +347,7 @@ export default function TableEditor({
                                       </label>
                                       <input
                                         type="radio"
-                                        name="filter-type-radio"
+                                        name="filter-style-radio"
                                         auria-labelledby={`${idxHeader}-${style}`}
                                         value={style}
                                         id={`${idxHeader}-${style}`}
