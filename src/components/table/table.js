@@ -145,6 +145,7 @@ class Table extends Component {
 
     // Update our edit sidebar if the table ever changes
     if (this.props.id === this.props.editorId) {
+      console.log('updating headers', this.props.headers)
       store.dispatch({
         type: EDIT_CONSTANTS.UPDATE_SIDEBAR,
         payload: {
@@ -156,6 +157,7 @@ class Table extends Component {
             dataUrl: this.props.dataUrl,
             dataSource: this.props.dataSource,
             pagination: this.props.rowSelectOptions,
+            refreshRate: this.props.refreshRate,
           },
         },
       })

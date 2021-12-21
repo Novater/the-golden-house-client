@@ -76,10 +76,11 @@ export default function editReducer(state = initialState, action) {
     }
     case EDIT_CONSTANTS.UPDATE_SIDEBAR: {
       if (state.showSideBar) {
-        const payload = { action }
-        const data = { payload }
-        const newData = { ...state.editorData, data }
-        return { ...state, editorData: newData }
+        console.log('action', action)
+        const { payload } = action
+        const { data } = payload
+        console.log('data', data)
+        return { ...state, editorData: data }
       }
       return { ...state }
     }

@@ -174,7 +174,7 @@ export default function TableEditor({
       type: POST_CONSTANTS.EDIT_POST,
       payload: {
         post: {
-          refreshRate: JSON.parse(event.target.value),
+          refreshRate: event.target.value,
         },
         row,
         col,
@@ -289,6 +289,7 @@ export default function TableEditor({
     }
   }
 
+  console.log('headers', headers);
   switch (currentSelectedTab) {
     case EDIT_TABLE_SUBTABS.HEADERS: {
       return (
