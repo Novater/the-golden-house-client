@@ -73,8 +73,8 @@ export default function TableEditor({
       format: '',
       keys: [],
       filterValues: [
-        { title: 'All', lookFor: '.*' },
-        { title: 'filter-title', lookFor: 'regex-string' },
+        { title: 'All', lookFor: '' },
+        { title: 'filter-title', lookFor: '' },
       ],
       filterStyle: 'dropdown',
     }
